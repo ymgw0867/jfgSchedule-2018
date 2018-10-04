@@ -1,0 +1,19 @@
+【東】
+select * from 会員稼働予定 inner join 
+(select カード番号 as cardno,氏名 from 会員情報 
+where (言語1 = 9 or 言語2 = 9 or 言語3 = 9 or 言語4 = 9 or 言語5 = 9) and 
+東西 = 1) as a 
+on 会員稼働予定.カード番号 = a.cardno
+order by 会員稼働予定.フリガナ, 会員稼働予定.カード番号, 会員稼働予定.年,会員稼働予定.月
+
+言語の番号を変えてその都度実行
+
+【西】
+select 地域コード, 地域名, 会員情報.カード番号 as cardno,氏名, a.* from 会員情報 inner join 
+(select * from 会員稼働予定) as a 
+on 会員情報.カード番号 = a.カード番号
+where (言語1 = 9 or 言語2 = 9 or 言語3 = 9 or 言語4 = 9 or 言語5 = 9) and 
+東西 = 2 
+order by 会員情報.地域コード,a.フリガナ, 会員情報.カード番号, a.年,a.月
+
+言語の番号を変えてその都度実行

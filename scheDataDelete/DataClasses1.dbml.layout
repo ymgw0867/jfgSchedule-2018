@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 40.375" name="DataClasses1">
+  <DataContextMoniker Name="/DataClasses1DataContext" />
+  <nestedChildShapes>
+    <classShape Id="1b414ff5-0458-4cba-b191-58229d52d1b3" absoluteBounds="2.25, 0.625, 2, 39.492291666666667">
+      <DataClassMoniker Name="/DataClasses1DataContext/会員情報" />
+      <nestedChildShapes>
+        <elementListCompartment Id="286cc3e5-dbfd-4c95-af06-22e5c3d6c588" absoluteBounds="2.265, 1.085, 1.9700000000000002, 38.932291666666664" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="a5c39acd-4a0d-466d-b579-b1f969be84f9" absoluteBounds="5.375, 0.625, 2, 10.237083333333333">
+      <DataClassMoniker Name="/DataClasses1DataContext/会員稼働予定" />
+      <nestedChildShapes>
+        <elementListCompartment Id="3a1f1894-c216-42a0-830b-c1668c6ece31" absoluteBounds="5.39, 1.085, 1.9700000000000002, 9.6770833333333321" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+  </nestedChildShapes>
+</ordesignerObjectsDiagram>

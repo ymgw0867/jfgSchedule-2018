@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 40.25" name="JfgDataClass">
+  <DataContextMoniker Name="/JfgDataClassDataContext" />
+  <nestedChildShapes>
+    <classShape Id="3e55d3be-00bc-42ab-aeb7-045483e41ac8" absoluteBounds="0.625, 0.5, 2, 39.492291666666667">
+      <DataClassMoniker Name="/JfgDataClassDataContext/会員情報" />
+      <nestedChildShapes>
+        <elementListCompartment Id="d2045485-ffa3-496b-b95a-1e66abf282bf" absoluteBounds="0.64000000000000012, 0.96, 1.9700000000000002, 38.932291666666664" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+  </nestedChildShapes>
+</ordesignerObjectsDiagram>

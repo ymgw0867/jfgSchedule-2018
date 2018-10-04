@@ -1,0 +1,41 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="scheTask.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="xlsxPath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\Users\ymgw\OneDrive\test\</Value>
+    </Setting>
+    <Setting Name="JFG_MSTConnectionString" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionString&gt;Data Source=YMGW-PC\SQLEXPRESS;Initial Catalog=JFG_MST;Persist Security Info=True;User ID=sa;Password=sqlpass&lt;/ConnectionString&gt;
+  &lt;ProviderName&gt;System.Data.SqlClient&lt;/ProviderName&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">Data Source=YMGW-PC\SQLEXPRESS;Initial Catalog=JFG_MST;Persist Security Info=True;User ID=sa;Password=sqlpass</Value>
+    </Setting>
+    <Setting Name="logFileName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Log.txt</Value>
+    </Setting>
+    <Setting Name="xlsKadouPath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\JFGWORKS\稼働予定表Temp.xlsx</Value>
+    </Setting>
+    <Setting Name="xlsWorksPath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\JFGWORKS\稼働予定表.xlsx</Value>
+    </Setting>
+    <Setting Name="xlsTempPath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\JFGWORKS\ワークシート.xlsx</Value>
+    </Setting>
+    <Setting Name="ServerName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">YMGW-PC\SQLEXPRESS</Value>
+    </Setting>
+    <Setting Name="Login" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">sa</Value>
+    </Setting>
+    <Setting Name="Pass" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">sqlpass</Value>
+    </Setting>
+    <Setting Name="Database" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">JFG_MST</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 40.5" name="jfgDataClass">
+  <DataContextMoniker Name="/jfgDataClassDataContext" />
+  <nestedChildShapes>
+    <classShape Id="0c2ddb0e-1337-4fe0-aac7-d63fa0f6e129" absoluteBounds="3.625, 0.75, 2, 39.492291666666667">
+      <DataClassMoniker Name="/jfgDataClassDataContext/会員情報" />
+      <nestedChildShapes>
+        <elementListCompartment Id="23d42b0a-b6c1-4fb3-b19b-0e14370289f7" absoluteBounds="3.6399999999999997, 1.21, 1.9700000000000002, 38.932291666666664" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="71671630-16a9-4ef7-8e4d-efcd2e3e738b" absoluteBounds="0.625, 16.375, 2, 2.1225">
+      <DataClassMoniker Name="/jfgDataClassDataContext/言語" />
+      <nestedChildShapes>
+        <elementListCompartment Id="94cc8591-36c4-4f9d-b037-fdb4aab20d7b" absoluteBounds="0.64000000000000012, 16.835, 1.9700000000000002, 1.5625" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="c6c9615a-1bc4-46c0-be76-13368d838bd7" absoluteBounds="0.875, 0.75, 2, 10.237083333333333">
+      <DataClassMoniker Name="/jfgDataClassDataContext/会員稼働予定" />
+      <nestedChildShapes>
+        <elementListCompartment Id="19c8a567-aafc-48cb-84ab-a02f2e5ca887" absoluteBounds="0.89000000000000012, 1.21, 1.9700000000000002, 9.6770833333333321" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="0521f5c1-e413-44d9-a057-fa0942964873" absoluteBounds="1, 11.375, 2, 1.2683333333333333">
+      <DataClassMoniker Name="/jfgDataClassDataContext/アサイン担当者" />
+      <nestedChildShapes>
+        <elementListCompartment Id="8ee9d0b4-ba60-4e86-8c71-9af174ea89a9" absoluteBounds="1.0150000000000001, 11.835, 1.9700000000000002, 0.70833333333333326" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="5620db46-0ff7-4fc6-8870-104699fa9f5c" absoluteBounds="6.125, 0.75, 2, 22.836041666666667">
+      <DataClassMoniker Name="/jfgDataClassDataContext/アサイン" />
+      <nestedChildShapes>
+        <elementListCompartment Id="c9b3ecf4-9a50-46ad-a2e0-348ae764c190" absoluteBounds="6.14, 1.21, 1.9700000000000002, 22.276041666666664" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="131b2d3a-5fac-4848-8677-2bacfb3ad4f2" absoluteBounds="0.625, 19.5, 2, 1.481875">
+      <DataClassMoniker Name="/jfgDataClassDataContext/稼働設定" />
+      <nestedChildShapes>
+        <elementListCompartment Id="0ff4e11c-3f44-4656-85fd-a9d5992e65a6" absoluteBounds="0.64000000000000012, 19.96, 1.9700000000000002, 0.921875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(2.875 : 5.86854166666667); (3.625 : 5.86854166666667)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/jfgDataClassDataContext/会員稼働予定/会員稼働予定_会員情報" />
+      <nodes>
+        <classShapeMoniker Id="c6c9615a-1bc4-46c0-be76-13368d838bd7" />
+        <classShapeMoniker Id="0c2ddb0e-1337-4fe0-aac7-d63fa0f6e129" />
+      </nodes>
+    </associationConnector>
+  </nestedChildShapes>
+</ordesignerObjectsDiagram>
