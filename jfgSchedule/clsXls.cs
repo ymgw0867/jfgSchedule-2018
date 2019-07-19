@@ -520,7 +520,11 @@ namespace jfgSchedule
 
             for (int i = 0; i < 31; i++)
             {
-                string dVal = Utility.nulltoString(cPData.sheet.Cell(sRow + i, cPData.colidx).Value);
+                // コメント化 2019/07/18
+                //string dVal = Utility.nulltoString(cPData.sheet.Cell(sRow + i, cPData.colidx).Value);
+
+                // Trim()を追加 2019/07/18
+                string dVal = Utility.nulltoString(cPData.sheet.Cell(sRow + i, cPData.colidx).Value).Trim();
 
                 if (i == 0) tbl.d1 = dVal;
                 if (i == 1) tbl.d2 = dVal;
