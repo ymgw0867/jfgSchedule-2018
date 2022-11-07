@@ -114,5 +114,14 @@ namespace jfgSchedule.Properties {
                 return ((string)(this["JFG_MSTConnectionString"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\JFGWORKS\\ホテル向けガイド稼働予定表.xlsx")]
+        public string xlsHotelsWorksPath {
+            get {
+                return ((string)(this["xlsHotelsWorksPath"]));
+            }
+        }
     }
 }

@@ -731,8 +731,8 @@ namespace jfgSchedule
 
                     // 東・LINQ
                     var linqEast = db.会員情報.Where(a => (a.言語1 == int.Parse(gCode) || a.言語2 == int.Parse(gCode) ||
-                                                   a.言語3 == int.Parse(gCode) || a.言語4 == int.Parse(gCode) ||
-                                                   a.言語5 == int.Parse(gCode)) && a.東西 == 1)
+                                                          a.言語3 == int.Parse(gCode) || a.言語4 == int.Parse(gCode) ||
+                                                          a.言語5 == int.Parse(gCode)) && a.東西 == 1)
                                          .OrderBy(a => a.会員稼働予定.フリガナ).ThenBy(a => a.会員稼働予定.カード番号).ThenBy(a => a.会員稼働予定.年).ThenBy(a => a.会員稼働予定.月)
                                          .Select(a => new
                                          {
@@ -761,6 +761,7 @@ namespace jfgSchedule
 
                     //if (ew == cEAST)    // 東
                     //{
+
                     // 組合員予定申告データクラスのインスタンス生成
                     clsWorksTbl w = new clsWorksTbl();
                     w.cardNumBox = string.Empty;
@@ -781,6 +782,7 @@ namespace jfgSchedule
                             continue;
                         }
                     }
+                    
                     //}
                     //else if (ew == cWEST)   // 西
                     //{
@@ -974,7 +976,7 @@ namespace jfgSchedule
                     //tmpSheet = book.Worksheet(1);
 
                     //保存処理
-                    book.SaveAs(Properties.Settings.Default.xlsWorksPath);
+                    book.SaveAs(Properties.Settings.Default.xlsHotelsWorksPath);
                 }
             }
             catch (Exception ex)

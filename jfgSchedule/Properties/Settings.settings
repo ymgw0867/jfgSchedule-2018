@@ -37,5 +37,8 @@
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
       <Value Profile="(Default)">Data Source=YMGW-PC\SQLEXPRESS;Initial Catalog=JFG_MST;Persist Security Info=True;User ID=sa; Password=sqlpass</Value>
     </Setting>
+    <Setting Name="xlsHotelsWorksPath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\JFGWORKS\ホテル向けガイド稼働予定表.xlsx</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
