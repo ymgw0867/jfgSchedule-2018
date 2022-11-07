@@ -14,8 +14,8 @@ namespace jfgSchedule
     class clsWorks
     {
         int sCnt = 2;                                   // 東西繰り返し回数
-        string [,] gengo;                               // 言語配列
-        string [,] sheetYYMM = new string [6, 2];       // 年月と開始列
+        string[,] gengo;                               // 言語配列
+        string[,] sheetYYMM = new string[6, 2];       // 年月と開始列
         int sheetStRow = 4;                             // エクセルシート明細開始行
         int[] S_colSMAX = { 195, 196 };                 // 稼働表Temp列Max
         string[] sheetName = { "東", "西" };            // シート名見出し
@@ -60,12 +60,12 @@ namespace jfgSchedule
 
             DateTime stDate;
             DateTime edDate;
-                        
+
             try
             {
                 // 稼働予定開始年月日
                 stDate = DateTime.Parse(DateTime.Today.Year.ToString() + "/" + DateTime.Today.Month.ToString() + "/01");
-            
+
                 // 稼働予定終了年月日
                 edDate = stDate.AddMonths(6).AddDays(-1);
 
@@ -126,7 +126,7 @@ namespace jfgSchedule
                         string cardNum = string.Empty;
                         string gCode = gengo[i - 1, 0];
                         int sRow = sheetStRow;
-                                                
+
                         jfgDataClassDataContext db = new jfgDataClassDataContext();
 
                         // 東・LINQ
@@ -134,12 +134,13 @@ namespace jfgSchedule
                                                        a.言語3 == int.Parse(gCode) || a.言語4 == int.Parse(gCode) ||
                                                        a.言語5 == int.Parse(gCode)) && a.東西 == 1)
                                              .OrderBy(a => a.会員稼働予定.フリガナ).ThenBy(a => a.会員稼働予定.カード番号).ThenBy(a => a.会員稼働予定.年).ThenBy(a => a.会員稼働予定.月)
-                                             .Select(a => new { 
-                                             cardno = a.カード番号,
-                                             氏名 = a.氏名,
-                                             携帯電話番号 = a.携帯電話番号,
-                                             JFG加入年 = a.JFG加入年,
-                                             a.会員稼働予定
+                                             .Select(a => new
+                                             {
+                                                 cardno = a.カード番号,
+                                                 氏名 = a.氏名,
+                                                 携帯電話番号 = a.携帯電話番号,
+                                                 JFG加入年 = a.JFG加入年,
+                                                 a.会員稼働予定
                                              });
 
                         // 西・LINQ
@@ -250,7 +251,7 @@ namespace jfgSchedule
 
                     ew++;
                 }
-                
+
                 // 作業用BOOKの1番目のシートは削除する
                 ((Excel.Worksheet)oXlsWork.Sheets[1]).Delete();
 
@@ -303,7 +304,7 @@ namespace jfgSchedule
         {
             DateTime stDate;
             DateTime edDate;
-            
+
             //IXLWorksheet tmpSheet = null;
 
             try
@@ -487,7 +488,7 @@ namespace jfgSchedule
                             // 年月を表すセルを結合する 2018/02/28
                             int stCell = 0;
                             int edCell = 0;
-                            
+
                             tmpSheet.Range(tmpSheet.Cell(1, ew + 9).Address,
                                            tmpSheet.Cell(1, tmpSheet.LastCellUsed().Address.ColumnNumber).Address).Style
                                            .Border.BottomBorder = XLBorderStyleValues.Thin;
@@ -614,7 +615,7 @@ namespace jfgSchedule
 
                                 // 見出しはBold 2018/02/28
                                 tmpSheet.Range(tmpSheet.Cell("J1").Address, tmpSheet.Cell(3, tmpSheet.LastCellUsed().Address.ColumnNumber).Address)
-                                    .Style.Font.SetBold(true);                                
+                                    .Style.Font.SetBold(true);
                             }
                         }
 
@@ -629,6 +630,350 @@ namespace jfgSchedule
                     //tmpSheet = book.Worksheet(1);
 
                     //保存処理 2018/02/26
+                    book.SaveAs(Properties.Settings.Default.xlsWorksPath);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Write(ex.ToString());
+            }
+            finally
+            {
+
+            }
+        }
+
+
+        /// <summary>
+        /// Excelシート名簿稼働表作成 : closedXML版 2022/11/07
+        /// </summary>
+        public void worksOutputXML_FromExcel()
+        {
+            DateTime stDate;
+            DateTime edDate;
+
+            try
+            {
+                using (var book = new XLWorkbook(Properties.Settings.Default.xlsKadouPath, XLEventTracking.Disabled))
+                {
+                    // 稼働予定開始年月日
+                    stDate = DateTime.Parse(DateTime.Today.Year.ToString() + "/" + DateTime.Today.Month.ToString() + "/01");
+
+                    // 稼働予定終了年月日
+                    edDate = stDate.AddMonths(6).AddDays(-1);
+
+                    int ew = 0;
+
+                    //while (ew < sCnt)
+                    //{
+
+                    // 言語別シートを作成
+                    //for (int i = 1; i <= gengo.GetLength(0); i++)
+                    //{
+                    //    int sNum = i + (10 * ew);
+
+                    // シートを追加する
+                    book.Worksheet("東").CopyTo(book, sheetName[ew] + "・" + gengo[0, 1], 1);
+
+                    //if (ew == cEAST)
+                    //{
+                    //    book.Worksheet("東").CopyTo(book, sheetName[ew] + "・" + gengo[i - 1, 1], sNum);
+                    //}
+                    //else if (ew == cWEST)
+                    //{
+                    //    book.Worksheet("西").CopyTo(book, sheetName[ew] + "・" + gengo[i - 1, 1], sNum);
+                    //}
+
+                    // カレントシート
+                    IXLWorksheet tmpSheet = book.Worksheet(1);
+
+                    int xCol = 0;   // 日列初期値
+
+                    // 稼働予定期間のカレンダーをセット
+                    for (int mon = 0; mon < 6; mon++)
+                    {
+                        // 該当月
+                        DateTime wDt = stDate.AddMonths(mon);
+                        xCol = 31 * mon + ew + 9;
+                        tmpSheet.Cell(1, xCol).SetValue(wDt.Year + "年" + wDt.Month + "月"); // 9,40,71,102,・・・ 
+
+                        // 年月と開始列の配列にセット
+                        sheetYYMM[mon, 0] = wDt.Year.ToString() + wDt.Month.ToString().PadLeft(2, '0');
+                        sheetYYMM[mon, 1] = xCol.ToString();
+
+                        DateTime dDay;
+
+                        // 該当月の暦
+                        int dy = 0;
+                        while (dy < 31)
+                        {
+                            if (DateTime.TryParse(wDt.Year.ToString() + "/" + wDt.Month.ToString() + "/" + (dy + 1).ToString(), out dDay))
+                            {
+                                tmpSheet.Cell(2, xCol + dy).SetValue((dy + 1).ToString());    // 日
+                                tmpSheet.Cell(3, xCol + dy).SetValue(dDay.ToString("ddd"));   // 曜日
+                            }
+                            else
+                            {
+                                tmpSheet.Cell(2, xCol + dy).SetValue(string.Empty);
+                                tmpSheet.Cell(3, xCol + dy).SetValue(string.Empty);
+                            }
+
+                            dy++;
+                        }
+                    }
+
+                    // 組合員予定申告データを取得
+                    string cardNum = string.Empty;
+                    string gCode   = gengo[0, 0];
+                    int    sRow    = sheetStRow;
+
+                    jfgDataClassDataContext db = new jfgDataClassDataContext();
+
+                    // 東・LINQ
+                    var linqEast = db.会員情報.Where(a => (a.言語1 == int.Parse(gCode) || a.言語2 == int.Parse(gCode) ||
+                                                   a.言語3 == int.Parse(gCode) || a.言語4 == int.Parse(gCode) ||
+                                                   a.言語5 == int.Parse(gCode)) && a.東西 == 1)
+                                         .OrderBy(a => a.会員稼働予定.フリガナ).ThenBy(a => a.会員稼働予定.カード番号).ThenBy(a => a.会員稼働予定.年).ThenBy(a => a.会員稼働予定.月)
+                                         .Select(a => new
+                                         {
+                                             cardno = a.カード番号,
+                                             氏名 = a.氏名,
+                                             携帯電話番号 = a.携帯電話番号,
+                                             JFG加入年 = a.JFG加入年,
+                                             a.会員稼働予定
+                                         });
+
+                    //// 西・LINQ
+                    //var linqWest = db.会員情報.Where(a => (a.言語1 == int.Parse(gCode) || a.言語2 == int.Parse(gCode) ||
+                    //                               a.言語3 == int.Parse(gCode) || a.言語4 == int.Parse(gCode) ||
+                    //                               a.言語5 == int.Parse(gCode)) && a.東西 == 2)
+                    //                     .OrderBy(a => a.地域コード).ThenBy(a => a.会員稼働予定.フリガナ).ThenBy(a => a.カード番号).ThenBy(a => a.会員稼働予定.年).ThenBy(a => a.会員稼働予定.月)
+                    //                     .Select(a => new
+                    //                     {
+                    //                         地域コード = a.地域コード,
+                    //                         地域名 = a.地域名,
+                    //                         cardno = a.カード番号,
+                    //                         氏名 = a.氏名,
+                    //                         携帯電話番号 = a.携帯電話番号,
+                    //                         JFG加入年 = a.JFG加入年,
+                    //                         a.会員稼働予定
+                    //                     });
+
+                    //if (ew == cEAST)    // 東
+                    //{
+                    // 組合員予定申告データクラスのインスタンス生成
+                    clsWorksTbl w = new clsWorksTbl();
+                    w.cardNumBox = string.Empty;
+                    w.sRow = sheetStRow;
+                    w.ew = ew;
+
+                    foreach (var t in linqEast)
+                    {
+                        w.cardNo = t.cardno;
+                        w.氏名 = t.氏名;
+                        w.携帯電話番号 = t.携帯電話番号;
+                        w.JFG加入年 = (short)t.JFG加入年;
+                        w.会員稼働予定 = t.会員稼働予定;
+
+                        // エクセル稼働表作成 2018/02/26
+                        if (!xlsCellsSetXML(w, tmpSheet))
+                        {
+                            continue;
+                        }
+                    }
+                    //}
+                    //else if (ew == cWEST)   // 西
+                    //{
+                    //    // 組合員予定申告データクラスのインスタンス生成
+                    //    clsWorksTbl w = new clsWorksTbl();
+                    //    w.cardNumBox = string.Empty;
+                    //    w.sRow = sheetStRow;
+                    //    w.ew = ew;
+
+                    //    foreach (var t in linqWest)
+                    //    {
+                    //        w.地域コード = (int)t.地域コード;
+                    //        w.地域名 = t.地域名;
+                    //        w.cardNo = t.cardno;
+                    //        w.氏名 = t.氏名;
+                    //        w.携帯電話番号 = t.携帯電話番号;
+                    //        w.JFG加入年 = (short)t.JFG加入年;
+                    //        w.会員稼働予定 = t.会員稼働予定;
+
+                    //        // エクセル稼働表作成 2018/02/26
+                    //        if (!xlsCellsSetXML(w, tmpSheet))
+                    //        {
+                    //            continue;
+                    //        }
+                    //    }
+                    //}
+
+                    // カレンダーにない日の列削除
+                    bool colDelStatus = true;
+
+                    // 2018/02/26
+                    while (colDelStatus)
+                    {
+                        for (int cl = (ew + 9); cl <= tmpSheet.RangeUsed().RangeAddress.LastAddress.ColumnNumber; cl++)
+                        {
+                            if (!Utility.NumericCheck(Utility.nulltoString(tmpSheet.Cell(2, cl).Value).Trim()))
+                            {
+                                tmpSheet.Column(cl).Delete();
+                                colDelStatus = true;
+                                break;
+                            }
+                            else
+                            {
+                                colDelStatus = false;
+                            }
+                        }
+                    }
+
+                    // 年月を表すセルを結合する
+                    int stCell = 0;
+                    int edCell = 0;
+
+                    tmpSheet.Range(tmpSheet.Cell(1, ew + 9).Address,
+                                   tmpSheet.Cell(1, tmpSheet.LastCellUsed().Address.ColumnNumber).Address).Style
+                                   .Border.BottomBorder = XLBorderStyleValues.Thin;
+                    for (int cl = (ew + 9); cl <= tmpSheet.LastCellUsed().Address.ColumnNumber; cl++)
+                    {
+                        if (Utility.nulltoString(tmpSheet.Cell(2, cl).Value).Trim() == "1")
+                        {
+                            if (stCell == 0)
+                            {
+                                stCell = cl;
+                            }
+                            else
+                            {
+                                // セル結合
+                                tmpSheet.Range(tmpSheet.Cell(1, stCell).Address, tmpSheet.Cell(1, edCell).Address).Merge(false);
+
+                                // IsMerge()パフォ劣化回避のためのStyle変更
+                                for (int cc = stCell; cc <= edCell; cc++)
+                                {
+                                    tmpSheet.Cell(1, cc).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                                }
+
+                                stCell = cl;
+                            }
+                        }
+                        else
+                        {
+                            edCell = cl;
+                        }
+                    }
+
+                    if (stCell != 0)
+                    {
+                        // セル結合
+                        tmpSheet.Range(tmpSheet.Cell(1, stCell).Address, tmpSheet.Cell(1, edCell).Address).Merge(false);
+
+                        // IsMerge()パフォ劣化回避のためのStyle変更
+                        for (int cc = stCell; cc <= edCell; cc++)
+                        {
+                            tmpSheet.Cell(1, cc).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                        }
+                    }
+
+                    // 表の外枠罫線を引く
+                    var range = tmpSheet.Range(tmpSheet.Cell("A1").Address, tmpSheet.LastCellUsed().Address);
+                    range.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+
+                    // 年月セル下部に罫線を引く
+                    tmpSheet.Range(tmpSheet.Cell(1, ew + 9).Address,
+                                   tmpSheet.Cell(1, tmpSheet.LastCellUsed().Address.ColumnNumber).Address).Style
+                                   .Border.BottomBorder = XLBorderStyleValues.Thin;
+
+                    tmpSheet.Range(tmpSheet.Cell(2, ew + 9).Address,
+                                   tmpSheet.Cell(2, tmpSheet.LastCellUsed().Address.ColumnNumber).Address).Style
+                                   .Border.BottomBorder = XLBorderStyleValues.Dotted;
+
+                    // 明細最上部に罫線を引く
+                    tmpSheet.Range(tmpSheet.Cell("A4").Address,
+                                   tmpSheet.Cell(4, tmpSheet.LastCellUsed().Address.ColumnNumber).Address).Style
+                                   .Border.TopBorder = XLBorderStyleValues.Thin;
+
+                    // 表の外枠左罫線を引く
+                    tmpSheet.Range(tmpSheet.Cell("A1").Address, tmpSheet.LastCellUsed().Address).Style
+                        .Border.LeftBorder = XLBorderStyleValues.Thin;
+
+                    // 見出しの背景色 
+                    tmpSheet.Range(tmpSheet.Cell("A1").Address, tmpSheet.Cell(3, tmpSheet.LastCellUsed().Address.ColumnNumber).Address)
+                        .Style.Fill.BackgroundColor = XLColor.WhiteSmoke;
+
+                    // 日曜日の背景色
+                    range = tmpSheet.Range(tmpSheet.Cell(3, ew + 9).Address, tmpSheet.Cell(3, tmpSheet.LastCellUsed().Address.ColumnNumber).Address);
+                    range.AddConditionalFormat()
+                         .WhenEquals("日")
+                         .Fill.SetBackgroundColor(XLColor.MistyRose);
+
+                    var range2 = tmpSheet.Range(tmpSheet.Cell(2, ew + 9).Address, tmpSheet.Cell(2, tmpSheet.LastCellUsed().Address.ColumnNumber).Address);
+
+                    if (ew == cEAST)
+                    {
+                        // 日曜日の日付の背景色
+                        range2.AddConditionalFormat()
+                              .WhenIsTrue("=I3=" + @"""日""")
+                              .Fill.BackgroundColor = XLColor.MistyRose;
+
+                        // ウィンドウ枠の固定
+                        tmpSheet.SheetView.Freeze(3, 2);
+
+                        // 見出し
+                        tmpSheet.Cell("A2").SetValue("氏名").Style.Font.SetBold(true).Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+                        tmpSheet.Cell("B2").SetValue("フリガナ").Style.Font.SetBold(true).Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+                        tmpSheet.Cell("C2").SetValue("入会年度").Style.Font.SetBold(true);
+                        tmpSheet.Cell("D2").SetValue("携帯電話").Style.Font.SetBold(true);
+                        tmpSheet.Cell("E2").SetValue("稼働日数").Style.Font.SetBold(true);
+                        tmpSheet.Cell("F2").SetValue("自己申告").Style.Font.SetBold(true);
+                        tmpSheet.Cell("F3").SetValue("日数").Style.Font.SetBold(true);
+                        tmpSheet.Cell("G2").SetValue("備考").Style.Font.SetBold(true);
+                        tmpSheet.Cell("H2").SetValue("更新日").Style.Font.SetBold(true);
+
+                        // 見出しはBold
+                        tmpSheet.Range(tmpSheet.Cell("I1").Address, tmpSheet.Cell(3, tmpSheet.LastCellUsed().Address.ColumnNumber).Address)
+                            .Style.Font.SetBold(true);
+                    }
+                    else if (ew == cWEST)
+                    {
+                        // 日曜日の日付の背景色
+                        range2.AddConditionalFormat()
+                              .WhenIsTrue("=J3=" + @"""日""")
+                              .Fill.BackgroundColor = XLColor.MistyRose;
+
+                        // ウィンドウ枠の固定
+                        tmpSheet.SheetView.Freeze(3, 3);
+
+                        // 見出し
+                        tmpSheet.Cell("A2").SetValue("地域").Style.Font.SetBold(true).Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+                        tmpSheet.Cell("B2").SetValue("氏名").Style.Font.SetBold(true).Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+                        tmpSheet.Cell("C2").SetValue("フリガナ").Style.Font.SetBold(true).Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+                        tmpSheet.Cell("D2").SetValue("入会年度").Style.Font.SetBold(true);
+                        tmpSheet.Cell("E2").SetValue("携帯電話").Style.Font.SetBold(true);
+                        tmpSheet.Cell("F2").SetValue("稼働日数").Style.Font.SetBold(true);
+                        tmpSheet.Cell("G2").SetValue("自己申告").Style.Font.SetBold(true);
+                        tmpSheet.Cell("G3").SetValue("日数").Style.Font.SetBold(true);
+                        tmpSheet.Cell("H2").SetValue("備考").Style.Font.SetBold(true);
+                        tmpSheet.Cell("I2").SetValue("更新日").Style.Font.SetBold(true);
+
+                        // 見出しはBold
+                        tmpSheet.Range(tmpSheet.Cell("J1").Address, tmpSheet.Cell(3, tmpSheet.LastCellUsed().Address.ColumnNumber).Address)
+                            .Style.Font.SetBold(true);
+                    }
+                    //}
+
+                    //    ew++;
+                    //}
+
+                    // テンプレートシートは削除する
+                    book.Worksheet("東").Delete();
+                    //book.Worksheet("西").Delete();
+
+                    // カレントシート 2018/02/26
+                    //tmpSheet = book.Worksheet(1);
+
+                    //保存処理
                     book.SaveAs(Properties.Settings.Default.xlsWorksPath);
                 }
             }
@@ -809,7 +1154,7 @@ namespace jfgSchedule
             if (t.cardNumBox != string.Empty && t.cardNumBox != t.cardNo.ToString())
             {
                 //セル下部へ点線ヨコ罫線を引く 2018/02/28
-                sheet.Range(sheet.Cell(t.sRow, 1).Address, 
+                sheet.Range(sheet.Cell(t.sRow, 1).Address,
                             sheet.Cell(t.sRow, sheet.LastCellUsed().Address.ColumnNumber).Address).Style.Border.BottomBorder = XLBorderStyleValues.Dotted;
 
                 //// 表の外枠右罫線を引く 2018/02/27
@@ -911,7 +1256,7 @@ namespace jfgSchedule
             jfgDataClassDataContext db = new jfgDataClassDataContext();
             var s = db.言語.Where(a => a.言語名1 != "J").OrderBy(a => a.言語番号);
 
-            gengo = new string [s.Count(), 2];
+            gengo = new string[s.Count(), 2];
 
             int i = 0;
             foreach (var item in s)
