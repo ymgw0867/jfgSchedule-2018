@@ -28,8 +28,10 @@ namespace jfgSchedule
             readLang();
 
             // 稼働表作成
-            //worksOutput();    // 2018/02/26
-            worksOutputXML();   // 2018/02/26   
+            worksOutputXML();
+
+            // ホテル向けガイドリスト(英語) 稼働表作成
+            worksOutputXML_FromExcel();
         }
 
         ///----------------------------------------------------
@@ -654,6 +656,27 @@ namespace jfgSchedule
 
             try
             {
+                // Excelガイドリストをテーブルに読み込む
+                IXLTable tbl;
+                using (var selectBook = new XLWorkbook(Properties.Settings.Default.xlsHotelGuideListPath))
+                using (var selSheet = selectBook.Worksheet(1))
+                {
+                    // カード番号開始セル
+                    var cell1 = selSheet.Cell("A4");
+                    // 最終行を取得
+                    var lastRow = selSheet.LastRowUsed().RowNumber();
+                    // カード番号最終セル
+                    var cell2 = selSheet.Cell(lastRow, 1);
+                    // カード番号をテーブルで取得
+                    tbl = selSheet.Range(cell1, cell2).AsTable();
+                }
+
+                // テーブル有効行がないときは終わる
+                if (tbl.RowCount() < 1)
+                {
+                    return;
+                }
+
                 using (var book = new XLWorkbook(Properties.Settings.Default.xlsKadouPath, XLEventTracking.Disabled))
                 {
                     // 稼働予定開始年月日
@@ -664,25 +687,8 @@ namespace jfgSchedule
 
                     int ew = 0;
 
-                    //while (ew < sCnt)
-                    //{
-
-                    // 言語別シートを作成
-                    //for (int i = 1; i <= gengo.GetLength(0); i++)
-                    //{
-                    //    int sNum = i + (10 * ew);
-
                     // シートを追加する
                     book.Worksheet("東").CopyTo(book, sheetName[ew] + "・" + gengo[0, 1], 1);
-
-                    //if (ew == cEAST)
-                    //{
-                    //    book.Worksheet("東").CopyTo(book, sheetName[ew] + "・" + gengo[i - 1, 1], sNum);
-                    //}
-                    //else if (ew == cWEST)
-                    //{
-                    //    book.Worksheet("西").CopyTo(book, sheetName[ew] + "・" + gengo[i - 1, 1], sNum);
-                    //}
 
                     // カレントシート
                     IXLWorksheet tmpSheet = book.Worksheet(1);
@@ -743,77 +749,54 @@ namespace jfgSchedule
                                              a.会員稼働予定
                                          });
 
-                    //// 西・LINQ
-                    //var linqWest = db.会員情報.Where(a => (a.言語1 == int.Parse(gCode) || a.言語2 == int.Parse(gCode) ||
-                    //                               a.言語3 == int.Parse(gCode) || a.言語4 == int.Parse(gCode) ||
-                    //                               a.言語5 == int.Parse(gCode)) && a.東西 == 2)
-                    //                     .OrderBy(a => a.地域コード).ThenBy(a => a.会員稼働予定.フリガナ).ThenBy(a => a.カード番号).ThenBy(a => a.会員稼働予定.年).ThenBy(a => a.会員稼働予定.月)
-                    //                     .Select(a => new
-                    //                     {
-                    //                         地域コード = a.地域コード,
-                    //                         地域名 = a.地域名,
-                    //                         cardno = a.カード番号,
-                    //                         氏名 = a.氏名,
-                    //                         携帯電話番号 = a.携帯電話番号,
-                    //                         JFG加入年 = a.JFG加入年,
-                    //                         a.会員稼働予定
-                    //                     });
-
-                    //if (ew == cEAST)    // 東
-                    //{
-
                     // 組合員予定申告データクラスのインスタンス生成
                     clsWorksTbl w = new clsWorksTbl();
-                    w.cardNumBox = string.Empty;
-                    w.sRow = sheetStRow;
-                    w.ew = ew;
+                    w.cardNumBox  = string.Empty;
+                    w.sRow        = sheetStRow;
+                    w.ew          = ew;
 
                     foreach (var t in linqEast)
                     {
+                        bool listMember = false;
+
+                        // ホテル向けガイドリスト(英語)を参照
+                        foreach (var row in tbl.Rows())
+                        {
+                            var card = row.Cell(1).Value;
+                            if (string.IsNullOrEmpty(card.ToString()))
+                            {
+                                continue;
+                            }
+
+                            if (card.ToString() == t.cardno.ToString())
+                            {
+                                listMember = true;
+                                break;
+                            }
+                        }
+
+                        // ホテル向けガイドリスト(英語)対象以外はネグる
+                        if (!listMember)
+                        {
+                            continue;
+                        }
+
                         w.cardNo = t.cardno;
                         w.氏名 = t.氏名;
                         w.携帯電話番号 = t.携帯電話番号;
                         w.JFG加入年 = (short)t.JFG加入年;
                         w.会員稼働予定 = t.会員稼働予定;
 
-                        // エクセル稼働表作成 2018/02/26
+                        // エクセル稼働表作成
                         if (!xlsCellsSetXML(w, tmpSheet))
                         {
                             continue;
                         }
                     }
-                    
-                    //}
-                    //else if (ew == cWEST)   // 西
-                    //{
-                    //    // 組合員予定申告データクラスのインスタンス生成
-                    //    clsWorksTbl w = new clsWorksTbl();
-                    //    w.cardNumBox = string.Empty;
-                    //    w.sRow = sheetStRow;
-                    //    w.ew = ew;
-
-                    //    foreach (var t in linqWest)
-                    //    {
-                    //        w.地域コード = (int)t.地域コード;
-                    //        w.地域名 = t.地域名;
-                    //        w.cardNo = t.cardno;
-                    //        w.氏名 = t.氏名;
-                    //        w.携帯電話番号 = t.携帯電話番号;
-                    //        w.JFG加入年 = (short)t.JFG加入年;
-                    //        w.会員稼働予定 = t.会員稼働予定;
-
-                    //        // エクセル稼働表作成 2018/02/26
-                    //        if (!xlsCellsSetXML(w, tmpSheet))
-                    //        {
-                    //            continue;
-                    //        }
-                    //    }
-                    //}
 
                     // カレンダーにない日の列削除
                     bool colDelStatus = true;
 
-                    // 2018/02/26
                     while (colDelStatus)
                     {
                         for (int cl = (ew + 9); cl <= tmpSheet.RangeUsed().RangeAddress.LastAddress.ColumnNumber; cl++)
@@ -963,17 +946,9 @@ namespace jfgSchedule
                         tmpSheet.Range(tmpSheet.Cell("J1").Address, tmpSheet.Cell(3, tmpSheet.LastCellUsed().Address.ColumnNumber).Address)
                             .Style.Font.SetBold(true);
                     }
-                    //}
-
-                    //    ew++;
-                    //}
 
                     // テンプレートシートは削除する
                     book.Worksheet("東").Delete();
-                    //book.Worksheet("西").Delete();
-
-                    // カレントシート 2018/02/26
-                    //tmpSheet = book.Worksheet(1);
 
                     //保存処理
                     book.SaveAs(Properties.Settings.Default.xlsHotelsWorksPath);

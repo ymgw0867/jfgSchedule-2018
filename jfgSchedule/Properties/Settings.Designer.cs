@@ -123,5 +123,14 @@ namespace jfgSchedule.Properties {
                 return ((string)(this["xlsHotelsWorksPath"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\JFGWORKS\\ホテル向けガイドリスト(英語) 2022.xlsx")]
+        public string xlsHotelGuideListPath {
+            get {
+                return ((string)(this["xlsHotelGuideListPath"]));
+            }
+        }
     }
 }

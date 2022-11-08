@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "jfgSchedule", "jfgSchedule\jfgSchedule.csproj", "{1B2334B9-3BC8-4E4B-9B84-E78F6F0F6916}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "scheTask", "scheTask\scheTask.csproj", "{CCFDE46C-2663-4A7E-9DBA-B15F04A18F35}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "scheDataDelete", "scheDataDelete\scheDataDelete.csproj", "{A4C1A830-6C65-47AD-95AA-967C0D426D39}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClosedXmlTest", "ClosedXmlTest\ClosedXmlTest.csproj", "{906A0AD4-FDBC-4D85-BFD0-D672F65FE0AA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,8 +65,23 @@ Global
 		{A4C1A830-6C65-47AD-95AA-967C0D426D39}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{A4C1A830-6C65-47AD-95AA-967C0D426D39}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{A4C1A830-6C65-47AD-95AA-967C0D426D39}.Release|x86.ActiveCfg = Release|Any CPU
+		{906A0AD4-FDBC-4D85-BFD0-D672F65FE0AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{906A0AD4-FDBC-4D85-BFD0-D672F65FE0AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{906A0AD4-FDBC-4D85-BFD0-D672F65FE0AA}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{906A0AD4-FDBC-4D85-BFD0-D672F65FE0AA}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{906A0AD4-FDBC-4D85-BFD0-D672F65FE0AA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{906A0AD4-FDBC-4D85-BFD0-D672F65FE0AA}.Debug|x86.Build.0 = Debug|Any CPU
+		{906A0AD4-FDBC-4D85-BFD0-D672F65FE0AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{906A0AD4-FDBC-4D85-BFD0-D672F65FE0AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{906A0AD4-FDBC-4D85-BFD0-D672F65FE0AA}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{906A0AD4-FDBC-4D85-BFD0-D672F65FE0AA}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{906A0AD4-FDBC-4D85-BFD0-D672F65FE0AA}.Release|x86.ActiveCfg = Release|Any CPU
+		{906A0AD4-FDBC-4D85-BFD0-D672F65FE0AA}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {13BF2B6D-D342-43B5-94F8-A5F85F68AC54}
 	EndGlobalSection
 EndGlobal
