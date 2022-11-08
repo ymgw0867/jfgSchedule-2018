@@ -107,8 +107,8 @@ namespace jfgSchedule.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=YMGW-PC\\SQLEXPRESS;Initial Catalog=JFG_MST;Persist Security Info=True" +
-            ";User ID=sa; Password=sqlpass")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=192.168.1.51\\SQLEXPRESS,1433;Initial Catalog=JFG_MST;Persist Security" +
+            " Info=True;User ID=jfg210915; Password=jfgpass")]
         public string JFG_MSTConnectionString {
             get {
                 return ((string)(this["JFG_MSTConnectionString"]));

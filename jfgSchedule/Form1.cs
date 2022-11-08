@@ -39,7 +39,6 @@ namespace jfgSchedule
             System.IO.File.AppendAllText(logFile, logText, System.Text.Encoding.GetEncoding(932));
             
             // 前回更新日時を取得
-            //DateTime dt = DateTime.Parse("2015/03/03 13:00");
             DateTime dt = getUpdateDate();
 
             // エクセル予定申告シートより会員稼働予定テーブルを更新する
@@ -52,12 +51,8 @@ namespace jfgSchedule
             // 更新された予定申告データがあったとき
             if (uCnt > 0)
             {
-                // アサイン担当用稼働表エクセルシートを作成する
-                clsWorks cw = new clsWorks();
-
-                // ログ出力
-                logText = DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToLongTimeString() + " アサイン担当用稼働表を更新しました。" + Environment.NewLine;
-                System.IO.File.AppendAllText(logFile, logText, System.Text.Encoding.GetEncoding(932));            
+                // アサイン担当用稼働表エクセルシートとホテル向けガイド稼働表を作成する：2022/11/08
+                clsWorks cw = new clsWorks(logFile);
             }
 
             // 終了ログ出力

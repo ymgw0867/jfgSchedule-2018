@@ -22,22 +22,23 @@ namespace jfgSchedule
         const int cEAST = 0;                            // 東定数
         const int cWEST = 1;                            // 西定数
 
-        public clsWorks()
+        public clsWorks(string logFile)
         {
             // 言語配列読み込み
             readLang();
 
             // 稼働表作成
-            worksOutputXML();
+            worksOutputXML(logFile);
 
             // ホテル向けガイドリスト(英語) 稼働表作成
-            worksOutputXML_FromExcel();
+            worksOutputXML_FromExcel(logFile);
         }
 
         ///----------------------------------------------------
         /// <summary>
         ///     稼働表作成 </summary>
         ///----------------------------------------------------
+        [Obsolete("旧メソッド。使用不可。", true)]
         public void worksOutput()
         {
             // Excelテンプレートシート開く
@@ -298,11 +299,13 @@ namespace jfgSchedule
             }
         }
 
-        ///----------------------------------------------------
         /// <summary>
-        ///     稼働表作成 : closedXML版 2018/02/22</summary>
-        ///----------------------------------------------------
-        public void worksOutputXML()
+        /// 稼働表作成 : closedXML版 2018/02/22
+        /// </summary>
+        /// <param name="logFile">
+        /// ログ出力パス
+        /// </param>
+        public void worksOutputXML(string logFile)
         {
             DateTime stDate;
             DateTime edDate;
@@ -634,6 +637,10 @@ namespace jfgSchedule
                     //保存処理 2018/02/26
                     book.SaveAs(Properties.Settings.Default.xlsWorksPath);
                 }
+
+                // ログ出力
+                string logText = DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToLongTimeString() + " アサイン担当用稼働表を更新しました。" + Environment.NewLine;
+                System.IO.File.AppendAllText(logFile, logText, System.Text.Encoding.GetEncoding(932));
             }
             catch (Exception ex)
             {
@@ -649,7 +656,10 @@ namespace jfgSchedule
         /// <summary>
         /// Excelシート名簿稼働表作成 : closedXML版 2022/11/07
         /// </summary>
-        public void worksOutputXML_FromExcel()
+        /// <param name="logFile">
+        /// ログ出力パス
+        /// </param>
+        public void worksOutputXML_FromExcel(string logFile)
         {
             DateTime stDate;
             DateTime edDate;
@@ -953,6 +963,10 @@ namespace jfgSchedule
                     //保存処理
                     book.SaveAs(Properties.Settings.Default.xlsHotelsWorksPath);
                 }
+
+                // ログ出力
+                string logText = DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToLongTimeString() + "ホテル向けガイド稼働表を更新しました。" + Environment.NewLine;
+                System.IO.File.AppendAllText(logFile, logText, System.Text.Encoding.GetEncoding(932));
             }
             catch (Exception ex)
             {
