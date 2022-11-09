@@ -310,8 +310,6 @@ namespace jfgSchedule
             DateTime stDate;
             DateTime edDate;
 
-            //IXLWorksheet tmpSheet = null;
-
             try
             {
                 using (var book = new XLWorkbook(Properties.Settings.Default.xlsKadouPath, XLEventTracking.Disabled))
@@ -352,7 +350,6 @@ namespace jfgSchedule
                                 // 該当月
                                 DateTime wDt = stDate.AddMonths(mon);
                                 xCol = 31 * mon + ew + 9;
-                                //tmpSheet.Cell(1, xCol).Value = wDt.ToShortDateString(); // 9,40,71,102,・・・ 2018/02/23
                                 tmpSheet.Cell(1, xCol).SetValue(wDt.Year + "年" + wDt.Month + "月"); // 9,40,71,102,・・・ 2018/02/28
 
                                 // 年月と開始列の配列にセット
@@ -631,16 +628,12 @@ namespace jfgSchedule
                     book.Worksheet("東").Delete();
                     book.Worksheet("西").Delete();
 
-                    // カレントシート 2018/02/26
-                    //tmpSheet = book.Worksheet(1);
-
                     //保存処理 2018/02/26
                     book.SaveAs(Properties.Settings.Default.xlsWorksPath);
                 }
 
                 // ログ出力
-                string logText = DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToLongTimeString() + " アサイン担当用稼働表を更新しました。" + Environment.NewLine;
-                System.IO.File.AppendAllText(logFile, logText, System.Text.Encoding.GetEncoding(932));
+                System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" アサイン担当用稼働表を更新しました。"), Encoding.GetEncoding(932));
             }
             catch (Exception ex)
             {
@@ -652,7 +645,6 @@ namespace jfgSchedule
             }
         }
 
-
         /// <summary>
         /// Excelシート名簿稼働表作成 : closedXML版 2022/11/07
         /// </summary>
@@ -661,6 +653,14 @@ namespace jfgSchedule
         /// </param>
         public void worksOutputXML_FromExcel(string logFile)
         {
+            // ホテル向けガイドリストExcelファイルの存在確認
+            if (!System.IO.File.Exists(Properties.Settings.Default.xlsHotelGuideListPath))
+            {
+                // ログ出力
+                System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" ホテル向けガイドリストExcelファイル（" + Properties.Settings.Default.xlsHotelGuideListPath + "）が見つかりませんでした。"), Encoding.GetEncoding(932));
+                return;
+            }
+
             DateTime stDate;
             DateTime edDate;
 
@@ -681,7 +681,7 @@ namespace jfgSchedule
                     tbl = selSheet.Range(cell1, cell2).AsTable();
                 }
 
-                // テーブル有効行がないときは終わる
+                // ガイドリストテーブル有効行がないときは終わる
                 if (tbl.RowCount() < 1)
                 {
                     return;
@@ -965,8 +965,7 @@ namespace jfgSchedule
                 }
 
                 // ログ出力
-                string logText = DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToLongTimeString() + "ホテル向けガイド稼働表を更新しました。" + Environment.NewLine;
-                System.IO.File.AppendAllText(logFile, logText, System.Text.Encoding.GetEncoding(932));
+                System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" ホテル向けガイド稼働表を更新しました。"), Encoding.GetEncoding(932));
             }
             catch (Exception ex)
             {

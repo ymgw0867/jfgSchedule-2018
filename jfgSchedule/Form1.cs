@@ -35,8 +35,7 @@ namespace jfgSchedule
             }
 
             // 開始ログ出力
-            logText = DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToLongTimeString() + " 処理を開始しました。" + Environment.NewLine;
-            System.IO.File.AppendAllText(logFile, logText, System.Text.Encoding.GetEncoding(932));
+            System.IO.File.AppendAllText(logFile, GetNowTime(" 処理を開始しました。"), System.Text.Encoding.GetEncoding(932));
             
             // 前回更新日時を取得
             DateTime dt = getUpdateDate();
@@ -54,13 +53,22 @@ namespace jfgSchedule
                 // アサイン担当用稼働表エクセルシートとホテル向けガイド稼働表を作成する：2022/11/08
                 clsWorks cw = new clsWorks(logFile);
             }
+            else
+            {
+                // ログ出力
+                System.IO.File.AppendAllText(logFile, GetNowTime(" 更新された予定申告データはありませんでした。"), System.Text.Encoding.GetEncoding(932));
+            }
 
             // 終了ログ出力
-            logText = DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToLongTimeString() + " 処理を終了しました。" + Environment.NewLine;
-            System.IO.File.AppendAllText(logFile, logText, System.Text.Encoding.GetEncoding(932));
+            System.IO.File.AppendAllText(logFile, GetNowTime(" 処理を終了しました。"), System.Text.Encoding.GetEncoding(932));
             
             // 終了
             Environment.Exit(0);
+        }
+
+        public static string GetNowTime(string msg)
+        {
+            return DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToLongTimeString() + ":" + DateTime.Now.Millisecond.ToString().PadLeft(3, '0') + msg + Environment.NewLine;
         }
 
         /// ----------------------------------------------------

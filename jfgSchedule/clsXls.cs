@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Excel = Microsoft.Office.Interop.Excel;
+//using Excel = Microsoft.Office.Interop.Excel;
 using ClosedXML.Excel;
 
 namespace jfgSchedule
@@ -43,13 +43,10 @@ namespace jfgSchedule
                 if (dt.CompareTo(sTime) >= 0)
                 {
                     // 組合員稼働予定テーブルを更新します
-                    //dataOutput(file, dt);
                     dataOutputXML(file, dt);    // 2018/02/22
                     sCnt++;
                 }
             }
-
-            //Console.WriteLine(sCnt.ToString()+ "枚の予定申告書シートから会員稼働予定テーブルが更新されました");
 
             // ログ出力
             if (!(log.Length == 1 && log[0] == null))
@@ -66,185 +63,6 @@ namespace jfgSchedule
 
             // 更新データ数を返す
             return sCnt;
-        }
-
-        ///------------------------------------------------------------------
-        /// <summary>
-        ///     会員稼働予定テーブル更新メインルーチン </summary>
-        /// <param name="sFile">
-        ///     予定申告エクセルファイルパス</param>
-        ///------------------------------------------------------------------
-        private void dataOutput(string sFile, DateTime sDt)
-        {
-            // Excelテンプレートシート開く
-            string sAppPath = System.AppDomain.CurrentDomain.BaseDirectory;
-
-            Excel.Application oXls = new Excel.Application();
-
-            Excel.Workbook oXlsBook = (Excel.Workbook)(oXls.Workbooks.Open(sFile, Type.Missing, Type.Missing, Type.Missing, Type.Missing,
-                                               Type.Missing, Type.Missing, Type.Missing, Type.Missing,
-                                               Type.Missing, Type.Missing, Type.Missing, Type.Missing,
-                                               Type.Missing, Type.Missing));
-
-            Excel.Worksheet oxlsSheet = (Excel.Worksheet)oXlsBook.Sheets[1];
-
-            Excel.Range rng;
-            Excel.Range rngYear;
-            Excel.Range rngMonth;
-            Excel.Range[] rngs = new Microsoft.Office.Interop.Excel.Range[31];
-
-            string lg = string.Empty;
-            
-            jfgDataClassDataContext db = new jfgDataClassDataContext();
-
-            // 個人データクラス
-            clsPersonalData cPData = new clsPersonalData();
-            cPData.sDt = sDt;
-
-            try
-            {
-                // 予定申告書シートよりカード番号取得
-                rng = (Excel.Range)oxlsSheet.Cells[2, 11];
-                cPData.cNo = Utility.cNumberCheck(rng.Text.Trim());
-
-                if (cPData.cNo == -1)
-                {
-                    // ログ文字列作成
-                    lg = DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToLongTimeString() + " " + System.IO.Path.GetFileName(sFile) + " " +
-                        "カード番号が正しい数字情報ではありません : 更新から除外されました。";
-
-                    // ログ配列に出力
-                    arrayLog(lg);
-
-                    // 2017/11/30 以下、コメント化
-                    //// ExcelBookをクローズ
-                    //oXlsBook.Close(Type.Missing, Type.Missing, Type.Missing);
-
-                    //// Excel終了
-                    //oXls.Quit();
-
-                    // 戻る
-                    return;
-                }
-                
-                // 会員情報よりフリガナを取得
-                var s = db.会員情報.Where(a => a.カード番号 == cPData.cNo);
-                if (s.Count() == 0)
-                {
-                    // ログ文字列作成
-                    lg = DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToLongTimeString() + " " + System.IO.Path.GetFileName(sFile) + " " +
-                        "カード番号に該当する会員が存在しません [" + cPData.cNo.ToString() + "] : 更新から除外されました。";
-
-                    // ログ配列に出力
-                    arrayLog(lg);
-
-                    // 2017/11/30 以下、コメント化
-                    //// ExcelBookをクローズ
-                    //oXlsBook.Close(Type.Missing, Type.Missing, Type.Missing);
-
-                    //// Excel終了
-                    //oXls.Quit();
-
-                    // 戻る
-                    return;
-                }
-                else
-                {
-                    foreach (var t in s)
-                    {
-                        cPData.furi = t.フリガナ;
-                    }
-                }
-
-                // 各月の予定を会員稼働予定テーブルに書き込む
-                for (int i = 0; i < 6; i++)
-                {
-                    // 年を取得
-                    rngYear = (Excel.Range)oxlsSheet.Cells[5, i * 4 + 2];
-                    cPData.eYear = cIntCheck(rangeNullToString(rngYear.Text).Trim());
-
-                    if (cPData.eYear == -1)
-                    {
-                        // ログ文字列作成
-                        lg = DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToLongTimeString() + " " + System.IO.Path.GetFileName(sFile) + " " +
-                            (i + 1).ToString() + "番目の年が正しくありません : 更新から除外されました。";
-
-                        // ログ配列に出力
-                        arrayLog(lg);
-
-                        // 次ぎへ
-                        continue;
-                    }
-
-                    // 月を取得
-                    rngMonth = (Excel.Range)oxlsSheet.Cells[5, i * 4 + 3];
-                    cPData.eMonth = cIntCheck(rangeNullToString(rngMonth.Text).Trim());
-
-                    if (cPData.eMonth == -1)
-                    {
-                        // ログ文字列作成
-                        lg = DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToLongTimeString() + " " + System.IO.Path.GetFileName(sFile) + " " +
-                            (i + 1).ToString() + "番目の月が正しくありません : 更新から除外されました。";
-
-                        // ログ配列に出力
-                        arrayLog(lg);
-
-                        // 次ぎへ
-                        continue;
-                    }
-
-                    // 過去の予定は更新しない
-                    int nowYYMM = DateTime.Today.Year * 100 + DateTime.Today.Month;
-                    int xlsYYMM = cPData.eYear * 100 + cPData.eMonth;
-                    if (xlsYYMM < nowYYMM) continue; // 次へ
-
-                    // 連絡事項を取得
-                    rng = (Excel.Range)oxlsSheet.Cells[2, 15];
-                    cPData.memo = rng.Text.Trim();
-
-                    // 該当列を取得
-                    cPData.colidx = i * 4 + 3;
-
-                    // エクセルシートオブジェクトを取得
-                    cPData.exl = oxlsSheet;
-
-                    // データ書き込み
-                    if (saveData(cPData))
-                    {
-                        // ログ文字列作成
-                        lg = DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToLongTimeString() + " " + System.IO.Path.GetFileName(sFile) + " " +
-                            cPData.eYear.ToString() + "年" + cPData.eMonth.ToString() + "月の予定が登録されました。";
-                    }
-                    else
-                    {
-                        // ログ文字列作成
-                        lg = DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToLongTimeString() + " " + System.IO.Path.GetFileName(sFile) + " " +
-                            cPData.eYear.ToString() + "年" + cPData.eMonth.ToString() + "月の予定の登録に失敗しました。";                        
-                    }
-
-                    // ログ配列に出力
-                    arrayLog(lg);
-                }
-
-                //Console.WriteLine(cPData.cNo + " " + cPData.furi);
-            }
-            catch(Exception e)
-            {
-
-            }
-            finally
-            {
-                // ExcelBookをクローズ
-                oXlsBook.Close(Type.Missing, Type.Missing, Type.Missing);
-
-                // Excel終了
-                oXls.Quit();
-
-                // COM オブジェクトの参照カウントを解放する 
-                System.Runtime.InteropServices.Marshal.ReleaseComObject(oxlsSheet);
-                System.Runtime.InteropServices.Marshal.ReleaseComObject(oXlsBook);
-                System.Runtime.InteropServices.Marshal.ReleaseComObject(oXls);
-            }
         }
 
         ///------------------------------------------------------------------
@@ -277,7 +95,8 @@ namespace jfgSchedule
                     if (cPData.cNo == -1)
                     {
                         // ログ文字列作成
-                        lg = DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToLongTimeString() + " " + System.IO.Path.GetFileName(sFile) + " " +
+                        lg = DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToLongTimeString() + 
+                            ":" + DateTime.Now.Millisecond.ToString().PadLeft(3, '0') + " " + System.IO.Path.GetFileName(sFile) + " " +
                             "カード番号が正しい数字情報ではありません : 更新から除外されました。";
 
                         // ログ配列に出力
@@ -291,7 +110,8 @@ namespace jfgSchedule
                     if (!db.会員情報.Any(a => a.カード番号 == cPData.cNo))
                     {
                         // ログ文字列作成
-                        lg = DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToLongTimeString() + " " + System.IO.Path.GetFileName(sFile) + " " +
+                        lg = DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToLongTimeString() +
+                            ":" + DateTime.Now.Millisecond.ToString().PadLeft(3, '0') + " " + System.IO.Path.GetFileName(sFile) + " " +
                             "カード番号に該当する会員が存在しません [" + cPData.cNo.ToString() + "] : 更新から除外されました。";
 
                         // ログ配列に出力
@@ -317,8 +137,9 @@ namespace jfgSchedule
                         if (cPData.eYear == -1)
                         {
                             // ログ文字列作成
-                            lg = DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToLongTimeString() + " " + System.IO.Path.GetFileName(sFile) + " " +
-                                (i + 1).ToString() + "番目の年が正しくありません : 更新から除外されました。";
+                            lg = DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToLongTimeString() +
+                            ":" + DateTime.Now.Millisecond.ToString().PadLeft(3, '0') + " " + System.IO.Path.GetFileName(sFile) + " " +
+                            (i + 1).ToString() + "番目の年が正しくありません : 更新から除外されました。";
 
                             // ログ配列に出力
                             arrayLog(lg);
@@ -333,8 +154,9 @@ namespace jfgSchedule
                         if (cPData.eMonth == -1)
                         {
                             // ログ文字列作成
-                            lg = DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToLongTimeString() + " " + System.IO.Path.GetFileName(sFile) + " " +
-                                (i + 1).ToString() + "番目の月が正しくありません : 更新から除外されました。";
+                            lg = DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToLongTimeString() +
+                            ":" + DateTime.Now.Millisecond.ToString().PadLeft(3, '0') + " " + System.IO.Path.GetFileName(sFile) + " " +
+                            (i + 1).ToString() + "番目の月が正しくありません : 更新から除外されました。";
 
                             // ログ配列に出力
                             arrayLog(lg);
@@ -364,14 +186,16 @@ namespace jfgSchedule
                         if (saveData(cPData))
                         {
                             // ログ文字列作成
-                            lg = DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToLongTimeString() + " " + System.IO.Path.GetFileName(sFile) + " " +
-                                cPData.eYear.ToString() + "年" + cPData.eMonth.ToString() + "月の予定が登録されました。";
+                            lg = DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToLongTimeString() +
+                            ":" + DateTime.Now.Millisecond.ToString().PadLeft(3, '0') + " " + System.IO.Path.GetFileName(sFile) + " " +
+                            cPData.eYear.ToString() + "年" + cPData.eMonth.ToString() + "月の予定が登録されました。";
                         }
                         else
                         {
                             // ログ文字列作成
-                            lg = DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToLongTimeString() + " " + System.IO.Path.GetFileName(sFile) + " " +
-                                cPData.eYear.ToString() + "年" + cPData.eMonth.ToString() + "月の予定の登録に失敗しました。";
+                            lg = DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToLongTimeString() +
+                            ":" + DateTime.Now.Millisecond.ToString().PadLeft(3, '0') + " " + System.IO.Path.GetFileName(sFile) + " " +
+                            cPData.eYear.ToString() + "年" + cPData.eMonth.ToString() + "月の予定の登録に失敗しました。";
                         }
 
                         // ログ配列に出力
@@ -404,7 +228,6 @@ namespace jfgSchedule
 
             try
             {
-                //Excel.Range[] rngs = new Microsoft.Office.Interop.Excel.Range[31];
                 string lg = string.Empty;
 
                 // 月末日を取得する（翌月1日の1日前）
@@ -520,9 +343,6 @@ namespace jfgSchedule
 
             for (int i = 0; i < 31; i++)
             {
-                // コメント化 2019/07/18
-                //string dVal = Utility.nulltoString(cPData.sheet.Cell(sRow + i, cPData.colidx).Value);
-
                 // Trim()を追加 2019/07/18
                 string dVal = Utility.nulltoString(cPData.sheet.Cell(sRow + i, cPData.colidx).Value).Trim();
 
@@ -648,10 +468,7 @@ namespace jfgSchedule
         private bool getScheRec(clsPersonalData cPData)
         {
             //var s = db.会員稼働予定.Where(a => a.カード番号 == cPData.cNo && a.年 == cPData.eYear && a.月 == cPData.eMonth);
-            //if (s.Count() != 0) return true;
-            //else return false;
 
-            var s = db.会員稼働予定.Where(a => a.カード番号 == cPData.cNo && a.年 == cPData.eYear && a.月 == cPData.eMonth);
             if (db.会員稼働予定.Any(a => a.カード番号 == cPData.cNo && a.年 == cPData.eYear && a.月 == cPData.eMonth))
             {
                 return true;
