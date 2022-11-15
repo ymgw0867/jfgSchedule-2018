@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Excel = Microsoft.Office.Interop.Excel;
+//using Excel = Microsoft.Office.Interop.Excel;
 
 namespace jfgSchedule
 {
@@ -18,7 +18,7 @@ namespace jfgSchedule
         public int eYear { get; set; }
         public int eMonth { get; set; }
         public DateTime sDt { get; set; }
-        public Excel.Worksheet exl { get; set; }
+        //public Excel.Worksheet exl { get; set; }
         public int colidx { get; set; }
         public string memo { get; set; }
         public int kadouDays { get; set; }
