@@ -452,19 +452,27 @@ namespace jfgSchedule
                         sheetYYMM[mon, 0] = wDt.Year.ToString() + wDt.Month.ToString().PadLeft(2, '0');
                         sheetYYMM[mon, 1] = xCol.ToString();
 
-                        DateTime dDay;
-
                         // 該当月の暦
                         int dy = 0;
                         while (dy < 31)
                         {
-                            if (DateTime.TryParse(wDt.Year.ToString() + "/" + wDt.Month.ToString() + "/" + (dy + 1).ToString(), out dDay))
+                            if (DateTime.TryParse(wDt.Year.ToString() + "/" + wDt.Month.ToString() + "/" + (dy + 1).ToString(), out DateTime dDay))
                             {
-                                tmpSheet.Cell(2, xCol + dy).SetValue((dy + 1).ToString());    // 日
-                                tmpSheet.Cell(3, xCol + dy).SetValue(dDay.ToString("ddd"));   // 曜日
+                                if (dDay >= DateTime.Today)
+                                {
+                                    tmpSheet.Cell(2, xCol + dy).SetValue((dy + 1).ToString());    // 日
+                                    tmpSheet.Cell(3, xCol + dy).SetValue(dDay.ToString("ddd"));   // 曜日
+                                }
+                                else
+                                {
+                                    // 作成前日以前はセルを空白とする：2023/01/25
+                                    tmpSheet.Cell(2, xCol + dy).SetValue(string.Empty);
+                                    tmpSheet.Cell(3, xCol + dy).SetValue(string.Empty);
+                                }
                             }
                             else
                             {
+                                // 存在しない日付はセルを空白とする
                                 tmpSheet.Cell(2, xCol + dy).SetValue(string.Empty);
                                 tmpSheet.Cell(3, xCol + dy).SetValue(string.Empty);
                             }
@@ -691,6 +699,9 @@ namespace jfgSchedule
                         tmpSheet.Range(tmpSheet.Cell("J1").Address, tmpSheet.Cell(3, tmpSheet.LastCellUsed().Address.ColumnNumber).Address)
                             .Style.Font.SetBold(true);
                     }
+
+                    // フィルタの設定：2023/1/25
+                    tmpSheet.Row(3).SetAutoFilter();
 
                     // テンプレートシートは削除する
                     book.Worksheet("東").Delete();
