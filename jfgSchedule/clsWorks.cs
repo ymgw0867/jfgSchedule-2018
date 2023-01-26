@@ -460,6 +460,7 @@ namespace jfgSchedule
                             {
                                 if (dDay >= DateTime.Today)
                                 {
+                                    tmpSheet.Cell(1, xCol + dy).SetValue(wDt.Year + "年" + wDt.Month + "月");  // 年月：2023/01/26
                                     tmpSheet.Cell(2, xCol + dy).SetValue((dy + 1).ToString());    // 日
                                     tmpSheet.Cell(3, xCol + dy).SetValue(dDay.ToString("ddd"));   // 曜日
                                 }
@@ -576,25 +577,43 @@ namespace jfgSchedule
                                    .Border.BottomBorder = XLBorderStyleValues.Thin;
                     for (int cl = (ew + 9); cl <= tmpSheet.LastCellUsed().Address.ColumnNumber; cl++)
                     {
+                        // 2023/01/26 : 作成日以前の列が削除されたため2日以降で始まるケースあり
+                        if (stCell == 0)
+                        {
+                            stCell = cl;
+                        }
+
                         if (Utility.nulltoString(tmpSheet.Cell(2, cl).Value).Trim() == "1")
                         {
-                            if (stCell == 0)
-                            {
-                                stCell = cl;
-                            }
-                            else
-                            {
-                                // セル結合
-                                tmpSheet.Range(tmpSheet.Cell(1, stCell).Address, tmpSheet.Cell(1, edCell).Address).Merge(false);
+                            // 2023/01/26 コメント化
+                            //if (stCell == 0)
+                            //{
+                            //    stCell = cl;
+                            //}
+                            //else
+                            //{
+                            //    // セル結合
+                            //    tmpSheet.Range(tmpSheet.Cell(1, stCell).Address, tmpSheet.Cell(1, edCell).Address).Merge(false);
 
-                                // IsMerge()パフォ劣化回避のためのStyle変更
-                                for (int cc = stCell; cc <= edCell; cc++)
-                                {
-                                    tmpSheet.Cell(1, cc).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                                }
+                            //    // IsMerge()パフォ劣化回避のためのStyle変更
+                            //    for (int cc = stCell; cc <= edCell; cc++)
+                            //    {
+                            //        tmpSheet.Cell(1, cc).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                            //    }
 
-                                stCell = cl;
+                            //    stCell = cl;
+                            //}
+
+                            // セル結合
+                            tmpSheet.Range(tmpSheet.Cell(1, stCell).Address, tmpSheet.Cell(1, edCell).Address).Merge(false);
+
+                            // IsMerge()パフォ劣化回避のためのStyle変更
+                            for (int cc = stCell; cc <= edCell; cc++)
+                            {
+                                tmpSheet.Cell(1, cc).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
                             }
+
+                            stCell = cl;
                         }
                         else
                         {
