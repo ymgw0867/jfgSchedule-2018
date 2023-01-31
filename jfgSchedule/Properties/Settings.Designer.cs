@@ -12,7 +12,7 @@ namespace jfgSchedule.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.3.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.4.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -106,17 +106,6 @@ namespace jfgSchedule.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=192.168.1.51\\SQLEXPRESS,1433;Initial Catalog=JFG_MST;Persist Security" +
-            " Info=True;User ID=jfg210915; Password=jfgpass")]
-        public string JFG_MSTConnectionString {
-            get {
-                return ((string)(this["JFG_MSTConnectionString"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("C:\\JFGWORKS\\ホテル向けガイド稼働予定表.xlsx")]
         public string xlsHotelsWorksPath {
             get {
@@ -130,6 +119,26 @@ namespace jfgSchedule.Properties {
         public string xlsHotelGuideListPath {
             get {
                 return ((string)(this["xlsHotelGuideListPath"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=192.168.1.51\\SQLEXPRESS,1433;Initial Catalog=JFG_MST;Persist Security" +
+            " Info=True;User ID=jfg210915; Password=jfgpass")]
+        public string JFG_MSTConnectionString {
+            get {
+                return ((string)(this["JFG_MSTConnectionString"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\JFGWORKS\\新ホテル向けガイドリスト.xlsx")]
+        public string xlsNewHotelGuideListPath {
+            get {
+                return ((string)(this["xlsNewHotelGuideListPath"]));
             }
         }
     }
