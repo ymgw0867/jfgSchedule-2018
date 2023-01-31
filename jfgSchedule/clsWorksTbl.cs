@@ -18,5 +18,7 @@ namespace jfgSchedule
         public int sRow { get; set; }
         public string cardNumBox { get; set; }
         public int ew { get; set; }
+
+        public ClosedXML.Excel.IXLRangeRow 新ホテル向けガイドリスト { get; set; }
     }
 }
