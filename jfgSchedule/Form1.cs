@@ -51,7 +51,7 @@ namespace jfgSchedule
             if (uCnt > 0)
             {
                 // アサイン担当用稼働表エクセルシートとホテル向けガイド稼働表を作成する：2022/11/08
-                clsWorks cw = new clsWorks(logFile);
+                _ = new clsWorks(logFile);
             }
             else
             {
