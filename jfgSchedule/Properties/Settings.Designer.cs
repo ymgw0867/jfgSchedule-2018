@@ -141,5 +141,14 @@ namespace jfgSchedule.Properties {
                 return ((string)(this["xlsNewHotelGuideListPath"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\JFGWORKS\\ホテル稼働予定表Temp.xlsx")]
+        public string xlsHotelKadouPath {
+            get {
+                return ((string)(this["xlsHotelKadouPath"]));
+            }
+        }
     }
 }

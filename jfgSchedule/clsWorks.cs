@@ -812,7 +812,7 @@ namespace jfgSchedule
                 }
 
                 // 稼働表テンプレートシート
-                using (var book = new XLWorkbook(Properties.Settings.Default.xlsKadouPath, XLEventTracking.Disabled))
+                using (var book = new XLWorkbook(Properties.Settings.Default.xlsHotelKadouPath, XLEventTracking.Disabled))
                 {
                     // 稼働予定開始年月日
                     stDate = DateTime.Parse(DateTime.Today.Year.ToString() + "/" + DateTime.Today.Month.ToString() + "/01");
@@ -822,7 +822,7 @@ namespace jfgSchedule
 
                     int ew = 0;
 
-                    const int xCol = 25;   // 日列初期値
+                    const int xCol = 26;   // 日列初期値
 
                     // 稼働予定期間のカレンダーをセット
                     for (int mon = 0; mon < 6; mon++)
@@ -840,32 +840,33 @@ namespace jfgSchedule
                         // カレントシート : 2023/01/30
                         IXLWorksheet tmpSheet = book.Worksheet(mon + 2);
 
-                        // 見出し 2023/01/31
-                        tmpSheet.Cell("A1").SetValue("氏名").Style.Font.SetBold(true).Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
-                        tmpSheet.Cell("B1").SetValue("フリガナ").Style.Font.SetBold(true).Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
-                        tmpSheet.Cell("C1").SetValue(headerArray[0]).Style.Font.SetBold(true); 
-                        tmpSheet.Cell("D1").SetValue(headerArray[1]).Style.Font.SetBold(true);
-                        tmpSheet.Cell("E1").SetValue(headerArray[2]).Style.Font.SetBold(true);
-                        tmpSheet.Cell("F1").SetValue(headerArray[3]).Style.Font.SetBold(true);
-                        tmpSheet.Cell("G1").SetValue(headerArray[4]).Style.Font.SetBold(true);
-                        tmpSheet.Cell("H1").SetValue(headerArray[5]).Style.Font.SetBold(true);
-                        tmpSheet.Cell("I1").SetValue(headerArray[6]).Style.Font.SetBold(true);
-                        tmpSheet.Cell("J1").SetValue(headerArray[7]).Style.Font.SetBold(true);
-                        tmpSheet.Cell("K1").SetValue(headerArray[8]).Style.Font.SetBold(true);
-                        tmpSheet.Cell("L1").SetValue(headerArray[9]).Style.Font.SetBold(true);
-                        tmpSheet.Cell("M1").SetValue(headerArray[10]).Style.Font.SetBold(true);
-                        tmpSheet.Cell("N1").SetValue(headerArray[11]).Style.Font.SetBold(true);
-                        tmpSheet.Cell("O1").SetValue(headerArray[12]).Style.Font.SetBold(true);
-                        tmpSheet.Cell("P1").SetValue(headerArray[13]).Style.Font.SetBold(true);
-                        tmpSheet.Cell("Q1").SetValue(headerArray[14]).Style.Font.SetBold(true);
-                        tmpSheet.Cell("R1").SetValue(headerArray[15]).Style.Font.SetBold(true);
-                        tmpSheet.Cell("S1").SetValue(headerArray[16]).Style.Font.SetBold(true);
-                        tmpSheet.Cell("T1").SetValue("入会年度").Style.Font.SetBold(true);
-                        tmpSheet.Cell("U1").SetValue("稼働日数").Style.Font.SetBold(true);
-                        tmpSheet.Cell("V1").SetValue("自己申告日数").Style.Font.SetBold(true);
-                        //tmpSheet.Cell("V3").SetValue("日数").Style.Font.SetBold(true);
-                        tmpSheet.Cell("W1").SetValue("備考").Style.Font.SetBold(true);
-                        tmpSheet.Cell("X1").SetValue("更新日").Style.Font.SetBold(true);
+                        // 見出し 2023/02/06
+                        //tmpSheet.Cell("A1").SetValue("カード番号").Style.Font.SetBold(true).Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+                        tmpSheet.Cell("A1").SetValue("カード番号").Style.Font.SetBold(true);
+                        tmpSheet.Cell("B1").SetValue("氏名").Style.Font.SetBold(true);
+                        tmpSheet.Cell("C1").SetValue("フリガナ").Style.Font.SetBold(true);
+                        tmpSheet.Cell("D1").SetValue(headerArray[0]).Style.Font.SetBold(true); 
+                        tmpSheet.Cell("E1").SetValue(headerArray[1]).Style.Font.SetBold(true);
+                        tmpSheet.Cell("F1").SetValue(headerArray[2]).Style.Font.SetBold(true);
+                        tmpSheet.Cell("G1").SetValue(headerArray[3]).Style.Font.SetBold(true);
+                        tmpSheet.Cell("H1").SetValue(headerArray[4]).Style.Font.SetBold(true);
+                        tmpSheet.Cell("I1").SetValue(headerArray[5]).Style.Font.SetBold(true);
+                        tmpSheet.Cell("J1").SetValue(headerArray[6]).Style.Font.SetBold(true);
+                        tmpSheet.Cell("K1").SetValue(headerArray[7]).Style.Font.SetBold(true);
+                        tmpSheet.Cell("L1").SetValue(headerArray[8]).Style.Font.SetBold(true);
+                        tmpSheet.Cell("M1").SetValue(headerArray[9]).Style.Font.SetBold(true);
+                        tmpSheet.Cell("N1").SetValue(headerArray[10]).Style.Font.SetBold(true);
+                        tmpSheet.Cell("O1").SetValue(headerArray[11]).Style.Font.SetBold(true);
+                        tmpSheet.Cell("P1").SetValue(headerArray[12]).Style.Font.SetBold(true);
+                        tmpSheet.Cell("Q1").SetValue(headerArray[13]).Style.Font.SetBold(true);
+                        tmpSheet.Cell("R1").SetValue(headerArray[14]).Style.Font.SetBold(true);
+                        tmpSheet.Cell("S1").SetValue(headerArray[15]).Style.Font.SetBold(true);
+                        tmpSheet.Cell("T1").SetValue(headerArray[16]).Style.Font.SetBold(true);
+                        tmpSheet.Cell("U1").SetValue("入会年度").Style.Font.SetBold(true);
+                        tmpSheet.Cell("V1").SetValue("稼働日数").Style.Font.SetBold(true);
+                        tmpSheet.Cell("W1").SetValue("自己申告日数").Style.Font.SetBold(true);
+                        tmpSheet.Cell("X1").SetValue("備考").Style.Font.SetBold(true);
+                        tmpSheet.Cell("Y1").SetValue("更新日").Style.Font.SetBold(true);
 
                         // 該当年月
                         tmpSheet.Cell(1, xCol).SetValue(wDt.Year + "年" + wDt.Month + "月"); 
@@ -1001,30 +1002,30 @@ namespace jfgSchedule
 
         private void SheetFormat(IXLWorksheet tmpSheet, int sCol, string logFile)
         {
-            //// カレンダーにない日の列削除
-            //bool colDelStatus = true;
+            // カレンダーにない日の列削除
+            bool colDelStatus = true;
 
-            //while (colDelStatus)
-            //{
-            //    for (int cl = sCol; cl <= tmpSheet.RangeUsed().RangeAddress.LastAddress.ColumnNumber; cl++)
-            //    {
-            //        if (!Utility.NumericCheck(Utility.nulltoString(tmpSheet.Cell(2, cl).Value).Trim()))
-            //        {
-            //            tmpSheet.Column(cl).Delete();
-            //            colDelStatus = true;
-            //            break;
-            //        }
-            //        else
-            //        {
-            //            colDelStatus = false;
-            //        }
-            //    }
-            //}
-            //System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" カレンダーにない日の列削除"), Encoding.GetEncoding(932));
+            while (colDelStatus)
+            {
+                for (int cl = sCol; cl <= tmpSheet.RangeUsed().RangeAddress.LastAddress.ColumnNumber; cl++)
+                {
+                    if (!Utility.NumericCheck(Utility.nulltoString(tmpSheet.Cell(2, cl).Value).Trim()))
+                    {
+                        tmpSheet.Column(cl).Delete();
+                        colDelStatus = true;
+                        break;
+                    }
+                    else
+                    {
+                        colDelStatus = false;
+                    }
+                }
+            }
+            System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" カレンダーにない日の列削除"), Encoding.GetEncoding(932));
 
-            // セル結合
-            //tmpSheet.Range(tmpSheet.Cell(1, sCol).Address, tmpSheet.Cell(1, tmpSheet.LastCellUsed().Address.ColumnNumber).Address)
-            //.Merge(false);
+            //セル結合
+            tmpSheet.Range(tmpSheet.Cell(1, sCol).Address, tmpSheet.Cell(1, tmpSheet.LastCellUsed().Address.ColumnNumber).Address)
+            .Merge(false);
 
             // IsMerge()パフォ劣化回避のためのStyle変更
             for (int cc = sCol; cc <= tmpSheet.LastCellUsed().Address.ColumnNumber; cc++)
@@ -1080,7 +1081,7 @@ namespace jfgSchedule
             System.IO.File.AppendAllText(logFile, Form1.GetNowTime(tmpSheet.Name + " ウィンドウ枠の固定"), Encoding.GetEncoding(932));
 
             // 見出しはBold
-            tmpSheet.Range(tmpSheet.Cell("Y1").Address, tmpSheet.Cell(3, tmpSheet.LastCellUsed().Address.ColumnNumber).Address)
+            tmpSheet.Range(tmpSheet.Cell("Z1").Address, tmpSheet.Cell(3, tmpSheet.LastCellUsed().Address.ColumnNumber).Address)
                 .Style.Font.SetBold(true);
             System.IO.File.AppendAllText(logFile, Form1.GetNowTime(tmpSheet.Name + " 見出しをBold"), Encoding.GetEncoding(932));
 
@@ -1252,25 +1253,26 @@ namespace jfgSchedule
                         sheet.Cell(t.sRow, sheet.LastCellUsed().Address.ColumnNumber).Address).Style.Border.BottomBorder = XLBorderStyleValues.Dotted;
 
             // 作業用シートにデータ貼り付け
-            sheet.Cell(t.sRow, 1).SetValue(t.氏名);
-            sheet.Cell(t.sRow, 2).SetValue(t.会員稼働予定.フリガナ);
+            sheet.Cell(t.sRow, 1).SetValue(t.cardNo);
+            sheet.Cell(t.sRow, 2).SetValue(t.氏名);
+            sheet.Cell(t.sRow, 3).SetValue(t.会員稼働予定.フリガナ);
 
             // 新ホテル向けガイドリストExcelシートの項目を貼り付ける：2023/01/31
-            sheet.Cell(t.sRow, 3).SetValue(GetNewHotelXCellValue(t.新ホテル向けガイドリスト.Cell(14).Value));
+            sheet.Cell(t.sRow, 4).SetValue(GetNewHotelXCellValue(t.新ホテル向けガイドリスト.Cell(14).Value));
             for (int cellNum = 4; cellNum < 14; cellNum++)
+            {
+                sheet.Cell(t.sRow, cellNum + 1).SetValue(GetNewHotelXCellValue(t.新ホテル向けガイドリスト.Cell(cellNum).Value));
+            }
+            for (int cellNum = 16; cellNum < 21; cellNum++)
             {
                 sheet.Cell(t.sRow, cellNum).SetValue(GetNewHotelXCellValue(t.新ホテル向けガイドリスト.Cell(cellNum).Value));
             }
-            for (int cellNum = 15; cellNum < 21; cellNum++)
-            {
-                sheet.Cell(t.sRow, cellNum - 1).SetValue(GetNewHotelXCellValue(t.新ホテル向けガイドリスト.Cell(cellNum).Value));
-            }
 
-            sheet.Cell(t.sRow, 20).SetValue(t.JFG加入年.ToString());
-            sheet.Cell(t.sRow, 21).SetValue(t.会員稼働予定.稼働日数.ToString());
-            sheet.Cell(t.sRow, 22).SetValue(t.会員稼働予定.自己申告日数.ToString());
-            sheet.Cell(t.sRow, 23).SetValue(t.会員稼働予定.備考);
-            sheet.Cell(t.sRow, 24).SetValue(Utility.nulltoString(t.会員稼働予定.申告年月日));
+            sheet.Cell(t.sRow, 21).SetValue(t.JFG加入年.ToString());
+            sheet.Cell(t.sRow, 22).SetValue(t.会員稼働予定.稼働日数.ToString());
+            sheet.Cell(t.sRow, 23).SetValue(t.会員稼働予定.自己申告日数.ToString());
+            sheet.Cell(t.sRow, 24).SetValue(t.会員稼働予定.備考);
+            sheet.Cell(t.sRow, 25).SetValue(Utility.nulltoString(t.会員稼働予定.申告年月日));
 
             // アサイン担当者か検証する
             jfgDataClassDataContext db = new jfgDataClassDataContext();
@@ -1280,6 +1282,7 @@ namespace jfgSchedule
                 // 氏名セルのBackColorを黄色にする
                 sheet.Cell(t.sRow, 1).Style.Fill.SetBackgroundColor(XLColor.Yellow);
                 sheet.Cell(t.sRow, 2).Style.Fill.SetBackgroundColor(XLColor.Yellow);
+                sheet.Cell(t.sRow, 3).Style.Fill.SetBackgroundColor(XLColor.Yellow);
             }
 
             // 予定申告内容をセルに貼り付ける
