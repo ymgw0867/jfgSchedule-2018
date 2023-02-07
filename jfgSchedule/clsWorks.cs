@@ -29,7 +29,7 @@ namespace jfgSchedule
             readLang();
 
             // 稼働表作成
-            worksOutputXML(logFile);
+            //worksOutputXML(logFile);
 
             // ホテル向けガイドリスト(英語) 稼働表作成
             //worksOutputXML_FromExcel(logFile);
@@ -811,8 +811,8 @@ namespace jfgSchedule
                     return;
                 }
 
-                // 稼働表テンプレートシート
-                using (var book = new XLWorkbook(Properties.Settings.Default.xlsHotelKadouPath, XLEventTracking.Disabled))
+                // 稼働表ブック作成
+                using (var book = new XLWorkbook(XLEventTracking.Disabled))
                 {
                     // 稼働予定開始年月日
                     stDate = DateTime.Parse(DateTime.Today.Year.ToString() + "/" + DateTime.Today.Month.ToString() + "/01");
@@ -835,17 +835,23 @@ namespace jfgSchedule
                         sheetYYMM[mon, 1] = xCol.ToString();
 
                         // シートを追加する : 2023/01/30
-                        book.Worksheet("東").CopyTo(book, wDt.Year + "年" + wDt.Month + "月", mon + 2);
+                        //book.Worksheet("東").CopyTo(book, wDt.Year + "年" + wDt.Month + "月", mon + 2);
+
+                        // シート名
+                        var sheetName = wDt.Year + "年" + wDt.Month + "月";
+
+                        // シート作成
+                        book.AddWorksheet(sheetName);
 
                         // カレントシート : 2023/01/30
-                        IXLWorksheet tmpSheet = book.Worksheet(mon + 2);
+                        var tmpSheet = book.Worksheet(sheetName);
 
                         // 見出し 2023/02/06
                         //tmpSheet.Cell("A1").SetValue("カード番号").Style.Font.SetBold(true).Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
                         tmpSheet.Cell("A1").SetValue("カード番号").Style.Font.SetBold(true);
                         tmpSheet.Cell("B1").SetValue("氏名").Style.Font.SetBold(true);
                         tmpSheet.Cell("C1").SetValue("フリガナ").Style.Font.SetBold(true);
-                        tmpSheet.Cell("D1").SetValue(headerArray[0]).Style.Font.SetBold(true); 
+                        tmpSheet.Cell("D1").SetValue(headerArray[0]).Style.Font.SetBold(true);
                         tmpSheet.Cell("E1").SetValue(headerArray[1]).Style.Font.SetBold(true);
                         tmpSheet.Cell("F1").SetValue(headerArray[2]).Style.Font.SetBold(true);
                         tmpSheet.Cell("G1").SetValue(headerArray[3]).Style.Font.SetBold(true);
@@ -973,92 +979,93 @@ namespace jfgSchedule
                         }
 
                         // 表のフォーマットを整える（罫線、列結合）
-                        //SheetFormat(tmpSheet, xCol, logFile);
-                        var sCol = xCol;
+                        SheetFormat(tmpSheet, xCol, logFile);
 
-                        // カレンダーにない日の列削除
-                        bool colDelStatus = true;
+                        //var sCol = xCol;
 
-                        while (colDelStatus)
-                        {
-                            for (int cl = sCol; cl <= tmpSheet.RangeUsed().RangeAddress.LastAddress.ColumnNumber; cl++)
-                            {
-                                if (!Utility.NumericCheck(Utility.nulltoString(tmpSheet.Cell(2, cl).Value).Trim()))
-                                {
-                                    tmpSheet.Column(cl).Delete();
-                                    colDelStatus = true;
-                                    break;
-                                }
-                                else
-                                {
-                                    colDelStatus = false;
-                                }
-                            }
-                        }
-                        System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" カレンダーにない日の列削除"), Encoding.GetEncoding(932));
+                        //// カレンダーにない日の列削除
+                        //bool colDelStatus = true;
 
-                        //セル結合
-                        var range = tmpSheet.Range(tmpSheet.Cell(1, sCol).Address, tmpSheet.Cell(1, tmpSheet.LastCellUsed().Address.ColumnNumber).Address);
-                        range.Merge(false);
+                        //while (colDelStatus)
+                        //{
+                        //    for (int cl = sCol; cl <= tmpSheet.RangeUsed().RangeAddress.LastAddress.ColumnNumber; cl++)
+                        //    {
+                        //        if (!Utility.NumericCheck(Utility.nulltoString(tmpSheet.Cell(2, cl).Value).Trim()))
+                        //        {
+                        //            tmpSheet.Column(cl).Delete();
+                        //            colDelStatus = true;
+                        //            break;
+                        //        }
+                        //        else
+                        //        {
+                        //            colDelStatus = false;
+                        //        }
+                        //    }
+                        //}
+                        //System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" カレンダーにない日の列削除"), Encoding.GetEncoding(932));
 
-                        // IsMerge()パフォ劣化回避のためのStyle変更
-                        for (int cc = sCol; cc <= tmpSheet.LastCellUsed().Address.ColumnNumber; cc++)
-                        {
-                            tmpSheet.Cell(1, cc).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                        }
+                        ////セル結合
+                        //var range = tmpSheet.Range(tmpSheet.Cell(1, sCol).Address, tmpSheet.Cell(1, tmpSheet.LastCellUsed().Address.ColumnNumber).Address);
+                        //range.Merge(false);
 
-                        // 表の外枠罫線を引く
-                        range = tmpSheet.Range(tmpSheet.Cell(1, 1).Address, tmpSheet.LastCellUsed().Address);
-                        range.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
-                        System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" " + tmpSheet.Name + " 表の外枠罫線を引く"), Encoding.GetEncoding(932));
+                        //// IsMerge()パフォ劣化回避のためのStyle変更
+                        //for (int cc = sCol; cc <= tmpSheet.LastCellUsed().Address.ColumnNumber; cc++)
+                        //{
+                        //    tmpSheet.Cell(1, cc).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                        //}
 
-                        // 年月セル下部に罫線を引く
-                        range = tmpSheet.Range(tmpSheet.Cell(1, sCol).Address, tmpSheet.Cell(1, tmpSheet.LastCellUsed().Address.ColumnNumber).Address);
-                        range.Style.Border.BottomBorder = XLBorderStyleValues.Thin;
-                        System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" " + tmpSheet.Name + " 年月セル下部に罫線を引く：1行目"), Encoding.GetEncoding(932));
+                        //// 表の外枠罫線を引く
+                        //range = tmpSheet.Range(tmpSheet.Cell(1, 1).Address, tmpSheet.LastCellUsed().Address);
+                        //range.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                        //System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" " + tmpSheet.Name + " 表の外枠罫線を引く " + range.RangeAddress.FirstAddress.ToString() + "," + range.RangeAddress.LastAddress.ToString()), Encoding.GetEncoding(932));
 
-                        range = tmpSheet.Range(tmpSheet.Cell(2, sCol).Address, tmpSheet.Cell(2, tmpSheet.LastCellUsed().Address.ColumnNumber).Address);
-                        range.Style.Border.BottomBorder = XLBorderStyleValues.Dotted;
-                        System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" " + tmpSheet.Name + " 年月セル下部に罫線を引く：２行目"), Encoding.GetEncoding(932));
+                        //// 年月セル下部に罫線を引く
+                        //range = tmpSheet.Range(tmpSheet.Cell(1, sCol).Address, tmpSheet.Cell(1, tmpSheet.LastCellUsed().Address.ColumnNumber).Address);
+                        //range.Style.Border.BottomBorder = XLBorderStyleValues.Thin;
+                        //System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" " + tmpSheet.Name + " 年月セル下部に罫線を引く：1行目"), Encoding.GetEncoding(932));
 
-                        // 明細最上部に罫線を引く
-                        range = tmpSheet.Range(tmpSheet.Cell(4, 1).Address, tmpSheet.Cell(4, tmpSheet.LastCellUsed().Address.ColumnNumber).Address);
-                        range.Style.Border.TopBorder = XLBorderStyleValues.Thin;
-                        System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" " + tmpSheet.Name + " 明細最上部に罫線を引く"), Encoding.GetEncoding(932));
+                        //range = tmpSheet.Range(tmpSheet.Cell(2, sCol).Address, tmpSheet.Cell(2, tmpSheet.LastCellUsed().Address.ColumnNumber).Address);
+                        //range.Style.Border.BottomBorder = XLBorderStyleValues.Dotted;
+                        //System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" " + tmpSheet.Name + " 年月セル下部に罫線を引く：２行目"), Encoding.GetEncoding(932));
 
-                        // 表の外枠左罫線を引く
-                        range = tmpSheet.Range(tmpSheet.Cell(1, 1).Address, tmpSheet.LastCellUsed().Address);
-                        range.Style.Border.LeftBorder = XLBorderStyleValues.Thin;
-                        System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" " + tmpSheet.Name + " 表の外枠左罫線を引く"), Encoding.GetEncoding(932));
+                        //// 明細最上部に罫線を引く
+                        //range = tmpSheet.Range(tmpSheet.Cell(4, 1).Address, tmpSheet.Cell(4, tmpSheet.LastCellUsed().Address.ColumnNumber).Address);
+                        //range.Style.Border.TopBorder = XLBorderStyleValues.Thin;
+                        //System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" " + tmpSheet.Name + " 明細最上部に罫線を引く"), Encoding.GetEncoding(932));
 
-                        // 見出しの背景色 
-                        range = tmpSheet.Range(tmpSheet.Cell(1, 1).Address, tmpSheet.Cell(3, tmpSheet.LastCellUsed().Address.ColumnNumber).Address);
-                        range.Style.Fill.BackgroundColor = XLColor.WhiteSmoke;
-                        System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" " + tmpSheet.Name + " 見出しの背景色"), Encoding.GetEncoding(932));
+                        //// 表の外枠左罫線を引く
+                        //range = tmpSheet.Range(tmpSheet.Cell(1, 1).Address, tmpSheet.LastCellUsed().Address);
+                        //range.Style.Border.LeftBorder = XLBorderStyleValues.Thin;
+                        //System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" " + tmpSheet.Name + " 表の外枠左罫線を引く " + range.RangeAddress.FirstAddress.ToString() + "," + range.RangeAddress.LastAddress.ToString()), Encoding.GetEncoding(932));
 
-                        // 日曜日の背景色
-                        range = tmpSheet.Range(tmpSheet.Cell(3, sCol).Address, tmpSheet.Cell(3, tmpSheet.LastCellUsed().Address.ColumnNumber).Address);
-                        range.AddConditionalFormat().WhenEquals("日").Fill.SetBackgroundColor(XLColor.MistyRose);
-                        System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" " + tmpSheet.Name + " 日曜日の背景色：曜日"), Encoding.GetEncoding(932));
+                        //// 見出しの背景色 
+                        //range = tmpSheet.Range(tmpSheet.Cell(1, 1).Address, tmpSheet.Cell(3, tmpSheet.LastCellUsed().Address.ColumnNumber).Address);
+                        //range.Style.Fill.BackgroundColor = XLColor.WhiteSmoke;
+                        //System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" " + tmpSheet.Name + " 見出しの背景色 " + range.RangeAddress.FirstAddress.ToString() + "," + range.RangeAddress.LastAddress.ToString()), Encoding.GetEncoding(932));
 
-                        var range2 = tmpSheet.Range(tmpSheet.Cell(2, sCol).Address, tmpSheet.Cell(2, tmpSheet.LastCellUsed().Address.ColumnNumber).Address);
+                        //// 日曜日の背景色
+                        //range = tmpSheet.Range(tmpSheet.Cell(3, sCol).Address, tmpSheet.Cell(3, tmpSheet.LastCellUsed().Address.ColumnNumber).Address);
+                        //range.AddConditionalFormat().WhenEquals("日").Fill.SetBackgroundColor(XLColor.MistyRose);
+                        //System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" " + tmpSheet.Name + " 日曜日の背景色：曜日"), Encoding.GetEncoding(932));
 
-                        // 日曜日の日付の背景色
-                        range2.AddConditionalFormat().WhenIsTrue("=I3=" + @"""日""").Fill.BackgroundColor = XLColor.MistyRose;
-                        System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" " + tmpSheet.Name + " 日曜日の日付の背景色"), Encoding.GetEncoding(932));
+                        //var range2 = tmpSheet.Range(tmpSheet.Cell(2, sCol).Address, tmpSheet.Cell(2, tmpSheet.LastCellUsed().Address.ColumnNumber).Address);
 
-                        // ウィンドウ枠の固定
-                        tmpSheet.SheetView.Freeze(3, 2);
-                        System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" " + tmpSheet.Name + " ウィンドウ枠の固定"), Encoding.GetEncoding(932));
+                        //// 日曜日の日付の背景色
+                        //range2.AddConditionalFormat().WhenIsTrue("=Z3=" + @"""日""").Fill.BackgroundColor = XLColor.MistyRose;
+                        //System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" " + tmpSheet.Name + " 日曜日の日付の背景色"), Encoding.GetEncoding(932));
 
-                        // 見出しはBold
-                        range = tmpSheet.Range(tmpSheet.Cell("Z1").Address, tmpSheet.Cell(3, tmpSheet.LastCellUsed().Address.ColumnNumber).Address);
-                        range.Style.Font.SetBold(true);
-                        System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" " + tmpSheet.Name + " 見出しをBold"), Encoding.GetEncoding(932));
+                        //// ウィンドウ枠の固定
+                        //tmpSheet.SheetView.Freeze(3, 2);
+                        //System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" " + tmpSheet.Name + " ウィンドウ枠の固定"), Encoding.GetEncoding(932));
 
-                        // フィルタの設定：2023/1/25
-                        tmpSheet.Row(3).SetAutoFilter();
-                        System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" " + tmpSheet.Name + " フィルタの設定"), Encoding.GetEncoding(932));
+                        //// 見出しはBold
+                        //range = tmpSheet.Range(tmpSheet.Cell("Z1").Address, tmpSheet.Cell(3, tmpSheet.LastCellUsed().Address.ColumnNumber).Address);
+                        //range.Style.Font.SetBold(true);
+                        //System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" " + tmpSheet.Name + " 見出しをBold"), Encoding.GetEncoding(932));
+
+                        ////// フィルタの設定：2023/1/25
+                        ////tmpSheet.Row(3).SetAutoFilter();
+                        ////System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" " + tmpSheet.Name + " フィルタの設定"), Encoding.GetEncoding(932));
 
 
 
@@ -1066,8 +1073,8 @@ namespace jfgSchedule
                         break;
                     }
 
-                    // テンプレートシートは削除する
-                    book.Worksheet("東").Delete();
+                    //// テンプレートシートは削除する
+                    //book.Worksheet("東").Delete();
 
                     //保存処理
                     book.SaveAs(Properties.Settings.Default.xlsHotelsWorksPath);
@@ -1159,17 +1166,46 @@ namespace jfgSchedule
             var range2 = tmpSheet.Range(tmpSheet.Cell(2, sCol).Address, tmpSheet.Cell(2, tmpSheet.LastCellUsed().Address.ColumnNumber).Address);
 
             // 日曜日の日付の背景色
-            range2.AddConditionalFormat().WhenIsTrue("=I3=" + @"""日""").Fill.BackgroundColor = XLColor.MistyRose;
+            range2.AddConditionalFormat().WhenIsTrue("=Z3=" + @"""日""").Fill.BackgroundColor = XLColor.MistyRose;
             System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" " + tmpSheet.Name + " 日曜日の日付の背景色"), Encoding.GetEncoding(932));
 
             // ウィンドウ枠の固定
             tmpSheet.SheetView.Freeze(3, 2);
             System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" " + tmpSheet.Name + " ウィンドウ枠の固定"), Encoding.GetEncoding(932));
 
-            // 見出しはBold
+            // 稼働予定見出しはBold
             range = tmpSheet.Range(tmpSheet.Cell("Z1").Address, tmpSheet.Cell(3, tmpSheet.LastCellUsed().Address.ColumnNumber).Address);
             range.Style.Font.SetBold(true);
             System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" " + tmpSheet.Name + " 見出しをBold"), Encoding.GetEncoding(932));
+
+            // ヘッダ行の高さ
+            tmpSheet.Row(1).Height = 45;
+            tmpSheet.Row(2).Height = 45;
+            tmpSheet.Row(3).Height = 45;
+
+            // ヘッダ行の加工
+            for (int col = 1; col < 26; col++)
+            {
+                range = tmpSheet.Range(tmpSheet.Cell(1, col).Address, tmpSheet.Cell(3, col).Address);
+
+                // フォントサイズ
+                if (col == 9)
+                {
+                    range.Style.Font.FontSize = 8;
+                }
+                else
+                {
+                    range.Style.Font.FontSize = 9;
+                }
+
+                tmpSheet.Cell(1, col).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+                // 折り返して全体を表示
+                tmpSheet.Cell(1, col).Style.Alignment.WrapText = true;
+
+                //セル結合
+                range.Merge(false);
+            }
 
             // フィルタの設定：2023/1/25
             tmpSheet.Row(3).SetAutoFilter();
