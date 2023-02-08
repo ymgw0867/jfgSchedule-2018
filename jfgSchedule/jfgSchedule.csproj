@@ -79,6 +79,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClsHotelScheduleXls.cs" />
     <Compile Include="clsPersonalData.cs" />
     <Compile Include="clsSchedule.cs" />
     <Compile Include="clsWorks.cs" />

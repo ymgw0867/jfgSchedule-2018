@@ -9,6 +9,7 @@ using System.Windows.Forms;
 //using Excel = Microsoft.Office.Interop.Excel;
 using ClosedXML.Excel;
 using DocumentFormat.OpenXml;
+using System.Reflection;
 
 namespace jfgSchedule
 {
@@ -834,9 +835,6 @@ namespace jfgSchedule
                         sheetYYMM[mon, 0] = wDt.Year.ToString() + wDt.Month.ToString().PadLeft(2, '0');
                         sheetYYMM[mon, 1] = xCol.ToString();
 
-                        // シートを追加する : 2023/01/30
-                        //book.Worksheet("東").CopyTo(book, wDt.Year + "年" + wDt.Month + "月", mon + 2);
-
                         // シート名
                         var sheetName = wDt.Year + "年" + wDt.Month + "月";
 
@@ -846,33 +844,32 @@ namespace jfgSchedule
                         // カレントシート : 2023/01/30
                         var tmpSheet = book.Worksheet(sheetName);
 
-                        // 見出し 2023/02/06
-                        //tmpSheet.Cell("A1").SetValue("カード番号").Style.Font.SetBold(true).Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
-                        tmpSheet.Cell("A1").SetValue("カード番号").Style.Font.SetBold(true);
-                        tmpSheet.Cell("B1").SetValue("氏名").Style.Font.SetBold(true);
-                        tmpSheet.Cell("C1").SetValue("フリガナ").Style.Font.SetBold(true);
-                        tmpSheet.Cell("D1").SetValue(headerArray[0]).Style.Font.SetBold(true);
-                        tmpSheet.Cell("E1").SetValue(headerArray[1]).Style.Font.SetBold(true);
-                        tmpSheet.Cell("F1").SetValue(headerArray[2]).Style.Font.SetBold(true);
-                        tmpSheet.Cell("G1").SetValue(headerArray[3]).Style.Font.SetBold(true);
-                        tmpSheet.Cell("H1").SetValue(headerArray[4]).Style.Font.SetBold(true);
-                        tmpSheet.Cell("I1").SetValue(headerArray[5]).Style.Font.SetBold(true);
-                        tmpSheet.Cell("J1").SetValue(headerArray[6]).Style.Font.SetBold(true);
-                        tmpSheet.Cell("K1").SetValue(headerArray[7]).Style.Font.SetBold(true);
-                        tmpSheet.Cell("L1").SetValue(headerArray[8]).Style.Font.SetBold(true);
-                        tmpSheet.Cell("M1").SetValue(headerArray[9]).Style.Font.SetBold(true);
-                        tmpSheet.Cell("N1").SetValue(headerArray[10]).Style.Font.SetBold(true);
-                        tmpSheet.Cell("O1").SetValue(headerArray[11]).Style.Font.SetBold(true);
-                        tmpSheet.Cell("P1").SetValue(headerArray[12]).Style.Font.SetBold(true);
-                        tmpSheet.Cell("Q1").SetValue(headerArray[13]).Style.Font.SetBold(true);
-                        tmpSheet.Cell("R1").SetValue(headerArray[14]).Style.Font.SetBold(true);
-                        tmpSheet.Cell("S1").SetValue(headerArray[15]).Style.Font.SetBold(true);
-                        tmpSheet.Cell("T1").SetValue(headerArray[16]).Style.Font.SetBold(true);
-                        tmpSheet.Cell("U1").SetValue("入会年度").Style.Font.SetBold(true);
-                        tmpSheet.Cell("V1").SetValue("稼働日数").Style.Font.SetBold(true);
-                        tmpSheet.Cell("W1").SetValue("自己申告日数").Style.Font.SetBold(true);
-                        tmpSheet.Cell("X1").SetValue("備考").Style.Font.SetBold(true);
-                        tmpSheet.Cell("Y1").SetValue("更新日").Style.Font.SetBold(true);
+                        // 見出し 2023/02/08
+                        tmpSheet.Cell("A1").SetValue("カード番号");
+                        tmpSheet.Cell("B1").SetValue("氏名");
+                        tmpSheet.Cell("C1").SetValue("フリガナ");
+                        tmpSheet.Cell("D1").SetValue(headerArray[0]);
+                        tmpSheet.Cell("E1").SetValue(headerArray[1]);
+                        tmpSheet.Cell("F1").SetValue(headerArray[2]);
+                        tmpSheet.Cell("G1").SetValue(headerArray[3]);
+                        tmpSheet.Cell("H1").SetValue(headerArray[4]);
+                        tmpSheet.Cell("I1").SetValue(headerArray[5]);
+                        tmpSheet.Cell("J1").SetValue(headerArray[6]);
+                        tmpSheet.Cell("K1").SetValue(headerArray[7]);
+                        tmpSheet.Cell("L1").SetValue(headerArray[8]);
+                        tmpSheet.Cell("M1").SetValue(headerArray[9]);
+                        tmpSheet.Cell("N1").SetValue(headerArray[10]);
+                        tmpSheet.Cell("O1").SetValue(headerArray[11]);
+                        tmpSheet.Cell("P1").SetValue(headerArray[12]);
+                        tmpSheet.Cell("Q1").SetValue(headerArray[13]);
+                        tmpSheet.Cell("R1").SetValue(headerArray[14]);
+                        tmpSheet.Cell("S1").SetValue(headerArray[15]);
+                        tmpSheet.Cell("T1").SetValue(headerArray[16]);
+                        tmpSheet.Cell("U1").SetValue("入会年度");
+                        tmpSheet.Cell("V1").SetValue("稼働日数");
+                        tmpSheet.Cell("W1").SetValue("自己申告日数");
+                        tmpSheet.Cell("X1").SetValue("備考");
+                        tmpSheet.Cell("Y1").SetValue("更新日");
 
                         // 該当年月
                         tmpSheet.Cell(1, xCol).SetValue(wDt.Year + "年" + wDt.Month + "月"); 
@@ -885,7 +882,7 @@ namespace jfgSchedule
                             {
                                 if (dDay >= DateTime.Today)
                                 {
-                                    tmpSheet.Cell(1, xCol + dy).SetValue(wDt.Year + "年" + wDt.Month + "月");  // 年月：2023/01/26
+                                    tmpSheet.Cell(1, xCol + dy).SetValue(sheetName);  // 年月：2023/01/26
                                     tmpSheet.Cell(2, xCol + dy).SetValue((dy + 1).ToString());    // 日
                                     tmpSheet.Cell(3, xCol + dy).SetValue(dDay.ToString("ddd"));   // 曜日
                                 }
@@ -1098,6 +1095,59 @@ namespace jfgSchedule
 
         private void SheetFormat(IXLWorksheet tmpSheet, int sCol, string logFile)
         {
+            tmpSheet.Style.Font.SetFontName("メイリオ");
+
+            //// 列幅
+            //tmpSheet.Column("A").Width = 10;
+            //tmpSheet.Column("B").Width = 20;
+            //tmpSheet.Column("C").Width = 20;
+            //tmpSheet.Column("D").Width = 20;
+            //tmpSheet.Column("E").Width = 8;
+            //tmpSheet.Column("F").Width = 8;
+            //tmpSheet.Column("G").Width = 8;
+            //tmpSheet.Column("H").Width = 16;
+            //tmpSheet.Column("I").Width = 12;
+            //tmpSheet.Column("J").Width = 13;
+            //tmpSheet.Column("K").Width = 46;
+            //tmpSheet.Column("L").Width = 8;
+            //tmpSheet.Column("M").Width = 12;
+            //tmpSheet.Column("N").Width = 13.6;
+            //tmpSheet.Column("O").Width = 46;
+            //tmpSheet.Column("P").Width = 8;
+            //tmpSheet.Column("Q").Width = 8;
+            //tmpSheet.Column("R").Width = 8;
+            //tmpSheet.Column("S").Width = 8;
+            //tmpSheet.Column("T").Width = 8;
+            //tmpSheet.Column("U").Width = 8;
+            //tmpSheet.Column("V").Width = 8;
+            //tmpSheet.Column("W").Width = 8;
+            //tmpSheet.Column("W").Width = 8;
+            //tmpSheet.Column("X").Width = 50;
+            //tmpSheet.Column("Y").Width = 26;
+
+            SetExcelSheetProperty<ClsHotelScheduleXls>(tmpSheet);
+
+            //for (int i = sCol; i <= tmpSheet.LastCellUsed().Address.ColumnNumber; i++)
+            //{
+            //    tmpSheet.Column(i).Width = 4;
+            //    tmpSheet.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            //}
+
+            SetExcelScheduledSheetProperty<ClsScheduleDays>(tmpSheet, sCol, tmpSheet.LastCellUsed().Address.ColumnNumber);
+
+            // ヘッダ行書式設定
+            for (int i = 1; i < 4; i++)
+            {
+                // 行の高さ
+                tmpSheet.Row(i).Height = 45;
+
+                // ヘッダ書式設定（縦横位置、折り返して全体を表示）
+                tmpSheet.Row(i).Style.Font.SetBold(true)
+                                     .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center)
+                                     .Alignment.SetVertical(XLAlignmentVerticalValues.Center)
+                                     .Alignment.SetWrapText(true);
+            }
+
             // カレンダーにない日の列削除
             bool colDelStatus = true;
 
@@ -1119,7 +1169,7 @@ namespace jfgSchedule
             }
             System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" カレンダーにない日の列削除"), Encoding.GetEncoding(932));
 
-            //セル結合
+            // 稼働予定列結合
             var range = tmpSheet.Range(tmpSheet.Cell(1, sCol).Address, tmpSheet.Cell(1, tmpSheet.LastCellUsed().Address.ColumnNumber).Address);
             range.Merge(false);
 
@@ -1128,6 +1178,7 @@ namespace jfgSchedule
             {
                 tmpSheet.Cell(1, cc).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             }
+
 
             // 表の外枠罫線を引く
             range = tmpSheet.Range(tmpSheet.Cell(1, 1).Address, tmpSheet.LastCellUsed().Address);
@@ -1173,39 +1224,28 @@ namespace jfgSchedule
             tmpSheet.SheetView.Freeze(3, 2);
             System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" " + tmpSheet.Name + " ウィンドウ枠の固定"), Encoding.GetEncoding(932));
 
-            // 稼働予定見出しはBold
-            range = tmpSheet.Range(tmpSheet.Cell("Z1").Address, tmpSheet.Cell(3, tmpSheet.LastCellUsed().Address.ColumnNumber).Address);
-            range.Style.Font.SetBold(true);
-            System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" " + tmpSheet.Name + " 見出しをBold"), Encoding.GetEncoding(932));
+            //// 稼働予定見出しはBold
+            //range = tmpSheet.Range(tmpSheet.Cell("Z1").Address, tmpSheet.Cell(3, tmpSheet.LastCellUsed().Address.ColumnNumber).Address);
+            //range.Style.Font.SetBold(true);
+            //System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" " + tmpSheet.Name + " 見出しをBold"), Encoding.GetEncoding(932));
 
-            // ヘッダ行の高さ
-            tmpSheet.Row(1).Height = 45;
-            tmpSheet.Row(2).Height = 45;
-            tmpSheet.Row(3).Height = 45;
 
-            // ヘッダ行の加工
-            for (int col = 1; col < 26; col++)
-            {
-                range = tmpSheet.Range(tmpSheet.Cell(1, col).Address, tmpSheet.Cell(3, col).Address);
 
-                // フォントサイズ
-                if (col == 9)
-                {
-                    range.Style.Font.FontSize = 8;
-                }
-                else
-                {
-                    range.Style.Font.FontSize = 9;
-                }
+            //// ヘッダ書式設定（フォント、縦横位置、折り返して全体を表示）
+            //tmpSheet.Row(1).Style.Font.SetBold(true).Font.SetFontName("メイリオ")
+            //                     .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center)
+            //                     .Alignment.SetVertical(XLAlignmentVerticalValues.Center)
+            //                     .Alignment.SetWrapText(true);
+            //tmpSheet.Row(2).Style.Font.SetBold(true).Font.SetFontName("メイリオ")
+            //                     .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center)
+            //                     .Alignment.SetVertical(XLAlignmentVerticalValues.Center)
+            //                     .Alignment.SetWrapText(true);
 
-                tmpSheet.Cell(1, col).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            //tmpSheet.Row(1).Style.Font.SetBold(true).Font.SetFontName("メイリオ")
+            //                     .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center)
+            //                     .Alignment.SetVertical(XLAlignmentVerticalValues.Center)
+            //                     .Alignment.SetWrapText(true);
 
-                // 折り返して全体を表示
-                tmpSheet.Cell(1, col).Style.Alignment.WrapText = true;
-
-                //セル結合
-                range.Merge(false);
-            }
 
             // フィルタの設定：2023/1/25
             tmpSheet.Row(3).SetAutoFilter();
@@ -1471,6 +1511,78 @@ namespace jfgSchedule
                 gengo[i, 0] = item.言語番号.ToString();
                 gengo[i, 1] = item.言語名2;
                 i++;
+            }
+        }
+
+
+        ///------------------------------------------------------------------------------
+        /// <summary>
+        ///     クラスやプロパティに設定された属性の値を取得する　</summary>
+        /// <typeparam name="T">
+        ///     属性が定義されたクラス</typeparam>
+        ///------------------------------------------------------------------------------
+        public void SetExcelSheetProperty<T>(IXLWorksheet tmpSheet)
+        {
+            foreach (PropertyInfo propertyInfo in typeof(T).GetProperties())
+            {
+                ColumnNameAttribute attribute = Attribute.GetCustomAttribute(propertyInfo, typeof(ColumnNameAttribute)) as ColumnNameAttribute;
+
+                //属性が定義されたプロパティだけを参照するため、fixedAttrがnullなら処理の対象外
+                if (attribute != null)
+                {
+                    //Console.WriteLine(string.Format("{0}プロパティの属性値： Len={1} PadChar={2}", propertyInfo.Name, attribute.HeaderName, attribute.ColumnIndex));
+
+                    //if (sb.ToString() == "")
+                    //{
+                    //    sb.Append(attribute.ColumnName);
+                    //}
+                    //else
+                    //{
+                    //    sb.Append(",").Append(attribute.HeaderName);
+                    //}
+
+
+                    // 列幅
+                    tmpSheet.Column(attribute.ColumnName).Width = attribute.Width;
+                    tmpSheet.Column(attribute.ColumnName).Style.Alignment.SetHorizontal(attribute.AlignHorizon)
+                                                               .Alignment.SetVertical(attribute.AlignVertial)
+                                                               .Alignment.SetWrapText(true);
+
+
+                    // フォントサイズ
+                    var rng = tmpSheet.Range(tmpSheet.Cell(1, attribute.ColumnIndex).Address, tmpSheet.Cell(3, attribute.ColumnIndex).Address);
+                    rng.Style.Font.FontSize = attribute.HeaderFontSize;
+
+                    //セル結合
+                    rng.Merge(false);
+                }
+            }
+        }
+
+
+
+        ///------------------------------------------------------------------------------
+        /// <summary>
+        ///     クラスやプロパティに設定された属性の値を取得する　</summary>
+        /// <typeparam name="T">
+        ///     属性が定義されたクラス</typeparam>
+        ///------------------------------------------------------------------------------
+        public void SetExcelScheduledSheetProperty<T>(IXLWorksheet tmpSheet, int sCol, int Columns)
+        {
+            foreach (PropertyInfo propertyInfo in typeof(T).GetProperties())
+            {
+                ColumnNameAttribute attribute = Attribute.GetCustomAttribute(propertyInfo, typeof(ColumnNameAttribute)) as ColumnNameAttribute;
+
+                //属性が定義されたプロパティだけを参照するため、fixedAttrがnullなら処理の対象外
+                if (attribute != null)
+                {
+                    for (int i = sCol; i <= Columns; i++)
+                    {
+                        tmpSheet.Column(i).Width = attribute.Width;
+                        tmpSheet.Column(i).Style.Alignment.SetHorizontal(attribute.AlignHorizon)
+                                                .Alignment.SetVertical(attribute.AlignVertial);
+                    }
+                }
             }
         }
     }
