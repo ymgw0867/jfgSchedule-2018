@@ -1,11 +1,5 @@
-﻿using DocumentFormat.OpenXml.Spreadsheet;
-using DocumentFormat.OpenXml.Wordprocessing;
+﻿using ClosedXML.Excel;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ClosedXML.Excel;
 
 namespace jfgSchedule
 {
@@ -13,8 +7,8 @@ namespace jfgSchedule
     {
         public string ColumnName   { get; set; }
         public int ColumnIndex  { get; set; }
-        public ClosedXML.Excel.XLAlignmentHorizontalValues AlignHorizon { get; set; }
-        public ClosedXML.Excel.XLAlignmentVerticalValues   AlignVertial { get; set; }
+        public XLAlignmentHorizontalValues AlignHorizon { get; set; }
+        public XLAlignmentVerticalValues   AlignVertial { get; set; }
         public float Width { get; set; }
         public int HeaderFontSize { get; set; }
         public ColumnNameAttribute(string name)
@@ -49,11 +43,11 @@ namespace jfgSchedule
         public string 得意分野 { get; set; }
         [ColumnName("L", ColumnIndex = 12, AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Center, Width = 8, HeaderFontSize = 9)]
         public string 保険加入 { get; set; }
-        [ColumnName("M", ColumnIndex = 13, AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Left, Width = 8, HeaderFontSize = 9)]
+        [ColumnName("M", ColumnIndex = 13, AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Left, Width = 11, HeaderFontSize = 9)]
         public string 都道府県 { get; set; }
-        [ColumnName("N", ColumnIndex = 14, AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Left, Width = 8, HeaderFontSize = 9)]
+        [ColumnName("N", ColumnIndex = 14, AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Left, Width = 13, HeaderFontSize = 9)]
         public string 市区町村 { get; set; }
-        [ColumnName("O", ColumnIndex = 15, AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Left, Width = 8, HeaderFontSize = 9)]
+        [ColumnName("O", ColumnIndex = 15, AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Left, Width = 40, HeaderFontSize = 9)]
         public string メールアドレス { get; set; }
         [ColumnName("P", ColumnIndex = 16, AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Center, Width = 8, HeaderFontSize = 9)]
         public string 他言語 { get; set; }

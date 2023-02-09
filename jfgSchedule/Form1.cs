@@ -24,9 +24,6 @@ namespace jfgSchedule
 
         private void Form1_Shown(object sender, EventArgs e)
         {
-            // ログメッセージ
-            string logText = string.Empty;
-
             // ログ書き出し先ファイルがあるか？なければ作成する
             string logFile = Properties.Settings.Default.xlsxPath + Properties.Settings.Default.logFileName;
             if (!System.IO.File.Exists(logFile))
