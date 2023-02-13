@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using ClosedXML.Excel;
 using DocumentFormat.OpenXml;
 using System.Reflection;
+using DocumentFormat.OpenXml.Presentation;
 
 namespace jfgSchedule
 {
@@ -23,6 +24,7 @@ namespace jfgSchedule
         string[] sheetName = { "東", "西" };            // シート名見出し
         const int cEAST = 0;                            // 東定数
         const int cWEST = 1;                            // 西定数
+        XLColor LineBackColor = XLColor.FromArgb(220, 230, 241); // 奇数明細行背景色
 
         public clsWorks(string logFile)
         {
@@ -775,7 +777,7 @@ namespace jfgSchedule
                 using (var selSheet = selectBook.Worksheet(1))
                 {
                     // カード番号開始セル
-                    var cell1 = selSheet.Cell("A3");
+                    var cell1 = selSheet.Cell("A2");
                     // 最終行を取得
                     var lastRow = selSheet.LastRowUsed().RowNumber();
                     // カード番号最終セル
@@ -784,23 +786,21 @@ namespace jfgSchedule
                     Hoteltbl = selSheet.Range(cell1, cell2).AsTable();
 
                     // 列見出し文言を取得
-                    headerArray[0] = selSheet.Cell("N2").Value.ToString();
-                    headerArray[1] = selSheet.Cell("D2").Value.ToString();
-                    headerArray[2] = selSheet.Cell("E2").Value.ToString();
-                    headerArray[3] = selSheet.Cell("F2").Value.ToString();
-                    headerArray[4] = selSheet.Cell("G2").Value.ToString();
-                    headerArray[5] = selSheet.Cell("H2").Value.ToString();
-                    headerArray[6] = selSheet.Cell("I2").Value.ToString();
-                    headerArray[7] = selSheet.Cell("J2").Value.ToString();
-                    headerArray[8] = selSheet.Cell("K2").Value.ToString();
-                    headerArray[9] = selSheet.Cell("L2").Value.ToString();
-                    headerArray[10] = selSheet.Cell("M2").Value.ToString();
-                    headerArray[11] = selSheet.Cell("O2").Value.ToString();
-                    headerArray[12] = selSheet.Cell("P2").Value.ToString();
-                    headerArray[13] = selSheet.Cell("Q2").Value.ToString();
-                    headerArray[14] = selSheet.Cell("R2").Value.ToString();
-                    headerArray[15] = selSheet.Cell("S2").Value.ToString();
-                    headerArray[16] = selSheet.Cell("T2").Value.ToString();
+                    headerArray[0]  = selSheet.Cell("D1").Value.ToString();  // 携帯電話
+                    headerArray[1]  = selSheet.Cell("E1").Value.ToString();
+                    headerArray[2]  = selSheet.Cell("F1").Value.ToString();
+                    headerArray[3]  = selSheet.Cell("G1").Value.ToString();
+                    headerArray[4]  = selSheet.Cell("H1").Value.ToString();
+                    headerArray[5]  = selSheet.Cell("J1").Value.ToString();
+                    headerArray[6]  = selSheet.Cell("K1").Value.ToString();
+                    headerArray[7]  = selSheet.Cell("L1").Value.ToString();
+                    headerArray[8]  = selSheet.Cell("M1").Value.ToString();
+                    headerArray[9]  = selSheet.Cell("N1").Value.ToString();
+                    headerArray[10] = selSheet.Cell("O1").Value.ToString();
+                    headerArray[11] = selSheet.Cell("P1").Value.ToString();
+                    headerArray[12] = selSheet.Cell("Q1").Value.ToString();
+                    headerArray[13] = selSheet.Cell("R1").Value.ToString();
+                    headerArray[14] = selSheet.Cell("S1").Value.ToString();
                 }
 
                 // ガイドリストテーブル有効行がないときは終わる
@@ -822,7 +822,7 @@ namespace jfgSchedule
 
                     int ew = 0;
 
-                    const int xCol = 26;   // 日列初期値
+                    const int xCol = 21;   // 日列初期値
 
                     // 稼働予定期間のカレンダーをセット
                     for (int mon = 0; mon < 6; mon++)
@@ -862,13 +862,8 @@ namespace jfgSchedule
                         tmpSheet.Cell("P1").SetValue(headerArray[12]);
                         tmpSheet.Cell("Q1").SetValue(headerArray[13]);
                         tmpSheet.Cell("R1").SetValue(headerArray[14]);
-                        tmpSheet.Cell("S1").SetValue(headerArray[15]);
-                        tmpSheet.Cell("T1").SetValue(headerArray[16]);
-                        tmpSheet.Cell("U1").SetValue("入会年度");
-                        tmpSheet.Cell("V1").SetValue("稼働日数");
-                        tmpSheet.Cell("W1").SetValue("自己申告日数");
-                        tmpSheet.Cell("X1").SetValue("備考");
-                        tmpSheet.Cell("Y1").SetValue("更新日");
+                        tmpSheet.Cell("S1").SetValue("稼働日数");
+                        tmpSheet.Cell("T1").SetValue("更新日");
 
                         // 該当年月
                         tmpSheet.Cell(1, xCol).SetValue(wDt.Year + "年" + wDt.Month + "月"); 
@@ -925,6 +920,9 @@ namespace jfgSchedule
                                              });
 
                         clsWorksTbl w = null;
+                        ClsHotelScheduleXls clsHotel    = null;
+                        ClsScheduleDays[] clsSchedule = new ClsScheduleDays[31];
+
                         int rowCount = 0;
 
                         foreach (var t in linqEast)
@@ -958,6 +956,71 @@ namespace jfgSchedule
                                         新ホテル向けガイドリスト = row
                                     };
 
+                                    clsHotel = new ClsHotelScheduleXls
+                                    {
+                                        CardNumBox = string.Empty,
+                                        SRow = sheetStRow + rowCount,
+                                        カード番号 = t.cardno.ToString(),
+                                        氏名 = t.氏名,
+                                        フリガナ = t.会員稼働予定.フリガナ,
+                                        携帯電話 = GetNewHotelXCellValue(row.Cell(4).Value),
+                                        分類 = GetNewHotelXCellValue(row.Cell(5).Value),
+                                        アサイン2019 = GetNewHotelXCellValue(row.Cell(6).Value),
+                                        アサイン2020 = GetNewHotelXCellValue(row.Cell(7).Value),
+                                        クレーム履歴 = GetNewHotelXCellValue(row.Cell(8).Value),
+                                        プレゼン面談年月 = GetMeetingDate(GetNewHotelXCellValue(row.Cell(9).Value)),
+                                        得意分野 = GetNewHotelXCellValue(row.Cell(10).Value),
+                                        保険加入 = GetNewHotelXCellValue(row.Cell(11).Value),
+                                        都道府県 = GetNewHotelXCellValue(row.Cell(12).Value),
+                                        市区町村 = GetNewHotelXCellValue(row.Cell(13).Value),
+                                        メールアドレス = GetNewHotelXCellValue(row.Cell(14).Value),
+                                        他言語 = GetNewHotelXCellValue(row.Cell(15).Value),
+                                        FIT = GetNewHotelXCellValue(row.Cell(16).Value),
+                                        マンダリン = GetNewHotelXCellValue(row.Cell(17).Value),
+                                        ペニンシュラ = GetNewHotelXCellValue(row.Cell(18).Value)
+                                    };
+
+                                    for (int i = 0; i < 31; i++)
+                                    {
+                                        clsSchedule[i] = new ClsScheduleDays();
+                                        if (i ==  0) clsSchedule[i].予定 = t.会員稼働予定.d1;
+                                        if (i ==  1) clsSchedule[i].予定 = t.会員稼働予定.d2;
+                                        if (i ==  2) clsSchedule[i].予定 = t.会員稼働予定.d3;
+                                        if (i ==  3) clsSchedule[i].予定 = t.会員稼働予定.d4;
+                                        if (i ==  4) clsSchedule[i].予定 = t.会員稼働予定.d5;
+                                        if (i ==  5) clsSchedule[i].予定 = t.会員稼働予定.d6;
+                                        if (i ==  6) clsSchedule[i].予定 = t.会員稼働予定.d7;
+                                        if (i ==  7) clsSchedule[i].予定 = t.会員稼働予定.d8;
+                                        if (i ==  8) clsSchedule[i].予定 = t.会員稼働予定.d9;
+                                        if (i ==  9) clsSchedule[i].予定 = t.会員稼働予定.d10;
+                                        if (i == 10) clsSchedule[i].予定 = t.会員稼働予定.d11;
+                                        if (i == 11) clsSchedule[i].予定 = t.会員稼働予定.d12;
+                                        if (i == 12) clsSchedule[i].予定 = t.会員稼働予定.d13;
+                                        if (i == 13) clsSchedule[i].予定 = t.会員稼働予定.d14;
+                                        if (i == 14) clsSchedule[i].予定 = t.会員稼働予定.d15;
+                                        if (i == 15) clsSchedule[i].予定 = t.会員稼働予定.d16;
+                                        if (i == 16) clsSchedule[i].予定 = t.会員稼働予定.d17;
+                                        if (i == 17) clsSchedule[i].予定 = t.会員稼働予定.d18;
+                                        if (i == 18) clsSchedule[i].予定 = t.会員稼働予定.d19;
+                                        if (i == 19) clsSchedule[i].予定 = t.会員稼働予定.d20;
+                                        if (i == 20) clsSchedule[i].予定 = t.会員稼働予定.d21;
+                                        if (i == 21) clsSchedule[i].予定 = t.会員稼働予定.d22;
+                                        if (i == 22) clsSchedule[i].予定 = t.会員稼働予定.d23;
+                                        if (i == 23) clsSchedule[i].予定 = t.会員稼働予定.d24;
+                                        if (i == 24) clsSchedule[i].予定 = t.会員稼働予定.d25;
+                                        if (i == 25) clsSchedule[i].予定 = t.会員稼働予定.d26;
+                                        if (i == 26) clsSchedule[i].予定 = t.会員稼働予定.d27;
+                                        if (i == 27) clsSchedule[i].予定 = t.会員稼働予定.d28;
+                                        if (i == 28) clsSchedule[i].予定 = t.会員稼働予定.d29;
+                                        if (i == 29) clsSchedule[i].予定 = t.会員稼働予定.d30;
+                                        if (i == 30) clsSchedule[i].予定 = t.会員稼働予定.d31;
+                                    }
+
+                                    //clsSchedule = new ClsScheduleDays
+                                    //{
+                                    //    会員稼働予定 = t.会員稼働予定
+                                    //};
+
                                     break;
                                 };
                             }
@@ -969,7 +1032,7 @@ namespace jfgSchedule
                             }
 
                             // 稼働予定を含む組合員情報を稼働表に貼付
-                            XlsCellsSetXML_BySheet(w, tmpSheet, xCol);
+                            XlsCellsSetXML_BySheet(clsHotel, clsSchedule, w, tmpSheet, xCol);
 
                             rowCount++;
                         }
@@ -1246,7 +1309,7 @@ namespace jfgSchedule
         /// <returns>
         ///     作成：true, 未作成：false</returns>
         /// --------------------------------------------------------------------------
-        private bool XlsCellsSetXML_BySheet(clsWorksTbl t, ClosedXML.Excel.IXLWorksheet sheet, int sCol)
+        private bool XlsCellsSetXML_BySheet(ClsHotelScheduleXls clsHotel, ClsScheduleDays [] clsSchedule, clsWorksTbl t, ClosedXML.Excel.IXLWorksheet sheet, int sCol)
         {
             //// 組合員が変わったら行番号を加算する
             //if (t.cardNumBox != string.Empty && t.cardNumBox != t.cardNo.ToString())
@@ -1262,91 +1325,124 @@ namespace jfgSchedule
 
             //セル下部へ点線ヨコ罫線を引く 2023/02/02
             sheet.Range(sheet.Cell(t.sRow, 1).Address,
-                        sheet.Cell(t.sRow, sheet.LastCellUsed().Address.ColumnNumber).Address).Style.Border.BottomBorder = XLBorderStyleValues.Dotted;
+                        sheet.Cell(t.sRow, sheet.LastCellUsed().Address.ColumnNumber).Address).Style.Border.BottomBorder = XLBorderStyleValues.Thin;
 
-            // 作業用シートにデータ貼り付け
-            sheet.Cell(t.sRow, 1).SetValue(t.cardNo);
-            sheet.Cell(t.sRow, 2).SetValue(t.氏名);
-            sheet.Cell(t.sRow, 3).SetValue(t.会員稼働予定.フリガナ);
+            //// 作業用シートにデータ貼り付け
+            //sheet.Cell(t.sRow, 1).SetValue(t.cardNo);
+            //sheet.Cell(t.sRow, 2).SetValue(t.氏名);
+            //sheet.Cell(t.sRow, 3).SetValue(t.会員稼働予定.フリガナ);
 
-            // 新ホテル向けガイドリストExcelシートの項目を貼り付ける：2023/01/31
-            sheet.Cell(t.sRow, 4).SetValue(GetNewHotelXCellValue(t.新ホテル向けガイドリスト.Cell(14).Value));
+            //// 新ホテル向けガイドリストExcelシートの項目を貼り付ける：2023/01/31
+            //sheet.Cell(t.sRow, 4).SetValue(GetNewHotelXCellValue(t.新ホテル向けガイドリスト.Cell(4).Value));
 
-            for (int cellNum = 4; cellNum < 14; cellNum++)
+            //for (int cellNum = 4; cellNum < 14; cellNum++)
+            //{
+            //    if (cellNum == 9)
+            //    {
+            //        // プレゼン用面談年月
+            //        var yymmdd = GetNewHotelXCellValue(t.新ホテル向けガイドリスト.Cell(cellNum).Value);
+            //        string yymm = "";
+            //        if (DateTime.TryParse(yymmdd, out DateTime dt))
+            //        {
+            //            yymm = dt.Year + "年" + dt.Month + "月";
+            //        }
+
+            //        sheet.Cell(t.sRow, cellNum + 1).SetValue(yymm);
+            //    }
+            //    else
+            //    {
+            //        sheet.Cell(t.sRow, cellNum + 1).SetValue(GetNewHotelXCellValue(t.新ホテル向けガイドリスト.Cell(cellNum).Value));
+            //    }
+            //}
+
+            //for (int cellNum = 15; cellNum < 21; cellNum++)
+            //{
+            //    sheet.Cell(t.sRow, cellNum).SetValue(t.新ホテル向けガイドリスト.Cell(cellNum).GetValue<string>());
+            //}
+
+            ////sheet.Cell(t.sRow, 21).SetValue(t.JFG加入年.ToString());
+            //sheet.Cell(t.sRow, 22).SetValue(t.会員稼働予定.稼働日数.ToString());
+            ////sheet.Cell(t.sRow, 23).SetValue(t.会員稼働予定.自己申告日数.ToString());
+            ////sheet.Cell(t.sRow, 24).SetValue(t.会員稼働予定.備考);
+            //sheet.Cell(t.sRow, 25).SetValue(Utility.nulltoString(t.会員稼働予定.申告年月日));
+
+            // 予定申告内容をセルに貼り付ける
+            //sheet.Cell(t.sRow, sCol).SetValue(t.会員稼働予定.d1);
+            //sheet.Cell(t.sRow, sCol +  1).SetValue(t.会員稼働予定.d2);
+            //sheet.Cell(t.sRow, sCol +  2).SetValue(t.会員稼働予定.d3);
+            //sheet.Cell(t.sRow, sCol +  3).SetValue(t.会員稼働予定.d4);
+            //sheet.Cell(t.sRow, sCol +  4).SetValue(t.会員稼働予定.d5);
+            //sheet.Cell(t.sRow, sCol +  5).SetValue(t.会員稼働予定.d6);
+            //sheet.Cell(t.sRow, sCol +  6).SetValue(t.会員稼働予定.d7);
+            //sheet.Cell(t.sRow, sCol +  7).SetValue(t.会員稼働予定.d8);
+            //sheet.Cell(t.sRow, sCol +  8).SetValue(t.会員稼働予定.d9);
+            //sheet.Cell(t.sRow, sCol +  9).SetValue(t.会員稼働予定.d10);
+            //sheet.Cell(t.sRow, sCol + 10).SetValue(t.会員稼働予定.d11);
+            //sheet.Cell(t.sRow, sCol + 11).SetValue(t.会員稼働予定.d12);
+            //sheet.Cell(t.sRow, sCol + 12).SetValue(t.会員稼働予定.d13);
+            //sheet.Cell(t.sRow, sCol + 13).SetValue(t.会員稼働予定.d14);
+            //sheet.Cell(t.sRow, sCol + 14).SetValue(t.会員稼働予定.d15);
+            //sheet.Cell(t.sRow, sCol + 15).SetValue(t.会員稼働予定.d16);
+            //sheet.Cell(t.sRow, sCol + 16).SetValue(t.会員稼働予定.d17);
+            //sheet.Cell(t.sRow, sCol + 17).SetValue(t.会員稼働予定.d18);
+            //sheet.Cell(t.sRow, sCol + 18).SetValue(t.会員稼働予定.d19);
+            //sheet.Cell(t.sRow, sCol + 19).SetValue(t.会員稼働予定.d20);
+            //sheet.Cell(t.sRow, sCol + 20).SetValue(t.会員稼働予定.d21);
+            //sheet.Cell(t.sRow, sCol + 21).SetValue(t.会員稼働予定.d22);
+            //sheet.Cell(t.sRow, sCol + 22).SetValue(t.会員稼働予定.d23);
+            //sheet.Cell(t.sRow, sCol + 23).SetValue(t.会員稼働予定.d24);
+            //sheet.Cell(t.sRow, sCol + 24).SetValue(t.会員稼働予定.d25);
+            //sheet.Cell(t.sRow, sCol + 25).SetValue(t.会員稼働予定.d26);
+            //sheet.Cell(t.sRow, sCol + 26).SetValue(t.会員稼働予定.d27);
+            //sheet.Cell(t.sRow, sCol + 27).SetValue(t.会員稼働予定.d28);
+            //sheet.Cell(t.sRow, sCol + 28).SetValue(t.会員稼働予定.d29);
+            //sheet.Cell(t.sRow, sCol + 29).SetValue(t.会員稼働予定.d30);
+            //sheet.Cell(t.sRow, sCol + 30).SetValue(t.会員稼働予定.d31);
+
+            // 予定表クラスから作業用シートにデータ貼り付け
+            foreach (PropertyInfo propertyInfo in typeof(ClsHotelScheduleXls).GetProperties())
             {
-                if (cellNum == 9)
+                //属性が定義されたプロパティだけを参照するため、fixedAttrがnullなら処理の対象外
+                if (Attribute.GetCustomAttribute(propertyInfo, typeof(ColumnNameAttribute)) is ColumnNameAttribute attribute)
                 {
-                    // プレゼン用面談年月
-                    var yymmdd = GetNewHotelXCellValue(t.新ホテル向けガイドリスト.Cell(cellNum).Value);
-                    string yymm = "";
-                    if (DateTime.TryParse(yymmdd, out DateTime dt))
+                    // 値取得
+                    var val = propertyInfo.GetValue(clsHotel) == null ? "" : propertyInfo.GetValue(clsHotel).ToString();
+                    // セルに貼り付け
+                    sheet.Cell(clsHotel.SRow, attribute.ColumnName).SetValue(val);
+
+                    // 奇数行なら背景色
+                    if (clsHotel.SRow % 2 == 0)
                     {
-                        yymm = dt.Year + "年" + dt.Month + "月";
+                        sheet.Cell(clsHotel.SRow, attribute.ColumnName).Style.Fill.BackgroundColor = LineBackColor;
                     }
-
-                    sheet.Cell(t.sRow, cellNum + 1).SetValue(yymm);
-                }
-                else
-                {
-                    sheet.Cell(t.sRow, cellNum + 1).SetValue(GetNewHotelXCellValue(t.新ホテル向けガイドリスト.Cell(cellNum).Value));
                 }
             }
 
-            for (int cellNum = 15; cellNum < 21; cellNum++)
+            // 予定申告内容をセルに貼り付ける
+            for (int i = 0; i < clsSchedule.Length; i++)
             {
-                sheet.Cell(t.sRow, cellNum).SetValue(t.新ホテル向けガイドリスト.Cell(cellNum).GetValue<string>());
+                sheet.Cell(clsHotel.SRow, sCol + i).SetValue(clsSchedule[i].予定);
+
+                // 奇数行なら背景色
+                if (clsHotel.SRow % 2 == 0)
+                {
+                    sheet.Cell(clsHotel.SRow, sCol + i).Style.Fill.BackgroundColor = LineBackColor;
+                }
             }
 
-            sheet.Cell(t.sRow, 21).SetValue(t.JFG加入年.ToString());
-            sheet.Cell(t.sRow, 22).SetValue(t.会員稼働予定.稼働日数.ToString());
-            sheet.Cell(t.sRow, 23).SetValue(t.会員稼働予定.自己申告日数.ToString());
-            sheet.Cell(t.sRow, 24).SetValue(t.会員稼働予定.備考);
-            sheet.Cell(t.sRow, 25).SetValue(Utility.nulltoString(t.会員稼働予定.申告年月日));
 
             // アサイン担当者か検証する
             jfgDataClassDataContext db = new jfgDataClassDataContext();
-            var s = db.アサイン担当者.Where(a => a.カード番号 == double.Parse(t.cardNumBox));
+            var s = db.アサイン担当者.Where(a => a.カード番号 == double.Parse(clsHotel.CardNumBox));
             if (s.Count() > 0)
             {
                 // カード番号、氏名、フリガナ各セルのBackColorを黄色にする
                 for (int i = 1; i < 4; i++)
                 {
-                    sheet.Cell(t.sRow, i).Style.Fill.SetBackgroundColor(XLColor.Yellow);
+                    sheet.Cell(clsHotel.SRow, i).Style.Fill.SetBackgroundColor(XLColor.Yellow);
                 }
             }
 
-            // 予定申告内容をセルに貼り付ける
-            sheet.Cell(t.sRow, sCol).SetValue(t.会員稼働予定.d1);
-            sheet.Cell(t.sRow, sCol +  1).SetValue(t.会員稼働予定.d2);
-            sheet.Cell(t.sRow, sCol +  2).SetValue(t.会員稼働予定.d3);
-            sheet.Cell(t.sRow, sCol +  3).SetValue(t.会員稼働予定.d4);
-            sheet.Cell(t.sRow, sCol +  4).SetValue(t.会員稼働予定.d5);
-            sheet.Cell(t.sRow, sCol +  5).SetValue(t.会員稼働予定.d6);
-            sheet.Cell(t.sRow, sCol +  6).SetValue(t.会員稼働予定.d7);
-            sheet.Cell(t.sRow, sCol +  7).SetValue(t.会員稼働予定.d8);
-            sheet.Cell(t.sRow, sCol +  8).SetValue(t.会員稼働予定.d9);
-            sheet.Cell(t.sRow, sCol +  9).SetValue(t.会員稼働予定.d10);
-            sheet.Cell(t.sRow, sCol + 10).SetValue(t.会員稼働予定.d11);
-            sheet.Cell(t.sRow, sCol + 11).SetValue(t.会員稼働予定.d12);
-            sheet.Cell(t.sRow, sCol + 12).SetValue(t.会員稼働予定.d13);
-            sheet.Cell(t.sRow, sCol + 13).SetValue(t.会員稼働予定.d14);
-            sheet.Cell(t.sRow, sCol + 14).SetValue(t.会員稼働予定.d15);
-            sheet.Cell(t.sRow, sCol + 15).SetValue(t.会員稼働予定.d16);
-            sheet.Cell(t.sRow, sCol + 16).SetValue(t.会員稼働予定.d17);
-            sheet.Cell(t.sRow, sCol + 17).SetValue(t.会員稼働予定.d18);
-            sheet.Cell(t.sRow, sCol + 18).SetValue(t.会員稼働予定.d19);
-            sheet.Cell(t.sRow, sCol + 19).SetValue(t.会員稼働予定.d20);
-            sheet.Cell(t.sRow, sCol + 20).SetValue(t.会員稼働予定.d21);
-            sheet.Cell(t.sRow, sCol + 21).SetValue(t.会員稼働予定.d22);
-            sheet.Cell(t.sRow, sCol + 22).SetValue(t.会員稼働予定.d23);
-            sheet.Cell(t.sRow, sCol + 23).SetValue(t.会員稼働予定.d24);
-            sheet.Cell(t.sRow, sCol + 24).SetValue(t.会員稼働予定.d25);
-            sheet.Cell(t.sRow, sCol + 25).SetValue(t.会員稼働予定.d26);
-            sheet.Cell(t.sRow, sCol + 26).SetValue(t.会員稼働予定.d27);
-            sheet.Cell(t.sRow, sCol + 27).SetValue(t.会員稼働予定.d28);
-            sheet.Cell(t.sRow, sCol + 28).SetValue(t.会員稼働予定.d29);
-            sheet.Cell(t.sRow, sCol + 29).SetValue(t.会員稼働予定.d30);
-            sheet.Cell(t.sRow, sCol + 30).SetValue(t.会員稼働予定.d31);
 
             return true;
         }
@@ -1359,6 +1455,23 @@ namespace jfgSchedule
         private string GetNewHotelXCellValue(object obj)
         {
             return obj == null ? "" : obj.ToString();
+        }
+
+        /// <summary>
+        ///新ホテル向けガイドリストセル値取得・プレゼン用面談年月
+        /// </summary>
+        /// <param name="obj">セル値</param>
+        /// <returns>面談年月文字列</returns>
+        private string GetMeetingDate(string yymmdd)
+        {
+            // プレゼン用面談年月
+            //var yymmdd = GetNewHotelXCellValue(obj);
+            string yymm = "";
+            if (DateTime.TryParse(yymmdd, out DateTime dt))
+            {
+                yymm = dt.Year + "年" + dt.Month + "月";
+            }
+            return yymm;
         }
 
 
