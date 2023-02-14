@@ -24,12 +24,13 @@ namespace jfgSchedule
         string[] sheetName = { "東", "西" };            // シート名見出し
         const int cEAST = 0;                            // 東定数
         const int cWEST = 1;                            // 西定数
-        XLColor LineBackColor = XLColor.FromArgb(220, 230, 241); // 奇数明細行背景色
+        readonly XLColor HeaderBackColor = XLColor.FromArgb(79, 129, 189);  // 見出し行背景色
+        readonly XLColor LineBackColor   = XLColor.FromArgb(220, 230, 241); // 奇数明細行背景色
 
         public clsWorks(string logFile)
         {
             // 言語配列読み込み
-            readLang();
+            ReadLang();
 
             // 稼働表作成
             //worksOutputXML(logFile);
@@ -795,7 +796,7 @@ namespace jfgSchedule
                     headerArray[6]  = selSheet.Cell("K1").Value.ToString();
                     headerArray[7]  = selSheet.Cell("L1").Value.ToString();
                     headerArray[8]  = selSheet.Cell("M1").Value.ToString();
-                    headerArray[9]  = selSheet.Cell("N1").Value.ToString();
+                    headerArray[9]  = selSheet.Cell("N1").Value.ToString().Replace(" ", "").Replace("　", "");
                     headerArray[10] = selSheet.Cell("O1").Value.ToString();
                     headerArray[11] = selSheet.Cell("P1").Value.ToString();
                     headerArray[12] = selSheet.Cell("Q1").Value.ToString();
@@ -968,16 +969,18 @@ namespace jfgSchedule
                                         アサイン2019 = GetNewHotelXCellValue(row.Cell(6).Value),
                                         アサイン2020 = GetNewHotelXCellValue(row.Cell(7).Value),
                                         クレーム履歴 = GetNewHotelXCellValue(row.Cell(8).Value),
-                                        プレゼン面談年月 = GetMeetingDate(GetNewHotelXCellValue(row.Cell(9).Value)),
-                                        得意分野 = GetNewHotelXCellValue(row.Cell(10).Value),
-                                        保険加入 = GetNewHotelXCellValue(row.Cell(11).Value),
-                                        都道府県 = GetNewHotelXCellValue(row.Cell(12).Value),
-                                        市区町村 = GetNewHotelXCellValue(row.Cell(13).Value),
-                                        メールアドレス = GetNewHotelXCellValue(row.Cell(14).Value),
-                                        他言語 = GetNewHotelXCellValue(row.Cell(15).Value),
-                                        FIT = GetNewHotelXCellValue(row.Cell(16).Value),
-                                        マンダリン = GetNewHotelXCellValue(row.Cell(17).Value),
-                                        ペニンシュラ = GetNewHotelXCellValue(row.Cell(18).Value)
+                                        プレゼン面談年月 = GetMeetingDate(GetNewHotelXCellValue(row.Cell(10).Value)),
+                                        得意分野 = GetNewHotelXCellValue(row.Cell(11).Value),
+                                        保険加入 = GetNewHotelXCellValue(row.Cell(12).Value),
+                                        都道府県 = GetNewHotelXCellValue(row.Cell(13).Value),
+                                        市区町村 = GetNewHotelXCellValue(row.Cell(14).Value),
+                                        メールアドレス = GetNewHotelXCellValue(row.Cell(15).Value),
+                                        他言語 = GetNewHotelXCellValue(row.Cell(16).Value),
+                                        FIT = GetNewHotelXCellValue(row.Cell(17).Value),
+                                        マンダリン = GetNewHotelXCellValue(row.Cell(18).Value),
+                                        ペニンシュラ = GetNewHotelXCellValue(row.Cell(19).Value),
+                                        稼働日数 = t.会員稼働予定.稼働日数.ToString(),
+                                        更新日 = t.会員稼働予定.更新日.ToString()
                                     };
 
                                     for (int i = 0; i < 31; i++)
@@ -1065,8 +1068,6 @@ namespace jfgSchedule
 
         private void SheetFormat(IXLWorksheet tmpSheet, int sCol, string logFile)
         {
-            tmpSheet.Style.Font.SetFontName("メイリオ");
-
             SetExcelSheetProperty<ClsHotelScheduleXls>(tmpSheet);
 
             SetExcelScheduledSheetProperty<ClsScheduleDays>(tmpSheet, sCol, tmpSheet.LastCellUsed().Address.ColumnNumber);
@@ -1115,7 +1116,6 @@ namespace jfgSchedule
                 tmpSheet.Cell(1, cc).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             }
 
-
             // 表の外枠罫線を引く
             range = tmpSheet.Range(tmpSheet.Cell(1, 1).Address, tmpSheet.LastCellUsed().Address);
             range.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
@@ -1142,27 +1142,31 @@ namespace jfgSchedule
 
             // 見出しの背景色 
             range = tmpSheet.Range(tmpSheet.Cell(1, 1).Address, tmpSheet.Cell(3, tmpSheet.LastCellUsed().Address.ColumnNumber).Address);
-            range.Style.Fill.BackgroundColor = XLColor.WhiteSmoke;
+            //range.Style.Fill.BackgroundColor = XLColor.WhiteSmoke;
+            range.Style.Fill.SetBackgroundColor(HeaderBackColor).Font.SetFontColor(XLColor.White);
             //System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" " + tmpSheet.Name + " 見出しの背景色"), Encoding.GetEncoding(932));
 
             // 日曜日の背景色
             range = tmpSheet.Range(tmpSheet.Cell(3, sCol).Address, tmpSheet.Cell(3, tmpSheet.LastCellUsed().Address.ColumnNumber).Address);
-            range.AddConditionalFormat().WhenEquals("日").Fill.SetBackgroundColor(XLColor.MistyRose);
+            range.AddConditionalFormat().WhenEquals("日").Fill.SetBackgroundColor(XLColor.MistyRose).Font.SetFontColor(XLColor.Black);
             //System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" " + tmpSheet.Name + " 日曜日の背景色：曜日"), Encoding.GetEncoding(932));
 
             var range2 = tmpSheet.Range(tmpSheet.Cell(2, sCol).Address, tmpSheet.Cell(2, tmpSheet.LastCellUsed().Address.ColumnNumber).Address);
 
             // 日曜日の日付の背景色
-            range2.AddConditionalFormat().WhenIsTrue("=Z3=" + @"""日""").Fill.BackgroundColor = XLColor.MistyRose;
+            range2.AddConditionalFormat().WhenIsTrue("=U3=" + @"""日""").Fill.SetBackgroundColor(XLColor.MistyRose).Font.SetFontColor(XLColor.Black);
             //System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" " + tmpSheet.Name + " 日曜日の日付の背景色"), Encoding.GetEncoding(932));
 
             // ウィンドウ枠の固定
-            tmpSheet.SheetView.Freeze(5, 2);
+            tmpSheet.SheetView.Freeze(3, 5);
             //System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" " + tmpSheet.Name + " ウィンドウ枠の固定"), Encoding.GetEncoding(932));
 
             // フィルタの設定：2023/1/25
-            tmpSheet.Row(3).SetAutoFilter();
+            tmpSheet.Row(2).SetAutoFilter();
             //System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" " + tmpSheet.Name + " フィルタの設定"), Encoding.GetEncoding(932));
+
+            tmpSheet.Style.Font.SetFontName("ＭＳ Ｐゴシック");
+            tmpSheet.RowHeight = 18;
         }
 
         /// --------------------------------------------------------------------------
@@ -1321,11 +1325,16 @@ namespace jfgSchedule
             //    t.sRow++;
             //}
 
-            t.cardNumBox = t.cardNo.ToString();    // カード番号
+            //t.cardNumBox = t.cardNo.ToString();    // カード番号
+            clsHotel.CardNumBox = clsHotel.カード番号;    // カード番号
+
+            ////セル下部へ点線ヨコ罫線を引く 2023/02/02
+            //sheet.Range(sheet.Cell(t.sRow, 1).Address,
+            //            sheet.Cell(t.sRow, sheet.LastCellUsed().Address.ColumnNumber).Address).Style.Border.BottomBorder = XLBorderStyleValues.Thin;
 
             //セル下部へ点線ヨコ罫線を引く 2023/02/02
-            sheet.Range(sheet.Cell(t.sRow, 1).Address,
-                        sheet.Cell(t.sRow, sheet.LastCellUsed().Address.ColumnNumber).Address).Style.Border.BottomBorder = XLBorderStyleValues.Thin;
+            sheet.Range(sheet.Cell(clsHotel.SRow, 1).Address,
+                        sheet.Cell(clsHotel.SRow, sheet.LastCellUsed().Address.ColumnNumber).Address).Style.Border.BottomBorder = XLBorderStyleValues.Thin;
 
             //// 作業用シートにデータ貼り付け
             //sheet.Cell(t.sRow, 1).SetValue(t.cardNo);
@@ -1407,6 +1416,7 @@ namespace jfgSchedule
                 {
                     // 値取得
                     var val = propertyInfo.GetValue(clsHotel) == null ? "" : propertyInfo.GetValue(clsHotel).ToString();
+
                     // セルに貼り付け
                     sheet.Cell(clsHotel.SRow, attribute.ColumnName).SetValue(val);
 
@@ -1479,7 +1489,7 @@ namespace jfgSchedule
         /// <summary>
         ///     言語配列作成　</summary>
         ///----------------------------------------------------
-        private void readLang()
+        private void ReadLang()
         {
             jfgDataClassDataContext db = new jfgDataClassDataContext();
             var s = db.言語.Where(a => a.言語名1 != "J").OrderBy(a => a.言語番号);
