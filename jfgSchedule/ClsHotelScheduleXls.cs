@@ -16,7 +16,9 @@ namespace jfgSchedule
             this.ColumnName = name;
         }
     }
-
+    /// <summary>
+    /// 新ホテル向けガイド稼働表・組合員情報クラス
+    /// </summary>
     public class ClsHotelScheduleXls
     {
         public int SRow { get; set; }
@@ -62,7 +64,9 @@ namespace jfgSchedule
         [ColumnName("T", ColumnIndex = 20, AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Left, Width = 26, HeaderFontSize = 9)]
         public string 更新日 { get; set; }
     }
-
+    /// <summary>
+    ///     新ホテル向けガイド稼働表・予定表クラス
+    /// </summary>
     public class ClsScheduleDays
     {
         [ColumnName("ScheduledDate", AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Center, Width = 4)]
