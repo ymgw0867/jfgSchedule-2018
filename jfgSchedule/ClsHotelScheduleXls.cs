@@ -31,17 +31,17 @@ namespace jfgSchedule
         public string 携帯電話 { get; set; }
         [ColumnName("E", ColumnIndex = 5, AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Center, Width = 8, HeaderFontSize = 9)]
         public string 分類 { get; set; }
-        [ColumnName("F", ColumnIndex = 6, AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Right, Width = 8, HeaderFontSize = 9)]
+        [ColumnName("F", ColumnIndex = 6, AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Right, Width = 9, HeaderFontSize = 9)]
         public string アサイン2019 { get; set; }
-        [ColumnName("G", ColumnIndex = 7, AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Right, Width = 8, HeaderFontSize = 9)]
+        [ColumnName("G", ColumnIndex = 7, AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Right, Width = 9, HeaderFontSize = 9)]
         public string アサイン2020 { get; set; }
-        [ColumnName("H", ColumnIndex = 8, AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Left, Width = 16, HeaderFontSize = 9)]
+        [ColumnName("H", ColumnIndex = 8, AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Left, Width = 14, HeaderFontSize = 9)]
         public string クレーム履歴 { get; set; }
         [ColumnName("I", ColumnIndex = 9, AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Center, Width = 13.6f, HeaderFontSize = 9)]
         public string プレゼン面談年月 { get; set; }
-        [ColumnName("J", ColumnIndex = 10, AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Left, Width = 46, HeaderFontSize = 9)]
+        [ColumnName("J", ColumnIndex = 10, AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Left, Width = 20, HeaderFontSize = 9)]
         public string 得意分野 { get; set; }
-        [ColumnName("K", ColumnIndex = 11, AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Center, Width = 8, HeaderFontSize = 9)]
+        [ColumnName("K", ColumnIndex = 11, AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Center, Width = 9, HeaderFontSize = 9)]
         public string 保険加入 { get; set; }
         [ColumnName("L", ColumnIndex = 12, AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Left, Width = 11, HeaderFontSize = 9)]
         public string 都道府県 { get; set; }
