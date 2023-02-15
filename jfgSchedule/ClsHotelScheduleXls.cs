@@ -5,10 +5,10 @@ namespace jfgSchedule
 {
     public class ColumnNameAttribute : Attribute
     {
-        public string ColumnName   { get; set; }
-        public int ColumnIndex  { get; set; }
+        public string ColumnName { get; set; }
+        public int ColumnIndex { get; set; }
         public XLAlignmentHorizontalValues AlignHorizon { get; set; }
-        public XLAlignmentVerticalValues   AlignVertial { get; set; }
+        public XLAlignmentVerticalValues AlignVertial { get; set; }
         public float Width { get; set; }
         public int HeaderFontSize { get; set; }
         public ColumnNameAttribute(string name)
@@ -23,7 +23,9 @@ namespace jfgSchedule
     {
         public int SRow { get; set; }
         public string CardNumBox { get; set; }
-        [ColumnName("A", ColumnIndex = 1, AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Center, Width = 10,  HeaderFontSize = 9)]
+        public int Year { get; set; }
+        public int Month { get; set; }
+        [ColumnName("A", ColumnIndex = 1, AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Center, Width = 10, HeaderFontSize = 9)]
         public string カード番号 { get; set; }
         [ColumnName("B", ColumnIndex = 2, AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Left, Width = 20, HeaderFontSize = 9)]
         public string 氏名 { get; set; }
