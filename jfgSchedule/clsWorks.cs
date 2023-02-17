@@ -38,11 +38,11 @@ namespace jfgSchedule
             ReadLang();
 
             // 稼働表作成
-            worksOutputXML(logFile);
+            WorksOutputXML(logFile);
 
             // ホテル向けガイドリスト(英語) 稼働表作成
             //worksOutputXML_FromExcel(logFile);
-            WorksOutputXML_FromExcel_BySheet(logFile);  // 新ホテル向けガイドリスト仕様（年月シート別） 2023/02/01
+            WorksOutputXML_FromExcel_BySheet(logFile);  // 新ホテル向けガイドリスト仕様 2023/02/17
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace jfgSchedule
         /// <param name="logFile">
         /// ログ出力パス
         /// </param>
-        public void worksOutputXML(string logFile)
+        public void WorksOutputXML(string logFile)
         {
             DateTime stDate;
             DateTime edDate;

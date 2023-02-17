@@ -49,6 +49,13 @@ namespace jfgSchedule
             {
                 // アサイン担当用稼働表エクセルシートとホテル向けガイド稼働表を作成する：2022/11/08
                 _ = new clsWorks(logFile);
+
+                // 過去の予定表データを削除する：2023/02/17
+                if (DeletePastData(logFile))
+                {
+                    // ログ出力
+                    System.IO.File.AppendAllText(logFile, GetNowTime(" 過去の予定表データを削除しました"), System.Text.Encoding.GetEncoding(932));
+                }
             }
             else
             {
@@ -101,6 +108,30 @@ namespace jfgSchedule
             s.前回更新日時 = DateTime.Now;
 
             db.SubmitChanges();
+        }
+
+        /// <summary>
+        ///     前月までの予定表データを削除する </summary>
+        /// <param name="logFile">
+        ///     ログファイルパス</param>
+        private bool DeletePastData(string logFile)
+        {
+            try
+            {
+                var yymm = DateTime.Today.Year * 100 + DateTime.Today.Month;
+
+                jfgDataClassDataContext db = new jfgDataClassDataContext();
+                db.会員稼働予定.DeleteAllOnSubmit(db.会員稼働予定.Where(a => (a.年 * 100 + a.月) < yymm));
+                db.SubmitChanges();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                // ログ出力
+                System.IO.File.AppendAllText(logFile, GetNowTime(ex.Message), System.Text.Encoding.GetEncoding(932));
+                return false;
+            }
         }
     }
 }
