@@ -40,7 +40,7 @@ namespace jfgSchedule
             // 稼働表作成
             WorksOutputXML(logFile);
 
-            // ホテル向けガイドリスト(英語) 稼働表作成
+            // 新ホテル向けガイド稼働表作成
             //worksOutputXML_FromExcel(logFile);
             WorksOutputXML_FromExcel_BySheet(logFile);  // 新ホテル向けガイドリスト仕様 2023/02/17
         }
@@ -827,8 +827,6 @@ namespace jfgSchedule
 
                     // 稼働予定終了年月日
                     edDate = stDate.AddMonths(6).AddDays(-1);
-
-                    //int ew = 0;
 
                     // シート作成
                     book.AddWorksheet(SheetName);
