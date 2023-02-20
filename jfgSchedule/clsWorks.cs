@@ -397,7 +397,7 @@ namespace jfgSchedule
         /// <param name="logFile">
         /// ログ出力パス
         /// </param>
-        public void worksOutputXML_FromExcel(string logFile)
+        public void WorksOutputXML_FromExcel(string logFile)
         {
             // ホテル向けガイドリストExcelファイルの存在確認
             if (!System.IO.File.Exists(Properties.Settings.Default.xlsHotelGuideListPath))
@@ -793,7 +793,7 @@ namespace jfgSchedule
                         Hoteltbl = selSheet.Range(cell1, cell2).AsTable();
 
                         // 列見出し文言を取得
-                        headerArray[0]  = selSheet.Cell("D1").Value.ToString();  // 携帯電話
+                        headerArray[0]  = selSheet.Cell("D1").Value.ToString();
                         headerArray[1]  = selSheet.Cell("E1").Value.ToString();
                         headerArray[2]  = selSheet.Cell("F1").Value.ToString();
                         headerArray[3]  = selSheet.Cell("G1").Value.ToString();
@@ -828,7 +828,7 @@ namespace jfgSchedule
                     // 稼働予定終了年月日
                     edDate = stDate.AddMonths(6).AddDays(-1);
 
-                    int ew = 0;
+                    //int ew = 0;
 
                     // シート作成
                     book.AddWorksheet(SheetName);
