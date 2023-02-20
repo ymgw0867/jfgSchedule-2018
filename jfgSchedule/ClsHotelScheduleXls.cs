@@ -21,8 +21,6 @@ namespace jfgSchedule
     /// </summary>
     public class ClsHotelScheduleXls
     {
-        public int SRow { get; set; }
-        public string CardNumBox { get; set; }
         public int Year { get; set; }
         public int Month { get; set; }
         [ColumnName("A", ColumnIndex = 1, AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Center, Width = 10, HeaderFontSize = 9)]
@@ -72,7 +70,6 @@ namespace jfgSchedule
     public class ClsScheduleDays
     {
         [ColumnName("ScheduledDate", AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Center, Width = 4)]
-        //public 会員稼働予定 会員稼働予定 { get; set; }
         public string 予定 { get; set; }
     }
 }

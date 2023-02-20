@@ -35,14 +35,14 @@ namespace jfgSchedule
             System.IO.File.AppendAllText(logFile, GetNowTime(" 処理を開始しました。"), System.Text.Encoding.GetEncoding(932));
             
             // 前回更新日時を取得
-            DateTime dt = getUpdateDate();
+            DateTime dt = GetUpdateDate();
 
             // エクセル予定申告シートより会員稼働予定テーブルを更新する
             clsXls xls = new clsXls();
             int uCnt = xls.xlsSelect(Properties.Settings.Default.xlsxPath, dt);
 
             // 前回更新日時フィールドに現在の日時を書き込む
-            setUpdateDate();
+            SetUpdateDate();
 
             // 更新された予定申告データがあったとき
             if (uCnt > 0)
@@ -54,7 +54,7 @@ namespace jfgSchedule
                 if (DeletePastData(logFile))
                 {
                     // ログ出力
-                    System.IO.File.AppendAllText(logFile, GetNowTime(" 過去の予定表データを削除しました"), System.Text.Encoding.GetEncoding(932));
+                    System.IO.File.AppendAllText(logFile, GetNowTime(" 前月までの予定表データを削除しました"), System.Text.Encoding.GetEncoding(932));
                 }
             }
             else
@@ -81,7 +81,7 @@ namespace jfgSchedule
         /// <returns>
         ///     前回更新日時 </returns>
         /// ----------------------------------------------------
-        private DateTime getUpdateDate()
+        private DateTime GetUpdateDate()
         {
             DateTime dt = DateTime.Parse("1900/01/01 00:00:00");
 
@@ -100,7 +100,7 @@ namespace jfgSchedule
         /// <summary>
         ///     前回更新日時を更新する </summary>
         /// ----------------------------------------------------
-        private void setUpdateDate()
+        private void SetUpdateDate()
         {
             jfgDataClassDataContext db = new jfgDataClassDataContext();
             var s = db.稼働設定.Single(a => a.ID == Utility.configKey);
