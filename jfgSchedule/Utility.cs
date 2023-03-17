@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Data.OleDb;
+using System.Windows.Forms;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace jfgSchedule
 {
@@ -122,6 +124,129 @@ namespace jfgSchedule
             }
 
             return sVal;
+        }
+        ///-------------------------------------------------------------------------
+        /// <summary>
+        ///     Excelファイルをパスワード付きでオープン・クローズする </summary>
+        /// <param name="sPath">
+        ///     Excelファイルパス</param>
+        /// <param name="rPw">
+        ///     読み込みパスワード</param>
+        /// <param name="wPw">
+        ///     書き込みパスワード</param>
+        /// <param name="logFile">
+        ///     ログファイルパス</param>
+        /// <returns>
+        ///     成功：true, 失敗：false</returns>
+        ///-------------------------------------------------------------------------
+        public static bool PwdXlsFile(string sPath, string rPw, string wPw, string logFile)
+        {
+            if (rPw == string.Empty)
+            {
+                return true;
+            }
+
+            // ログ出力
+            System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" Excelを起動しています..."), Encoding.GetEncoding(932));
+
+            System.Threading.Thread.Sleep(100);
+            Application.DoEvents();
+
+            // エクセルオブジェクト
+            Excel.Application oXls = new Excel.Application();
+            Excel.Workbook oXlsBook = null;
+
+            try
+            {
+                //if (wPw != string.Empty)
+                //{
+                //    lblMsg.Text = sPath + " のパスワードを解除しています...";
+                //}
+                //else
+                //{
+                //    lblMsg.Text = sPath + " を開いています...";
+                //}
+
+                System.Threading.Thread.Sleep(100);
+                Application.DoEvents();
+
+                // Excelファイルを開く
+                oXlsBook = (oXls.Workbooks.Open(sPath, Type.Missing, Type.Missing, Type.Missing,
+                    Type.Missing, wPw, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing,
+                    Type.Missing, Type.Missing, Type.Missing, Type.Missing));
+
+                    //if (wPw != string.Empty)
+                    //{
+                    //    lblMsg.Text = sPath + " のパスワードが解除されました...";
+                    //}
+                    //else
+                    //{
+                    //    lblMsg.Text = sPath + " を開きました...";
+                    //}
+
+                    System.Threading.Thread.Sleep(100);
+                Application.DoEvents();
+
+                oXls.DisplayAlerts = false;
+
+                System.Threading.Thread.Sleep(100);
+                Application.DoEvents();
+
+                //// Excelファイル書き込み
+                //oXlsBook.SaveAs(sPath, Type.Missing, Type.Missing, Type.Missing, Type.Missing, rPw,
+                //                Excel.XlSaveAsAccessMode.xlNoChange, Type.Missing, Type.Missing, Type.Missing,
+                //                Type.Missing, Type.Missing);
+
+                // Excelファイル書き込み
+                oXlsBook.SaveAs(sPath, Type.Missing, rPw, Type.Missing, Type.Missing, Type.Missing, Excel.XlSaveAsAccessMode.xlNoChange, Type.Missing, Type.Missing,
+                                Type.Missing, Type.Missing);
+
+                //lblMsg.Text = sPath + " を保存しました...";
+
+                // ログ出力
+                if (rPw != string.Empty)
+                {
+                    System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" " + sPath + " をパスワード付きで保存しました..."), Encoding.GetEncoding(932));
+                }
+
+                System.Threading.Thread.Sleep(100);
+                Application.DoEvents();
+
+                // Bookをクローズ
+                oXlsBook.Close(Type.Missing, Type.Missing, Type.Missing);
+
+                //lblMsg.Text = "Excelを終了しました...";
+                System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" Excelを終了しました..."), Encoding.GetEncoding(932));
+
+                System.Threading.Thread.Sleep(100);
+                Application.DoEvents();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return false;
+            }
+            finally
+            {
+                // Excelを終了
+                oXls.Quit();
+
+                // COM オブジェクトの参照カウントを解放する 
+                //System.Runtime.InteropServices.Marshal.ReleaseComObject(oxlsSheet);
+                if (oXlsBook != null)
+                {
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(oXlsBook);
+                }
+
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(oXls);
+
+                oXls = null;
+                oXlsBook = null;
+
+                GC.Collect();
+            }
         }
     }
 }

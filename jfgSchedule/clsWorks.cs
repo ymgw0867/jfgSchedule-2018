@@ -963,6 +963,9 @@ namespace jfgSchedule
 
                 // ログ出力
                 System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" ホテル向けガイド稼働表を更新しました。"), Encoding.GetEncoding(932));
+
+                // パスワード付きで再度書き換え：2023/03/17
+                _ = Utility.PwdXlsFile(Properties.Settings.Default.xlsHotelsWorksPath, Properties.Settings.Default.xlsPassword, "", logFile);
             }
             catch (Exception ex)
             {

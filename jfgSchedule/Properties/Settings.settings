@@ -49,5 +49,8 @@
     <Setting Name="xlsHotelKadouPath" Type="System.String" Scope="Application">
       <Value Profile="(Default)">C:\JFGWORKS\ホテル稼働予定表Temp.xlsx</Value>
     </Setting>
+    <Setting Name="xlsPassword" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">hotel2023</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
