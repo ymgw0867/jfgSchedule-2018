@@ -21,7 +21,7 @@ namespace jfgSchedule
     {
         int sCnt = 2;                                   // 東西繰り返し回数
         string[,] gengo;                               // 言語配列
-        string[,] sheetYYMM = new string[6, 2];       // 年月と開始列
+        string[,] sheetYYMM = new string[6, 2];        // 年月と開始列
         int sheetStRow = 4;                             // エクセルシート明細開始行
         int[] S_colSMAX = { 195, 196 };                 // 稼働表Temp列Max
         string[] sheetName = { "東", "西" };            // シート名見出し
