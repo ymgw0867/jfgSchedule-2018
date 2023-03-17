@@ -14,6 +14,7 @@ using DocumentFormat.OpenXml.Presentation;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.Office.Interop.Excel;
 using DocumentFormat.OpenXml.Wordprocessing;
+using DocumentFormat.OpenXml.Drawing.Charts;
 
 namespace jfgSchedule
 {
@@ -951,11 +952,13 @@ namespace jfgSchedule
                             住所都道府県 = t.都道府県,
                             住所市区 = t.住所1,
                             メールアドレス = t.メールアドレス1,
-                            他言語ライセンス = t.言語名1 + " " + t.言語名2 + " " +t.言語名3 + " " +t.言語名4 + " " +t.言語名5,
+                            他言語ライセンス = t.言語名1 + " " + t.言語名2 + " " +t.言語名3 + " " +t.言語名4 + " " +t.言語名5 + " ",
                             JFG加入年 = t.JFG加入年.ToString(),
                             JFG稼働日数1 = 0,
                             JFG稼働日数2 = 0,
                             FIT日数 = t.FIT日数,
+                            マンダリン = 0,
+                            ペニンシュラ = 0,
                             会員稼働予定 = t.会員稼働予定
                         };
 
@@ -1056,6 +1059,8 @@ namespace jfgSchedule
 
                 if (card.ToString() == t.カード番号.ToString())
                 {
+                    UpdateClsEastEng(t);    // アサインテーブル項目集計
+
                     clsHotel = new ClsHotelScheduleXls
                     {
                         Year = t.会員稼働予定.年,
@@ -1066,23 +1071,29 @@ namespace jfgSchedule
                         //携帯電話 = GetNewHotelXCellValue(row.Cell(4).Value),
                         携帯電話 = t.携帯電話,
                         分類 = GetNewHotelXCellValue(row.Cell(5).Value),
-                        アサイン2019 = GetNewHotelXCellValue(row.Cell(6).Value),
-                        アサイン2020 = GetNewHotelXCellValue(row.Cell(7).Value),
+                        //アサイン2019 = GetNewHotelXCellValue(row.Cell(6).Value),
+                        アサイン2019 = t.JFG稼働日数1.ToString("###"),
+                        //アサイン2020 = GetNewHotelXCellValue(row.Cell(7).Value),
+                        アサイン2020 = t.JFG稼働日数2.ToString("###"),
                         クレーム履歴 = GetNewHotelXCellValue(row.Cell(8).Value),
                         プレゼン面談年月 = GetMeetingDate(GetNewHotelXCellValue(row.Cell(10).Value)),
                         得意分野 = GetNewHotelXCellValue(row.Cell(11).Value),
                         保険加入 = GetNewHotelXCellValue(row.Cell(12).Value),
                         //都道府県 = GetNewHotelXCellValue(row.Cell(13).Value),
                         都道府県 = t.住所都道府県,
-                        市区町村 = GetNewHotelXCellValue(row.Cell(14).Value),
+                        //市区町村 = GetNewHotelXCellValue(row.Cell(14).Value),
+                        市区町村 = t.住所市区,
                         //メールアドレス = GetNewHotelXCellValue(row.Cell(15).Value),
                         メールアドレス = t.メールアドレス,
-                        他言語 = GetNewHotelXCellValue(row.Cell(16).Value),
+                        //他言語 = GetNewHotelXCellValue(row.Cell(16).Value),
+                        他言語 = t.他言語ライセンス,
                         //FIT = GetNewHotelXCellValue(row.Cell(17).Value),
-                        FIT = t.FIT日数.ToString(),
-                        マンダリン = GetNewHotelXCellValue(row.Cell(18).Value),
-                        ペニンシュラ = GetNewHotelXCellValue(row.Cell(19).Value),
-                        稼働日数 = t.会員稼働予定.稼働日数.ToString(),
+                        FIT = t.FIT日数.ToString("###"),
+                        //マンダリン = GetNewHotelXCellValue(row.Cell(18).Value),
+                        マンダリン = t.マンダリン.ToString("###"),
+                        //ペニンシュラ = GetNewHotelXCellValue(row.Cell(19).Value),
+                        ペニンシュラ = t.ペニンシュラ.ToString("###"),
+                        稼働日数 = t.会員稼働予定.稼働日数.ToString("###"),
                         更新日 = t.会員稼働予定.更新日.ToString()
                     };
 
@@ -1130,70 +1141,89 @@ namespace jfgSchedule
             return rtn;
         }
 
+        /// <summary>
+        /// アサインデータ集計・加工
+        /// </summary>
+        /// <param name="t">ClsEastEngクラス</param>
         private void UpdateClsEastEng(ClsEastEng t)
         {
             var str = t.住所市区;
-            int idx;
+            int idx = 0;
 
-            // 住所・市区
+            // 住所・市区を切り出し
             if (t.住所都道府県 == "東京都")
             {
-                idx = str.IndexOf("区", 1);
+                string[] city = { "区", "市", "郡" };
 
-                if (idx == 0)
+                for (int i = 0; i < city.Length; i++)
                 {
-                    idx = str.IndexOf("市", 1);
-                }
-
-                if (idx == 0)
-                {
-                    idx = str.IndexOf("郡", 1);
+                    idx = str.IndexOf(city[i], 1);
+                    if (idx > 0)
+                    {
+                        break;
+                    }
                 }
             }
             else
             {
-                idx = str.IndexOf("郡", 1);
+                string[] city = { "郡", "市市", "市" };
 
-                if (idx == 0)
+                for (int i = 0; i < city.Length; i++)
                 {
-                    idx = str.IndexOf("市市", 1);
+                    idx = str.IndexOf(city[i], 1);
                     if (idx > 0)
                     {
-                        idx++;
+                        if (i == 1)
+                        {
+                            idx++;
+                        }
+                        break;
                     }
-                }
-
-                if (idx == 0)
-                {
-                    idx = str.IndexOf("市", 1);
                 }
             }
 
-            t.住所市区 = str.Substring(0, idx);
+            if (idx > 0)
+            {
+                t.住所市区 = str.Substring(0, idx + 1);
+            }
+            else
+            {
+                t.住所市区 = "";
+            }
 
-            t.他言語ライセンス = t.他言語ライセンス.Replace("E ", "");
+            t.他言語ライセンス = t.他言語ライセンス.Replace("E ", "").Trim();
 
-            //SELECT COUNT(*) FROM[JFG_MST].[dbo].[アサイン] where カード番号 = 52 and 分類 = 'G' and 稼働日1>= '2019/01/01' and 稼働日1< '2019/12/31' and 手数料日付 is not null
+            jfgDataClassDataContext db = new jfgDataClassDataContext();
 
+            // ホテルアサイン件数（英）2019
             var date1 = DateTime.Parse(Properties.Settings.Default.assignYear1 + "/" + "01/01");
             var date2 = DateTime.Parse(Properties.Settings.Default.assignYear1 + "/" + "12/31");
 
-            jfgDataClassDataContext db = new jfgDataClassDataContext();
             var asgn = db.アサイン.Where(a => a.カード番号 == t.カード番号).Where(a => a.分類 == "G")
                 .Where(a => a.手数料日付 != null).Where(a => a.稼働日1 >= date1 && a.稼働日1 <= date2).Count();
+
             t.JFG稼働日数1 = asgn;
 
-            /*・ホテルアサイン件数（英）2020～2022
-            SELECT COUNT(*) FROM[JFG_MST].[dbo].[アサイン] where カード番号 = 52 and 分類 = 'G' and 稼働日1>= '2020/01/01' 
-            and 稼働日1< '2022/12/31' and 手数料日付 is not null */
-
+            // ホテルアサイン件数（英）2020～2022
             date1 = DateTime.Parse(Properties.Settings.Default.assignYear2 + "/" + "01/01");
             date2 = DateTime.Parse(Properties.Settings.Default.assignYear3 + "/" + "12/31");
+
             asgn = db.アサイン.Where(a => a.カード番号 == t.カード番号).Where(a => a.分類 == "G")
                 .Where(a => a.手数料日付 != null).Where(a => a.稼働日1 >= date1 && a.稼働日1 <= date2).Count();
+
             t.JFG稼働日数2 = asgn;
 
+            // マンダリン
+            asgn = db.アサイン.Where(a => a.カード番号 == t.カード番号).Where(a => a.分類 == "G").Where(a => a.手数料日付 != null)
+                .Where(a => a.依頼先名1.Contains("ﾏﾝﾀﾞﾘﾝ")).Count();
 
+            t.マンダリン = asgn;
+
+            // ペニンシュラ
+            asgn = db.アサイン.Where(a => a.カード番号 == t.カード番号).Where(a => a.分類 == "G").Where(a => a.手数料日付 != null)
+                .Where(a => a.依頼先名1.Contains("ﾍﾟﾆﾝｼｭﾗ")).Count();
+
+            t.ペニンシュラ = asgn;
         }
 
 

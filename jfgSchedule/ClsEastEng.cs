@@ -20,6 +20,8 @@ namespace jfgSchedule
         public int JFG稼働日数1 { get; set; }
         public int JFG稼働日数2 { get; set; }
         public int FIT日数 { get; set; }
+        public int マンダリン { get; set; }
+        public int ペニンシュラ { get; set; }
         public 会員稼働予定 会員稼働予定 { get; set; }
     }
 }
