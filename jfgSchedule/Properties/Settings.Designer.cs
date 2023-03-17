@@ -124,17 +124,6 @@ namespace jfgSchedule.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=192.168.1.51\\SQLEXPRESS,1433;Initial Catalog=JFG_MST;Persist Security" +
-            " Info=True;User ID=jfg210915; Password=jfgpass")]
-        public string JFG_MSTConnectionString {
-            get {
-                return ((string)(this["JFG_MSTConnectionString"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("C:\\JFGWORKS\\新ホテル向けガイドリスト.xlsx")]
         public string xlsNewHotelGuideListPath {
             get {
@@ -157,6 +146,44 @@ namespace jfgSchedule.Properties {
         public string xlsPassword {
             get {
                 return ((string)(this["xlsPassword"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=192.168.1.51\\SQLEXPRESS,1433;Initial Catalog=JFG_MST;Persist Security" +
+            " Info=True;User ID=jfg210915; Password=jfgpass")]
+        public string JFG_MSTConnectionString {
+            get {
+                return ((string)(this["JFG_MSTConnectionString"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2019")]
+        public string assignYear1 {
+            get {
+                return ((string)(this["assignYear1"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2020")]
+        public string assignYear2 {
+            get {
+                return ((string)(this["assignYear2"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2022")]
+        public string assignYear3 {
+            get {
+                return ((string)(this["assignYear3"]));
             }
         }
     }

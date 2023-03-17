@@ -898,7 +898,7 @@ namespace jfgSchedule
 
                     // 組合員予定申告データを取得
                     string cardNum = string.Empty;
-                    string gCode   = gengo[0, 0];
+                    string gCode = gengo[0, 0];
 
                     jfgDataClassDataContext db = new jfgDataClassDataContext();
 
@@ -911,11 +911,23 @@ namespace jfgSchedule
                                          {
                                              a.カード番号,
                                              a.氏名,
+                                             a.携帯電話番号,
+                                             a.生年月日,
+                                             a.都道府県,
+                                             a.住所1,
+                                             a.メールアドレス1,
+                                             a.言語名1,
+                                             a.言語名2,
+                                             a.言語名3,
+                                             a.言語名4,
+                                             a.言語名5,
+                                             a.JFG加入年,
+                                             a.FIT日数,
                                              a.会員稼働予定
                                          });
 
-                    ClsHotelScheduleXls clsHotel    = null;
-                    ClsScheduleDays[]   clsSchedule = new ClsScheduleDays[31];
+                    ClsHotelScheduleXls clsHotel = null;
+                    ClsScheduleDays[] clsSchedule = new ClsScheduleDays[31];
 
                     int col;
 
@@ -934,6 +946,16 @@ namespace jfgSchedule
                         {
                             カード番号 = t.カード番号,
                             氏名 = t.氏名,
+                            携帯電話 = t.携帯電話番号,
+                            生まれ年 = t.生年月日 is null ? "" : (DateTime.Parse(t.生年月日.ToString()).Year).ToString(),
+                            住所都道府県 = t.都道府県,
+                            住所市区 = t.住所1,
+                            メールアドレス = t.メールアドレス1,
+                            他言語ライセンス = t.言語名1 + " " + t.言語名2 + " " +t.言語名3 + " " +t.言語名4 + " " +t.言語名5,
+                            JFG加入年 = t.JFG加入年.ToString(),
+                            JFG稼働日数1 = 0,
+                            JFG稼働日数2 = 0,
+                            FIT日数 = t.FIT日数,
                             会員稼働予定 = t.会員稼働予定
                         };
 
@@ -1041,7 +1063,8 @@ namespace jfgSchedule
                         カード番号 = t.カード番号.ToString(),
                         氏名 = t.氏名,
                         フリガナ = t.会員稼働予定.フリガナ,
-                        携帯電話 = GetNewHotelXCellValue(row.Cell(4).Value),
+                        //携帯電話 = GetNewHotelXCellValue(row.Cell(4).Value),
+                        携帯電話 = t.携帯電話,
                         分類 = GetNewHotelXCellValue(row.Cell(5).Value),
                         アサイン2019 = GetNewHotelXCellValue(row.Cell(6).Value),
                         アサイン2020 = GetNewHotelXCellValue(row.Cell(7).Value),
@@ -1049,11 +1072,14 @@ namespace jfgSchedule
                         プレゼン面談年月 = GetMeetingDate(GetNewHotelXCellValue(row.Cell(10).Value)),
                         得意分野 = GetNewHotelXCellValue(row.Cell(11).Value),
                         保険加入 = GetNewHotelXCellValue(row.Cell(12).Value),
-                        都道府県 = GetNewHotelXCellValue(row.Cell(13).Value),
+                        //都道府県 = GetNewHotelXCellValue(row.Cell(13).Value),
+                        都道府県 = t.住所都道府県,
                         市区町村 = GetNewHotelXCellValue(row.Cell(14).Value),
-                        メールアドレス = GetNewHotelXCellValue(row.Cell(15).Value),
+                        //メールアドレス = GetNewHotelXCellValue(row.Cell(15).Value),
+                        メールアドレス = t.メールアドレス,
                         他言語 = GetNewHotelXCellValue(row.Cell(16).Value),
-                        FIT = GetNewHotelXCellValue(row.Cell(17).Value),
+                        //FIT = GetNewHotelXCellValue(row.Cell(17).Value),
+                        FIT = t.FIT日数.ToString(),
                         マンダリン = GetNewHotelXCellValue(row.Cell(18).Value),
                         ペニンシュラ = GetNewHotelXCellValue(row.Cell(19).Value),
                         稼働日数 = t.会員稼働予定.稼働日数.ToString(),
@@ -1103,6 +1129,73 @@ namespace jfgSchedule
 
             return rtn;
         }
+
+        private void UpdateClsEastEng(ClsEastEng t)
+        {
+            var str = t.住所市区;
+            int idx;
+
+            // 住所・市区
+            if (t.住所都道府県 == "東京都")
+            {
+                idx = str.IndexOf("区", 1);
+
+                if (idx == 0)
+                {
+                    idx = str.IndexOf("市", 1);
+                }
+
+                if (idx == 0)
+                {
+                    idx = str.IndexOf("郡", 1);
+                }
+            }
+            else
+            {
+                idx = str.IndexOf("郡", 1);
+
+                if (idx == 0)
+                {
+                    idx = str.IndexOf("市市", 1);
+                    if (idx > 0)
+                    {
+                        idx++;
+                    }
+                }
+
+                if (idx == 0)
+                {
+                    idx = str.IndexOf("市", 1);
+                }
+            }
+
+            t.住所市区 = str.Substring(0, idx);
+
+            t.他言語ライセンス = t.他言語ライセンス.Replace("E ", "");
+
+            //SELECT COUNT(*) FROM[JFG_MST].[dbo].[アサイン] where カード番号 = 52 and 分類 = 'G' and 稼働日1>= '2019/01/01' and 稼働日1< '2019/12/31' and 手数料日付 is not null
+
+            var date1 = DateTime.Parse(Properties.Settings.Default.assignYear1 + "/" + "01/01");
+            var date2 = DateTime.Parse(Properties.Settings.Default.assignYear1 + "/" + "12/31");
+
+            jfgDataClassDataContext db = new jfgDataClassDataContext();
+            var asgn = db.アサイン.Where(a => a.カード番号 == t.カード番号).Where(a => a.分類 == "G")
+                .Where(a => a.手数料日付 != null).Where(a => a.稼働日1 >= date1 && a.稼働日1 <= date2).Count();
+            t.JFG稼働日数1 = asgn;
+
+            /*・ホテルアサイン件数（英）2020～2022
+            SELECT COUNT(*) FROM[JFG_MST].[dbo].[アサイン] where カード番号 = 52 and 分類 = 'G' and 稼働日1>= '2020/01/01' 
+            and 稼働日1< '2022/12/31' and 手数料日付 is not null */
+
+            date1 = DateTime.Parse(Properties.Settings.Default.assignYear2 + "/" + "01/01");
+            date2 = DateTime.Parse(Properties.Settings.Default.assignYear3 + "/" + "12/31");
+            asgn = db.アサイン.Where(a => a.カード番号 == t.カード番号).Where(a => a.分類 == "G")
+                .Where(a => a.手数料日付 != null).Where(a => a.稼働日1 >= date1 && a.稼働日1 <= date2).Count();
+            t.JFG稼働日数2 = asgn;
+
+
+        }
+
 
         /// <summary>
         ///     シートの書式を設定する </summary>
@@ -1226,7 +1319,7 @@ namespace jfgSchedule
             // 日曜日の日付の背景色
             var range2 = tmpSheet.Range(tmpSheet.Cell(2, sCol).Address, tmpSheet.Cell(2, tmpSheet.LastCellUsed().Address.ColumnNumber).Address);
             range2.AddConditionalFormat().WhenIsTrue("=U3=" + @"""日""").Fill.SetBackgroundColor(XLColor.MistyRose).Font.SetFontColor(XLColor.Black);
-            
+
             // ウィンドウ枠の固定
             tmpSheet.SheetView.Freeze(3, 5);
 
