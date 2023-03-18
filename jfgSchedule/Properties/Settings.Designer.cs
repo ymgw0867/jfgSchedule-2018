@@ -143,9 +143,9 @@ namespace jfgSchedule.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("hotel2023")]
-        public string xlsPassword {
+        public string xlsPasswordHotel {
             get {
-                return ((string)(this["xlsPassword"]));
+                return ((string)(this["xlsPasswordHotel"]));
             }
         }
         
@@ -184,6 +184,33 @@ namespace jfgSchedule.Properties {
         public string assignYear3 {
             get {
                 return ((string)(this["assignYear3"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\JFGWORKS\\ツアー向けガイドリスト2023test.xlsx")]
+        public string xlsTourGuideListPath {
+            get {
+                return ((string)(this["xlsTourGuideListPath"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\JFGWORKS\\ツアー向けガイド稼働予定表.xlsx")]
+        public string xlsTourWorksPath {
+            get {
+                return ((string)(this["xlsTourWorksPath"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("tour2023")]
+        public string xlsPasswordTour {
+            get {
+                return ((string)(this["xlsPasswordTour"]));
             }
         }
     }

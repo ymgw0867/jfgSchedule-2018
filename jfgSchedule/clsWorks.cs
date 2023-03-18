@@ -32,18 +32,22 @@ namespace jfgSchedule
         readonly XLColor HeaderBackColor = XLColor.FromArgb(79, 129, 189);  // 見出し行背景色
         readonly XLColor LineBackColor = XLColor.FromArgb(220, 230, 241); // 奇数明細行背景色
         readonly string SheetName = "新ホテル向けガイド稼働表";
+        readonly string xlsNewHotelList = Properties.Settings.Default.xlsNewHotelGuideListPath; // 参照用エクセルファイル：新ホテル向けガイドリスト
+        readonly string xlsTourList = Properties.Settings.Default.xlsTourWorksPath;     // 参照用エクセルファイル：ツアー向けガイドリスト2023
 
         public clsWorks(string logFile)
         {
             // 言語配列読み込み
             ReadLang();
 
-            // 稼働表作成
+            // 稼働予定表作成
             WorksOutputXML(logFile);
 
-            // 新ホテル向けガイド稼働表作成
-            //worksOutputXML_FromExcel(logFile);
-            WorksOutputXML_FromExcel_BySheet(logFile);  // 新ホテル向けガイドリスト仕様 2023/02/17
+            // 新ホテル向けガイド稼働予定表作成：2023/02/17
+            WorksOutputXML_FromExcel_BySheet(logFile);
+
+            // ツアー向けガイド稼働予定表作成：2023/03/18
+            WorksOutputXML_FromExcel_ForTour(logFile);
         }
 
         /// <summary>
@@ -755,9 +759,7 @@ namespace jfgSchedule
         }
 
         /// <summary>
-        /// 仕様簿稼働表作成： 2023/01/30
-        ///     ・新ホテル向けガイドリストを基に作成
-        ///     ・月をシート毎に分ける
+        /// 新ホテル向けガイド稼働予定表作成： 2023/01/30
         /// </summary>
         /// <param name="logFile">
         /// ログ出力パス
@@ -765,10 +767,10 @@ namespace jfgSchedule
         public void WorksOutputXML_FromExcel_BySheet(string logFile)
         {
             // ホテル向けガイドリストExcelファイルの存在確認
-            if (!System.IO.File.Exists(Properties.Settings.Default.xlsHotelGuideListPath))
+            if (!System.IO.File.Exists(xlsNewHotelList))
             {
                 // ログ出力
-                System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" ホテル向けガイドリストExcelファイル（" + Properties.Settings.Default.xlsHotelGuideListPath + "）が見つかりませんでした。"), Encoding.GetEncoding(932));
+                System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" ホテル向けガイドリストExcelファイル（" + xlsNewHotelList + "）が見つかりませんでした。"), Encoding.GetEncoding(932));
                 return;
             }
 
@@ -780,7 +782,7 @@ namespace jfgSchedule
             {
                 // Excelシート：新ホテル向けガイドリストをテーブルに読み込む
                 IXLTable Hoteltbl;
-                using (var selectBook = new XLWorkbook(Properties.Settings.Default.xlsNewHotelGuideListPath))
+                using (var selectBook = new XLWorkbook(xlsNewHotelList))
                 {
                     using (var selSheet = selectBook.Worksheet(1))
                     {
@@ -990,7 +992,7 @@ namespace jfgSchedule
                 System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" ホテル向けガイド稼働表を更新しました。"), Encoding.GetEncoding(932));
 
                 // パスワード付きで再度書き換え：2023/03/17
-                _ = Utility.PwdXlsFile(Properties.Settings.Default.xlsHotelsWorksPath, Properties.Settings.Default.xlsPassword, "", logFile);
+                _ = Utility.PwdXlsFile(Properties.Settings.Default.xlsHotelsWorksPath, Properties.Settings.Default.xlsPasswordHotel, "", logFile);
             }
             catch (Exception ex)
             {
@@ -1003,6 +1005,256 @@ namespace jfgSchedule
 
             }
         }
+
+
+        /// <summary>
+        /// ツアー向け稼働予定表作成： 2023/03/18
+        /// </summary>
+        /// <param name="logFile">
+        /// ログ出力パス
+        /// </param>
+        public void WorksOutputXML_FromExcel_ForTour(string logFile)
+        {
+            // ツアー向けガイドリストExcelファイルの存在確認
+            if (!System.IO.File.Exists(xlsTourList))
+            {
+                // ログ出力
+                System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" ツアー向けガイドリストExcelファイル（" + xlsTourList + "）が見つかりませんでした。"), Encoding.GetEncoding(932));
+                return;
+            }
+
+            DateTime stDate;
+            DateTime edDate;
+            string[] headerArray = new string[17];
+
+            try
+            {
+                // Excelシート：ツアー向けガイドリストをテーブルに読み込む
+                IXLTable Tourtbl;
+                using (var selectBook = new XLWorkbook(xlsTourList))
+                {
+                    using (var selSheet = selectBook.Worksheet(1))
+                    {
+                        // カード番号開始セル
+                        var cell1 = selSheet.Cell("A2");
+                        // 最終行を取得
+                        var lastRow = selSheet.LastRowUsed().RowNumber();
+                        // カード番号最終セル
+                        var cell2 = selSheet.Cell(lastRow, 19);
+                        // カード番号をテーブルで取得
+                        Tourtbl = selSheet.Range(cell1, cell2).AsTable();
+
+                        // 列見出し文言を取得
+                        headerArray[0]  = selSheet.Cell("D1").Value.ToString();
+                        headerArray[1]  = selSheet.Cell("E1").Value.ToString();
+                        headerArray[2]  = selSheet.Cell("F1").Value.ToString();
+                        headerArray[3]  = selSheet.Cell("G1").Value.ToString();
+                        headerArray[4]  = selSheet.Cell("H1").Value.ToString();
+                        headerArray[5]  = selSheet.Cell("I1").Value.ToString();
+                        headerArray[6]  = selSheet.Cell("K1").Value.ToString();
+                        headerArray[7]  = selSheet.Cell("L1").Value.ToString();
+                        headerArray[8]  = selSheet.Cell("M1").Value.ToString().Replace(" ", "").Replace("　", "");
+                        headerArray[9]  = selSheet.Cell("N1").Value.ToString();
+                        headerArray[10] = selSheet.Cell("O1").Value.ToString();
+                        headerArray[11] = selSheet.Cell("P1").Value.ToString();
+                        headerArray[12] = selSheet.Cell("Q1").Value.ToString();
+                        headerArray[13] = selSheet.Cell("R1").Value.ToString();
+                        headerArray[14] = selSheet.Cell("S1").Value.ToString();
+                    }
+                }
+
+                // ガイドリストテーブル有効行がないときは終わる
+                if (Tourtbl.RowCount() < 1)
+                {
+                    // ログ出力
+                    System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" ツアー向けガイドリストExcelシートに有効行がありませんでした。"), Encoding.GetEncoding(932));
+                    return;
+                }
+
+                // 稼働予定表ブック作成
+                using (var book = new XLWorkbook(XLEventTracking.Disabled))
+                {
+                    // 稼働予定開始年月日
+                    stDate = DateTime.Parse(DateTime.Today.Year.ToString() + "/" + DateTime.Today.Month.ToString() + "/01");
+
+                    // 稼働予定終了年月日
+                    edDate = stDate.AddMonths(6).AddDays(-1);
+
+                    // シート作成
+                    book.AddWorksheet(SheetName);
+                    var tmpSheet = book.Worksheet(SheetName);
+
+                    // 見出し 2023/02/08
+                    tmpSheet.Cell("A1").SetValue("カード番号");
+                    tmpSheet.Cell("B1").SetValue("氏名");
+                    tmpSheet.Cell("C1").SetValue("フリガナ");
+                    tmpSheet.Cell("D1").SetValue(headerArray[0]);
+                    tmpSheet.Cell("E1").SetValue(headerArray[1]);
+                    tmpSheet.Cell("F1").SetValue(headerArray[2]);
+                    tmpSheet.Cell("G1").SetValue(headerArray[3]);
+                    tmpSheet.Cell("H1").SetValue(headerArray[4]);
+                    tmpSheet.Cell("I1").SetValue(headerArray[5]);
+                    tmpSheet.Cell("J1").SetValue(headerArray[6]);
+                    tmpSheet.Cell("K1").SetValue(headerArray[7]);
+                    tmpSheet.Cell("L1").SetValue(headerArray[8]);
+                    tmpSheet.Cell("M1").SetValue(headerArray[9]);
+                    tmpSheet.Cell("N1").SetValue(headerArray[10]);
+                    tmpSheet.Cell("O1").SetValue(headerArray[11]);
+                    tmpSheet.Cell("P1").SetValue(headerArray[12]);
+                    tmpSheet.Cell("Q1").SetValue(headerArray[13]);
+                    tmpSheet.Cell("R1").SetValue(headerArray[14]);
+                    tmpSheet.Cell("S1").SetValue("稼働日数");
+                    tmpSheet.Cell("T1").SetValue("更新日");
+
+                    // 稼働予定期間のカレンダーをセット
+                    for (int mon = 0; mon < 6; mon++)
+                    {
+                        // 該当月
+                        DateTime wDt = stDate.AddMonths(mon);
+                        var xCol = 31 * mon + 21;
+                        tmpSheet.Cell(1, xCol).SetValue(wDt.Year + "年" + wDt.Month + "月"); // 21,52,83,114,・・・ 
+
+                        // 年月と開始列の配列にセット
+                        sheetYYMM[mon, 0] = wDt.Year.ToString() + wDt.Month.ToString().PadLeft(2, '0');
+                        sheetYYMM[mon, 1] = xCol.ToString();
+
+                        // 該当月の暦
+                        int dy = 0;
+                        while (dy < 31)
+                        {
+                            if (DateTime.TryParse(wDt.Year.ToString() + "/" + wDt.Month.ToString() + "/" + (dy + 1).ToString(), out DateTime dDay))
+                            {
+                                if (dDay >= DateTime.Today)
+                                {
+                                    tmpSheet.Cell(1, xCol + dy).SetValue(wDt.Year + "年" + wDt.Month + "月");  // 年月：2023/01/26
+                                    tmpSheet.Cell(2, xCol + dy).SetValue((dy + 1).ToString());    // 日
+                                    tmpSheet.Cell(3, xCol + dy).SetValue(dDay.ToString("ddd"));   // 曜日
+                                }
+                                else
+                                {
+                                    // 作成前日以前はセルを空白とする：2023/01/25
+                                    tmpSheet.Cell(2, xCol + dy).SetValue(string.Empty);
+                                    tmpSheet.Cell(3, xCol + dy).SetValue(string.Empty);
+                                }
+                            }
+                            else
+                            {
+                                // 存在しない日付はセルを空白とする
+                                tmpSheet.Cell(2, xCol + dy).SetValue(string.Empty);
+                                tmpSheet.Cell(3, xCol + dy).SetValue(string.Empty);
+                            }
+
+                            dy++;
+                        }
+                    }
+
+                    // 組合員予定申告データを取得
+                    string cardNum = string.Empty;
+                    string gCode = gengo[0, 0];
+
+                    jfgDataClassDataContext db = new jfgDataClassDataContext();
+
+                    // 東・LINQ
+                    var linqEast = db.会員情報.Where(a => (a.言語1 == int.Parse(gCode) || a.言語2 == int.Parse(gCode) ||
+                                                          a.言語3 == int.Parse(gCode) || a.言語4 == int.Parse(gCode) ||
+                                                          a.言語5 == int.Parse(gCode)) && a.東西 == 1)
+                                         .OrderBy(a => a.会員稼働予定.フリガナ).ThenBy(a => a.会員稼働予定.カード番号).ThenBy(a => a.会員稼働予定.年).ThenBy(a => a.会員稼働予定.月)
+                                         .Select(a => new
+                                         {
+                                             a.カード番号,
+                                             a.氏名,
+                                             a.フリガナ,
+                                             a.携帯電話番号,
+                                             a.都道府県,
+                                             a.住所1,
+                                             a.メールアドレス1,
+                                             a.言語名1,
+                                             a.言語名2,
+                                             a.言語名3,
+                                             a.言語名4,
+                                             a.言語名5,
+                                             a.JFG加入年,
+                                             a.会員稼働予定
+                                         });
+
+                    ClsTourScheduleXls clsTour = null;
+                    ClsScheduleDays[] clsSchedule = new ClsScheduleDays[31];
+
+                    int col;
+
+                    foreach (var t in linqEast)
+                    {
+                        col = 0;
+
+                        // 該当期間のデータか検証
+                        if (!IsTargetPeriod(t.会員稼働予定.年.ToString() + t.会員稼働予定.月.ToString().PadLeft(2, '0'), out col))
+                        {
+                            // 非該当期間のとき読み飛ばし
+                            continue;
+                        }
+
+                        ClsEastEng eastEng = new ClsEastEng
+                        {
+                            カード番号 = t.カード番号,
+                            氏名 = t.氏名,
+                            フリガナ = t.フリガナ,
+                            携帯電話 = t.携帯電話番号,
+                            生まれ年 = "",
+                            住所都道府県 = t.都道府県,
+                            住所市区 = t.住所1,
+                            メールアドレス = t.メールアドレス1,
+                            他言語ライセンス = t.言語名1 + " " + t.言語名2 + " " +t.言語名3 + " " +t.言語名4 + " " +t.言語名5 + " ",
+                            JFG加入年 = t.JFG加入年.ToString(),
+                            JFG稼働日数1 = 0,
+                            JFG稼働日数2 = 0,
+                            FIT日数 = 0,
+                            マンダリン = 0,
+                            ペニンシュラ = 0,
+                            会員稼働予定 = t.会員稼働予定
+                        };
+
+                        // ツアー向けガイドリスト(英語)を参照
+                        if (!IsTourListMember(Tourtbl, out clsTour, out clsSchedule, eastEng))
+                        {
+                            // ツアー向けガイドリスト(英語)未掲載はネグる
+                            continue;
+                        }
+
+                        // 稼働予定を含む組合員情報を稼働表エクセルシートに貼付
+                        if (!XlsCellsSetXML_BySheet(clsTour, clsSchedule, tmpSheet, sheetStRow, col, cardNum, logFile))
+                        {
+                            continue;
+                        }
+
+                        // カード番号
+                        cardNum = clsTour.カード番号;
+                    }
+
+                    // 表のフォーマットを整える（罫線、列結合）
+                    SheetFormat(tmpSheet, xCol, logFile);
+
+                    //保存処理
+                    book.SaveAs(Properties.Settings.Default.xlsTourWorksPath);
+                }
+
+                // ログ出力
+                System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" ツアー向けガイド稼働表を更新しました。"), Encoding.GetEncoding(932));
+
+                // パスワード付きで再度書き換え：2023/03/18
+                _ = Utility.PwdXlsFile(Properties.Settings.Default.xlsTourWorksPath, Properties.Settings.Default.xlsPasswordTour, "", logFile);
+            }
+            catch (Exception ex)
+            {
+                Console.Write(ex.ToString());
+                // ログ出力
+                System.IO.File.AppendAllText(logFile, Form1.GetNowTime(ex.ToString()), Encoding.GetEncoding(932));
+            }
+            finally
+            {
+
+            }
+        }
+
 
         /// <summary>
         ///     対象期間内の予定か検証 </summary>
@@ -1141,56 +1393,117 @@ namespace jfgSchedule
             return rtn;
         }
 
+
         /// <summary>
-        /// アサインデータ集計・加工
+        ///     ツアー向けガイドリストに掲載されているか検証、掲載ならClsTourScheduleXlsクラス作成　</summary>
+        /// <param name="Tourltbl">
+        ///     ツアー向けガイドリストテーブル</param>
+        /// <param name="clsTour">
+        ///     ツアー向けガイド稼働表・組合員情報クラス</param>
+        /// <param name="clsSchedule">
+        ///     ツアー向けガイド稼働表・予定表クラス</param>
+        /// <param name="t">
+        ///     会員稼働予定情報（東、英語）</param>
+        /// <returns>
+        ///     掲載：true, 非掲載：false</returns>
+        private bool IsTourListMember(IXLTable Tourtbl, out ClsTourScheduleXls clsTour, out ClsScheduleDays[] clsSchedule, ClsEastEng t)
+        {
+            bool rtn = false;
+
+            clsTour = null;
+            clsSchedule = new ClsScheduleDays[31];
+
+            // ツアー向けガイドリスト(英語)を参照
+            foreach (var row in Tourtbl.Rows())
+            {
+                var card = row.Cell(1).Value;
+                if (string.IsNullOrEmpty(card.ToString()))
+                {
+                    continue;
+                }
+
+                if (card.ToString() == t.カード番号.ToString())
+                {
+                    UpdateClsEastEng_Tour(t);    // アサインテーブル項目集計
+
+                    clsTour = new ClsTourScheduleXls
+                    {
+                        Year  = t.会員稼働予定.年,
+                        Month = t.会員稼働予定.月,
+                        カード番号 = t.カード番号.ToString(),
+                        氏名 = t.氏名,
+                        フリガナ = t.会員稼働予定.フリガナ,
+                        携帯電話 = t.携帯電話,
+                        ホテル業務対応可 = GetNewHotelXCellValue(row.Cell(5).Value),
+                        団体インセンティブ対応可  = GetNewHotelXCellValue(row.Cell(6).Value),
+                        一般のツアー対応可 = GetNewHotelXCellValue(row.Cell(7).Value),
+                        東京都福祉衛生局対応 = GetNewHotelXCellValue(row.Cell(8).Value),
+                        クレーム履歴 = GetNewHotelXCellValue(row.Cell(9).Value),
+                        プレゼン面談年月 = GetMeetingDate(GetNewHotelXCellValue(row.Cell(11).Value)),
+                        都道府県 = t.住所都道府県,
+                        市区町村 = t.住所市区,
+                        メールアドレス = t.メールアドレス,
+                        他言語 = t.他言語ライセンス,
+                        得意分野 = GetNewHotelXCellValue(row.Cell(16).Value),
+                        JFG加入年 = GetNewHotelXCellValue(row.Cell(17).Value),
+                        稼働日数2019 = t.JFG稼働日数1.ToString("###"),
+                        稼働日数2022 = t.JFG稼働日数2.ToString("###"),
+                        稼働日数 = t.会員稼働予定.稼働日数.ToString("###"),
+                        更新日 = t.会員稼働予定.更新日.ToString()
+                    };
+
+                    for (int i = 0; i < 31; i++)
+                    {
+                        clsSchedule[i] = new ClsScheduleDays();
+                        if (i ==  0) clsSchedule[i].予定 = t.会員稼働予定.d1;
+                        if (i ==  1) clsSchedule[i].予定 = t.会員稼働予定.d2;
+                        if (i ==  2) clsSchedule[i].予定 = t.会員稼働予定.d3;
+                        if (i ==  3) clsSchedule[i].予定 = t.会員稼働予定.d4;
+                        if (i ==  4) clsSchedule[i].予定 = t.会員稼働予定.d5;
+                        if (i ==  5) clsSchedule[i].予定 = t.会員稼働予定.d6;
+                        if (i ==  6) clsSchedule[i].予定 = t.会員稼働予定.d7;
+                        if (i ==  7) clsSchedule[i].予定 = t.会員稼働予定.d8;
+                        if (i ==  8) clsSchedule[i].予定 = t.会員稼働予定.d9;
+                        if (i ==  9) clsSchedule[i].予定 = t.会員稼働予定.d10;
+                        if (i == 10) clsSchedule[i].予定 = t.会員稼働予定.d11;
+                        if (i == 11) clsSchedule[i].予定 = t.会員稼働予定.d12;
+                        if (i == 12) clsSchedule[i].予定 = t.会員稼働予定.d13;
+                        if (i == 13) clsSchedule[i].予定 = t.会員稼働予定.d14;
+                        if (i == 14) clsSchedule[i].予定 = t.会員稼働予定.d15;
+                        if (i == 15) clsSchedule[i].予定 = t.会員稼働予定.d16;
+                        if (i == 16) clsSchedule[i].予定 = t.会員稼働予定.d17;
+                        if (i == 17) clsSchedule[i].予定 = t.会員稼働予定.d18;
+                        if (i == 18) clsSchedule[i].予定 = t.会員稼働予定.d19;
+                        if (i == 19) clsSchedule[i].予定 = t.会員稼働予定.d20;
+                        if (i == 20) clsSchedule[i].予定 = t.会員稼働予定.d21;
+                        if (i == 21) clsSchedule[i].予定 = t.会員稼働予定.d22;
+                        if (i == 22) clsSchedule[i].予定 = t.会員稼働予定.d23;
+                        if (i == 23) clsSchedule[i].予定 = t.会員稼働予定.d24;
+                        if (i == 24) clsSchedule[i].予定 = t.会員稼働予定.d25;
+                        if (i == 25) clsSchedule[i].予定 = t.会員稼働予定.d26;
+                        if (i == 26) clsSchedule[i].予定 = t.会員稼働予定.d27;
+                        if (i == 27) clsSchedule[i].予定 = t.会員稼働予定.d28;
+                        if (i == 28) clsSchedule[i].予定 = t.会員稼働予定.d29;
+                        if (i == 29) clsSchedule[i].予定 = t.会員稼働予定.d30;
+                        if (i == 30) clsSchedule[i].予定 = t.会員稼働予定.d31;
+                    }
+
+                    rtn = true;
+                    break;
+                };
+            }
+
+            return rtn;
+        }
+
+
+        /// <summary>
+        /// アサインデータ集計・加工（ホテル）
         /// </summary>
         /// <param name="t">ClsEastEngクラス</param>
         private void UpdateClsEastEng(ClsEastEng t)
         {
-            var str = t.住所市区;
-            int idx = 0;
-
-            // 住所・市区を切り出し
-            if (t.住所都道府県 == "東京都")
-            {
-                string[] city = { "区", "市", "郡" };
-
-                for (int i = 0; i < city.Length; i++)
-                {
-                    idx = str.IndexOf(city[i], 1);
-                    if (idx > 0)
-                    {
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                string[] city = { "郡", "市市", "市" };
-
-                for (int i = 0; i < city.Length; i++)
-                {
-                    idx = str.IndexOf(city[i], 1);
-                    if (idx > 0)
-                    {
-                        if (i == 1)
-                        {
-                            idx++;
-                        }
-                        break;
-                    }
-                }
-            }
-
-            if (idx > 0)
-            {
-                t.住所市区 = str.Substring(0, idx + 1);
-            }
-            else
-            {
-                t.住所市区 = "";
-            }
-
+            t.住所市区 = SubstrAddress(t.住所市区, t.住所都道府県);
             t.他言語ライセンス = t.他言語ライセンス.Replace("E ", "").Trim();
 
             jfgDataClassDataContext db = new jfgDataClassDataContext();
@@ -1224,6 +1537,88 @@ namespace jfgSchedule
                 .Where(a => a.依頼先名1.Contains("ﾍﾟﾆﾝｼｭﾗ")).Count();
 
             t.ペニンシュラ = asgn;
+        }
+
+        /// <summary>
+        /// アサインデータ集計・加工（ツアー）
+        /// </summary>
+        /// <param name="t">ClsEastEngクラス</param>
+        private void UpdateClsEastEng_Tour(ClsEastEng t)
+        {
+            t.住所市区 = SubstrAddress(t.住所市区, t.住所都道府県);
+            t.他言語ライセンス = t.他言語ライセンス.Replace("E ", "").Trim();
+
+            jfgDataClassDataContext db = new jfgDataClassDataContext();
+
+            // 2019アサイン件数
+            var date1 = DateTime.Parse(Properties.Settings.Default.assignYear1 + "/" + "01/01");
+            var date2 = DateTime.Parse(Properties.Settings.Default.assignYear1 + "/" + "12/31");
+
+            var asgn = db.アサイン.Where(a => a.カード番号 == t.カード番号)
+                .Where(a => a.手数料日付 != null).Where(a => a.稼働日1 >= date1 && a.稼働日1 <= date2).Count();
+
+            t.JFG稼働日数1 = asgn;
+
+            // 2022アサイン件数
+            date1 = DateTime.Parse(Properties.Settings.Default.assignYear3 + "/" + "01/01");
+            date2 = DateTime.Parse(Properties.Settings.Default.assignYear3 + "/" + "12/31");
+
+            asgn = db.アサイン.Where(a => a.カード番号 == t.カード番号)
+                .Where(a => a.手数料日付 != null).Where(a => a.稼働日1 >= date1 && a.稼働日1 <= date2).Count();
+
+            t.JFG稼働日数2 = asgn;
+        }
+
+        /// <summary>
+        /// 住所1より区市郡までを切り出す
+        /// </summary>
+        /// <param name="str">住所</param>
+        /// <param name="prefectures">都道府県</param>
+        /// <returns>区市郡までの文字列</returns>
+        private string SubstrAddress(string str, string prefectures)
+        {
+            int idx = 0;
+
+            // 住所・市区を切り出し
+            if (prefectures == "東京都")
+            {
+                string[] city = { "区", "市", "郡" };
+
+                for (int i = 0; i < city.Length; i++)
+                {
+                    idx = str.IndexOf(city[i], 1);
+                    if (idx > 0)
+                    {
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                string[] city = { "郡", "市市", "市" };
+
+                for (int i = 0; i < city.Length; i++)
+                {
+                    idx = str.IndexOf(city[i], 1);
+                    if (idx > 0)
+                    {
+                        if (i == 1)
+                        {
+                            idx++;
+                        }
+                        break;
+                    }
+                }
+            }
+
+            if (idx > 0)
+            {
+                return str.Substring(0, idx + 1);
+            }
+            else
+            {
+                return "";
+            }
         }
 
 
@@ -1492,11 +1887,11 @@ namespace jfgSchedule
 
         /// --------------------------------------------------------------------------
         /// <summary>
-        ///     新ホテル向けガイド稼働表エクセルシート作成 2023/02/14 </summary>
-        /// <param name="clsHotel">
-        ///     新ホテル向けガイド稼働表・組合員情報クラス</param>
+        ///     稼働表エクセルシート作成 2023/02/14 </summary>
+        /// <param name="cls">
+        ///     ジェネリッククラス/param>
         /// <param name="clsSchedule">
-        ///     新ホテル向けガイド稼働表・予定表クラス</param>
+        ///     ガイド稼働表・予定表クラス</param>
         /// <param name="sheet">
         ///     アサイン担当用稼働表エクセルシート </param>
         /// <param name="sRow">
@@ -1506,8 +1901,22 @@ namespace jfgSchedule
         /// <param name="cardNum">
         ///     カード番号</param>
         /// --------------------------------------------------------------------------
-        private bool XlsCellsSetXML_BySheet(ClsHotelScheduleXls clsHotel, ClsScheduleDays[] clsSchedule, ClosedXML.Excel.IXLWorksheet sheet, int stRow, int sCol, string cardNum, string logFile)
+        private bool XlsCellsSetXML_BySheet<T>(T cls, ClsScheduleDays[] clsSchedule, ClosedXML.Excel.IXLWorksheet sheet, int stRow, int sCol, string cardNum, string logFile) where T : class
         {
+            string cardCode;
+            if (typeof(T) == typeof(ClsHotelScheduleXls))
+            {
+                cardCode = ((ClsHotelScheduleXls)(object)(cls)).カード番号;
+            }
+            else if (typeof(T) == typeof(ClsTourScheduleXls))
+            {
+                cardCode = ((ClsTourScheduleXls)(object)(cls)).カード番号;
+            }
+            else
+            {
+                return false;
+            }
+
             var SRow = stRow;
             if (SRow < sheet.LastRowUsed().RowNumber())
             {
@@ -1515,7 +1924,7 @@ namespace jfgSchedule
             }
 
             // 組合員が変わったとき
-            if (cardNum != string.Empty && cardNum != clsHotel.カード番号)
+            if (cardNum != string.Empty && cardNum != cardCode)
             {
                 // 行下部へヨコ罫線を引く
                 sheet.Range(sheet.Cell(SRow, 1).Address,
@@ -1523,18 +1932,18 @@ namespace jfgSchedule
                 SRow++;
             }
 
-            if (cardNum != clsHotel.カード番号)
+            if (cardNum != cardCode)
             {
                 sheet.Row(SRow).Height = 18;
 
                 // 組合員情報クラスからデータ貼り付け
-                foreach (PropertyInfo propertyInfo in typeof(ClsHotelScheduleXls).GetProperties())
+                foreach (PropertyInfo propertyInfo in typeof(T).GetProperties())
                 {
                     //属性が定義されたプロパティだけを参照するため、fixedAttrがnullなら処理の対象外
                     if (Attribute.GetCustomAttribute(propertyInfo, typeof(ColumnNameAttribute)) is ColumnNameAttribute attribute)
                     {
                         // 値取得
-                        var val = propertyInfo.GetValue(clsHotel) == null ? "" : propertyInfo.GetValue(clsHotel).ToString();
+                        var val = propertyInfo.GetValue(cls) == null ? "" : propertyInfo.GetValue(cls).ToString();
 
                         // セルに貼り付け
                         sheet.Cell(SRow, attribute.ColumnName).SetValue(val);
@@ -1557,7 +1966,7 @@ namespace jfgSchedule
 
             // アサイン担当者か検証する
             jfgDataClassDataContext db = new jfgDataClassDataContext();
-            var s = db.アサイン担当者.Where(a => a.カード番号 == double.Parse(clsHotel.カード番号));
+            var s = db.アサイン担当者.Where(a => a.カード番号 == double.Parse(cardCode));
             if (s.Count() > 0)
             {
                 // カード番号、氏名、フリガナ各セルのBackColorを黄色にする
