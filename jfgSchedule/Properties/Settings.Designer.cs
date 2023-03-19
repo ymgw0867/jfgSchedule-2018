@@ -189,7 +189,7 @@ namespace jfgSchedule.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\JFGWORKS\\ツアー向けガイドリスト2023test.xlsx")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\JFGWORKS\\ツアー向けガイドリスト2023.xlsx")]
         public string xlsTourGuideListPath {
             get {
                 return ((string)(this["xlsTourGuideListPath"]));

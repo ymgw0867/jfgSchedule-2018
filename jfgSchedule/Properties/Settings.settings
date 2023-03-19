@@ -62,7 +62,7 @@
       <Value Profile="(Default)">2022</Value>
     </Setting>
     <Setting Name="xlsTourGuideListPath" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">C:\JFGWORKS\ツアー向けガイドリスト2023test.xlsx</Value>
+      <Value Profile="(Default)">C:\JFGWORKS\ツアー向けガイドリスト2023.xlsx</Value>
     </Setting>
     <Setting Name="xlsTourWorksPath" Type="System.String" Scope="Application">
       <Value Profile="(Default)">C:\JFGWORKS\ツアー向けガイド稼働予定表.xlsx</Value>

@@ -31,9 +31,10 @@ namespace jfgSchedule
         const int xCol = 21;                           // 日列初期値
         readonly XLColor HeaderBackColor = XLColor.FromArgb(79, 129, 189);  // 見出し行背景色
         readonly XLColor LineBackColor = XLColor.FromArgb(220, 230, 241); // 奇数明細行背景色
-        readonly string SheetName = "新ホテル向けガイド稼働表";
+        readonly string HotelSheetName = "新ホテル向けガイド稼働表";
+        readonly string TourSheetName  = "ツアー向けガイド稼働表";
         readonly string xlsNewHotelList = Properties.Settings.Default.xlsNewHotelGuideListPath; // 参照用エクセルファイル：新ホテル向けガイドリスト
-        readonly string xlsTourList = Properties.Settings.Default.xlsTourWorksPath;     // 参照用エクセルファイル：ツアー向けガイドリスト2023
+        readonly string xlsTourList = Properties.Settings.Default.xlsTourGuideListPath;     // 参照用エクセルファイル：ツアー向けガイドリスト2023
 
         public clsWorks(string logFile)
         {
@@ -787,7 +788,7 @@ namespace jfgSchedule
                     using (var selSheet = selectBook.Worksheet(1))
                     {
                         // カード番号開始セル
-                        var cell1 = selSheet.Cell("A2");
+                        var cell1 = selSheet.Cell("A1");
                         // 最終行を取得
                         var lastRow = selSheet.LastRowUsed().RowNumber();
                         // カード番号最終セル
@@ -832,8 +833,8 @@ namespace jfgSchedule
                     edDate = stDate.AddMonths(6).AddDays(-1);
 
                     // シート作成
-                    book.AddWorksheet(SheetName);
-                    var tmpSheet = book.Worksheet(SheetName);
+                    book.AddWorksheet(HotelSheetName);
+                    var tmpSheet = book.Worksheet(HotelSheetName);
 
                     // 見出し 2023/02/08
                     tmpSheet.Cell("A1").SetValue("カード番号");
@@ -982,7 +983,7 @@ namespace jfgSchedule
                     }
 
                     // 表のフォーマットを整える（罫線、列結合）
-                    SheetFormat(tmpSheet, xCol, logFile);
+                    SheetFormat<ClsHotelScheduleXls>(tmpSheet, xCol, logFile);
 
                     //保存処理
                     book.SaveAs(Properties.Settings.Default.xlsHotelsWorksPath);
@@ -1036,12 +1037,12 @@ namespace jfgSchedule
                     using (var selSheet = selectBook.Worksheet(1))
                     {
                         // カード番号開始セル
-                        var cell1 = selSheet.Cell("A2");
+                        var cell1 = selSheet.Cell("A1");
                         // 最終行を取得
                         var lastRow = selSheet.LastRowUsed().RowNumber();
                         // カード番号最終セル
                         var cell2 = selSheet.Cell(lastRow, 19);
-                        // カード番号をテーブルで取得
+                        // ツアー向けガイドリストをテーブルで取得
                         Tourtbl = selSheet.Range(cell1, cell2).AsTable();
 
                         // 列見出し文言を取得
@@ -1081,8 +1082,8 @@ namespace jfgSchedule
                     edDate = stDate.AddMonths(6).AddDays(-1);
 
                     // シート作成
-                    book.AddWorksheet(SheetName);
-                    var tmpSheet = book.Worksheet(SheetName);
+                    book.AddWorksheet(TourSheetName);
+                    var tmpSheet = book.Worksheet(TourSheetName);
 
                     // 見出し 2023/02/08
                     tmpSheet.Cell("A1").SetValue("カード番号");
@@ -1231,7 +1232,7 @@ namespace jfgSchedule
                     }
 
                     // 表のフォーマットを整える（罫線、列結合）
-                    SheetFormat(tmpSheet, xCol, logFile);
+                    SheetFormat<ClsTourScheduleXls>(tmpSheet, xCol, logFile);
 
                     //保存処理
                     book.SaveAs(Properties.Settings.Default.xlsTourWorksPath);
@@ -1630,12 +1631,13 @@ namespace jfgSchedule
         ///     予定開始列</param>
         /// <param name="logFile">
         ///     ログファイルパス</param>
-        private void SheetFormat(IXLWorksheet tmpSheet, int sCol, string logFile)
+        private void SheetFormat<T>(IXLWorksheet tmpSheet, int sCol, string logFile)
         {
             tmpSheet.Style.Font.SetFontName("ＭＳ Ｐゴシック");
 
-            SetExcelSheetProperty<ClsHotelScheduleXls>(tmpSheet);
+            SetExcelSheetProperty<T>(tmpSheet);
 
+            // 稼働予定部・属性
             SetExcelScheduledSheetProperty<ClsScheduleDays>(tmpSheet, sCol, tmpSheet.LastCellUsed().Address.ColumnNumber);
 
             // ヘッダ行書式設定
