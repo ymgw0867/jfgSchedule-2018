@@ -44,23 +44,35 @@ namespace jfgSchedule
             // 前回更新日時フィールドに現在の日時を書き込む
             SetUpdateDate();
 
-            // 更新された予定申告データがあったとき
-            if (uCnt > 0)
-            {
-                // アサイン担当用稼働表エクセルシートとホテル向けガイド稼働表を作成する：2022/11/08
-                _ = new clsWorks(logFile);
+            // コメント化：本稼働開始後は「更新された予定申告データがあったとき」に戻す：2023/03/28
+            //// 更新された予定申告データがあったとき
+            //if (uCnt > 0)
+            //{
+            //    // アサイン担当用稼働表エクセルシートとホテル向けガイド稼働表を作成する：2022/11/08
+            //    _ = new clsWorks(logFile);
 
-                // 過去の予定表データを削除する：2023/02/17
-                if (DeletePastData(logFile))
-                {
-                    // ログ出力
-                    System.IO.File.AppendAllText(logFile, GetNowTime(" 前月までの予定表データを削除しました"), System.Text.Encoding.GetEncoding(932));
-                }
-            }
-            else
+            //    // 過去の予定表データを削除する：2023/02/17
+            //    if (DeletePastData(logFile))
+            //    {
+            //        // ログ出力
+            //        System.IO.File.AppendAllText(logFile, GetNowTime(" 前月までの予定表データを削除しました"), System.Text.Encoding.GetEncoding(932));
+            //    }
+            //}
+            //else
+            //{
+            //    // ログ出力
+            //    System.IO.File.AppendAllText(logFile, GetNowTime(" 更新された予定申告データはありませんでした。"), System.Text.Encoding.GetEncoding(932));
+            //}
+
+            // 旧ホテル向けと並行稼働のため予定申告データの有無にかかわらず稼働予定表を作成：2023/03/28
+            // アサイン担当用稼働表エクセルシートとホテル向けガイド稼働表を作成する
+            _ = new clsWorks(logFile);
+
+            // 過去の予定表データを削除する：2023/02/17
+            if (DeletePastData(logFile))
             {
                 // ログ出力
-                System.IO.File.AppendAllText(logFile, GetNowTime(" 更新された予定申告データはありませんでした。"), System.Text.Encoding.GetEncoding(932));
+                System.IO.File.AppendAllText(logFile, GetNowTime(" 前月までの予定表データを削除しました"), System.Text.Encoding.GetEncoding(932));
             }
 
             // 終了ログ出力

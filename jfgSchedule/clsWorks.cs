@@ -20,21 +20,21 @@ namespace jfgSchedule
 {
     class clsWorks
     {
-        int sCnt = 2;                                   // 東西繰り返し回数
-        string[,] gengo;                               // 言語配列
-        string[,] sheetYYMM = new string[6, 2];        // 年月と開始列
-        int sheetStRow = 4;                             // エクセルシート明細開始行
-        int[] S_colSMAX = { 195, 196 };                 // 稼働表Temp列Max
-        string[] sheetName = { "東", "西" };            // シート名見出し
-        const int cEAST = 0;                            // 東定数
-        const int cWEST = 1;                            // 西定数
-        const int xCol = 21;                           // 日列初期値
+        int sCnt = 2;                           // 東西繰り返し回数
+        string[,] gengo;                        // 言語配列
+        string[,] sheetYYMM = new string[6, 2]; // 年月と開始列
+        int sheetStRow = 4;                     // エクセルシート明細開始行
+        int[] S_colSMAX = { 195, 196 };         // 稼働表Temp列Max
+        string[] sheetName = { "東", "西" };    // シート名見出し
+        const int cEAST = 0;                    // 東定数
+        const int cWEST = 1;                    // 西定数
+        const int xCol = 21;                    // 日列初期値
         readonly XLColor HeaderBackColor = XLColor.FromArgb(79, 129, 189);  // 見出し行背景色
-        readonly XLColor LineBackColor = XLColor.FromArgb(220, 230, 241); // 奇数明細行背景色
-        readonly string HotelSheetName = "新ホテル向けガイド稼働表";
-        readonly string TourSheetName  = "ツアー向けガイド稼働表";
-        readonly string xlsNewHotelList = Properties.Settings.Default.xlsNewHotelGuideListPath; // 参照用エクセルファイル：新ホテル向けガイドリスト
-        readonly string xlsTourList = Properties.Settings.Default.xlsTourGuideListPath;     // 参照用エクセルファイル：ツアー向けガイドリスト2023
+        readonly XLColor LineBackColor   = XLColor.FromArgb(220, 230, 241); // 奇数明細行背景色
+        readonly string HotelSheetName   = "新ホテル向けガイド稼働表";
+        readonly string TourSheetName    = "ツアー向けガイド稼働表";
+        readonly string xlsNewHotelList  = Properties.Settings.Default.xlsNewHotelGuideListPath; // 参照用エクセルファイル：新ホテル向けガイドリスト
+        readonly string xlsTourList      = Properties.Settings.Default.xlsTourGuideListPath;     // 参照用エクセルファイル：ツアー向けガイドリスト2023
 
         public clsWorks(string logFile)
         {
