@@ -106,7 +106,7 @@ namespace jfgSchedule.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\kyama\\OneDrive - softbit\\JFG\\20230330稼働予定表\\新ホテル向けガイド稼働予定表.xlsx")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\JFGWORKS\\新ホテル向けガイド稼働予定表.xlsx")]
         public string xlsHotelsWorksPath {
             get {
                 return ((string)(this["xlsHotelsWorksPath"]));
@@ -198,7 +198,7 @@ namespace jfgSchedule.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\kyama\\OneDrive - softbit\\JFG\\20230330稼働予定表\\ツアー向けガイド稼働予定表.xlsx")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\JFGWORKS\\ツアー向けガイド稼働予定表.xlsx")]
         public string xlsTourWorksPath {
             get {
                 return ((string)(this["xlsTourWorksPath"]));
@@ -211,6 +211,15 @@ namespace jfgSchedule.Properties {
         public string xlsPasswordTour {
             get {
                 return ((string)(this["xlsPasswordTour"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\kyama\\OneDrive - softbit\\JFG\\20230330稼働予定表\\")]
+        public string Copy2OneDrivePath {
+            get {
+                return ((string)(this["Copy2OneDrivePath"]));
             }
         }
     }

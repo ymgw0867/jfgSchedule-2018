@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Drawing;
 using System.Data.OleDb;
 using System.Windows.Forms;
+using System.IO;
 //using Excel = Microsoft.Office.Interop.Excel;
 using ClosedXML.Excel;
 using DocumentFormat.OpenXml;
@@ -990,16 +991,20 @@ namespace jfgSchedule
                 }
 
                 // ログ出力
-                System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" ホテル向けガイド稼働表を更新しました。"), Encoding.GetEncoding(932));
+                File.AppendAllText(logFile, Form1.GetNowTime(" ホテル向けガイド稼働表を更新しました。"), Encoding.GetEncoding(932));
 
-                //// パスワード付きで再度書き換え：2023/03/17
-                //_ = Utility.PwdXlsFile(Properties.Settings.Default.xlsHotelsWorksPath, Properties.Settings.Default.xlsPasswordHotel, "", logFile);
+                // パスワード付きで再度書き換え：2023/03/17
+                _ = Utility.PwdXlsFile(Properties.Settings.Default.xlsHotelsWorksPath, Properties.Settings.Default.xlsPasswordHotel, "", logFile);
+
+                // OneDriveフォルダへコピー：2023/03/30
+                var toPath = Properties.Settings.Default.Copy2OneDrivePath + Path.GetFileName(Properties.Settings.Default.xlsHotelsWorksPath);
+                _ = Copy2OneDrive(Properties.Settings.Default.xlsHotelsWorksPath, toPath, logFile);
             }
             catch (Exception ex)
             {
                 Console.Write(ex.ToString());
                 // ログ出力
-                System.IO.File.AppendAllText(logFile, Form1.GetNowTime(ex.ToString()), Encoding.GetEncoding(932));
+                File.AppendAllText(logFile, Form1.GetNowTime(ex.ToString()), Encoding.GetEncoding(932));
             }
             finally
             {
@@ -1239,16 +1244,20 @@ namespace jfgSchedule
                 }
 
                 // ログ出力
-                System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" ツアー向けガイド稼働表を更新しました。"), Encoding.GetEncoding(932));
+                File.AppendAllText(logFile, Form1.GetNowTime(" ツアー向けガイド稼働表を更新しました。"), Encoding.GetEncoding(932));
 
-                //// パスワード付きで再度書き換え：2023/03/18
-                //_ = Utility.PwdXlsFile(Properties.Settings.Default.xlsTourWorksPath, Properties.Settings.Default.xlsPasswordTour, "", logFile);
+                // パスワード付きで再度書き換え：2023/03/18
+                _ = Utility.PwdXlsFile(Properties.Settings.Default.xlsTourWorksPath, Properties.Settings.Default.xlsPasswordTour, "", logFile);
+
+                // OneDriveフォルダへコピー：2023/03/30
+                var toPath = Properties.Settings.Default.Copy2OneDrivePath + Path.GetFileName(Properties.Settings.Default.xlsTourWorksPath);
+                _ = Copy2OneDrive(Properties.Settings.Default.xlsTourWorksPath, toPath, logFile);
             }
             catch (Exception ex)
             {
                 Console.Write(ex.ToString());
                 // ログ出力
-                System.IO.File.AppendAllText(logFile, Form1.GetNowTime(ex.ToString()), Encoding.GetEncoding(932));
+                File.AppendAllText(logFile, Form1.GetNowTime(ex.ToString()), Encoding.GetEncoding(932));
             }
             finally
             {
@@ -1256,6 +1265,32 @@ namespace jfgSchedule
             }
         }
 
+        /// <summary>
+        /// ファイルのコピー
+        /// </summary>
+        /// <param name="fromPath">コピー元ファイル名</param>
+        /// <param name="ToPath">コピー先ファイル名</param>
+        /// <param name="logFile">ログファイル</param>
+        /// <returns>true:成功、false:失敗</returns>
+        private bool Copy2OneDrive(string fromPath, string ToPath, string logFile)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(fromPath) || string.IsNullOrEmpty(ToPath))
+                {
+                    return false;
+                }
+
+                File.Copy(fromPath, ToPath, true);
+                File.AppendAllText(logFile, Form1.GetNowTime(" " + fromPath +　"をOneDriveフォルダへコピーしました"), Encoding.GetEncoding(932));
+                return true;
+            }
+            catch (Exception ex)
+            {
+                File.AppendAllText(logFile, Form1.GetNowTime(" " + ex.Message + Environment.NewLine + fromPath + "のOneDriveフォルダへのコピーに失敗しました"), Encoding.GetEncoding(932));
+                return false;
+            }
+        }
 
         /// <summary>
         ///     対象期間内の予定か検証 </summary>
