@@ -837,26 +837,26 @@ namespace jfgSchedule
                     var tmpSheet = book.Worksheet(HotelSheetName);
 
                     // 見出し 2023/02/08
-                    tmpSheet.Cell("A1").SetValue("カード番号");
-                    tmpSheet.Cell("B1").SetValue("氏名");
-                    tmpSheet.Cell("C1").SetValue("フリガナ");
-                    tmpSheet.Cell("D1").SetValue(headerArray[0]);
-                    tmpSheet.Cell("E1").SetValue(headerArray[1]);
-                    tmpSheet.Cell("F1").SetValue(headerArray[2]);
-                    tmpSheet.Cell("G1").SetValue(headerArray[3]);
-                    tmpSheet.Cell("H1").SetValue(headerArray[4]);
-                    tmpSheet.Cell("I1").SetValue(headerArray[5]);
-                    tmpSheet.Cell("J1").SetValue(headerArray[6]);
-                    tmpSheet.Cell("K1").SetValue(headerArray[7]);
-                    tmpSheet.Cell("L1").SetValue(headerArray[8]);
-                    tmpSheet.Cell("M1").SetValue(headerArray[9]);
-                    tmpSheet.Cell("N1").SetValue(headerArray[10]);
-                    tmpSheet.Cell("O1").SetValue(headerArray[11]);
-                    tmpSheet.Cell("P1").SetValue(headerArray[12]);
-                    tmpSheet.Cell("Q1").SetValue(headerArray[13]);
-                    tmpSheet.Cell("R1").SetValue(headerArray[14]);
-                    tmpSheet.Cell("S1").SetValue("稼働日数");
-                    tmpSheet.Cell("T1").SetValue("更新日");
+                    tmpSheet.Cell("A2").SetValue("カード番号");
+                    tmpSheet.Cell("B2").SetValue("氏名");
+                    tmpSheet.Cell("C2").SetValue("フリガナ");
+                    tmpSheet.Cell("D2").SetValue(headerArray[0]);
+                    tmpSheet.Cell("E2").SetValue(headerArray[1]);
+                    tmpSheet.Cell("F2").SetValue(headerArray[2]);
+                    tmpSheet.Cell("G2").SetValue(headerArray[3]);
+                    tmpSheet.Cell("H2").SetValue(headerArray[4]);
+                    tmpSheet.Cell("I2").SetValue(headerArray[5]);
+                    tmpSheet.Cell("J2").SetValue(headerArray[6]);
+                    tmpSheet.Cell("K2").SetValue(headerArray[7]);
+                    tmpSheet.Cell("L2").SetValue(headerArray[8]);
+                    tmpSheet.Cell("M2").SetValue(headerArray[9]);
+                    tmpSheet.Cell("N2").SetValue(headerArray[10]);
+                    tmpSheet.Cell("O2").SetValue(headerArray[11]);
+                    tmpSheet.Cell("P2").SetValue(headerArray[12]);
+                    tmpSheet.Cell("Q2").SetValue(headerArray[13]);
+                    tmpSheet.Cell("R2").SetValue(headerArray[14]);
+                    tmpSheet.Cell("S2").SetValue("稼働日数");
+                    tmpSheet.Cell("T2").SetValue("更新日");
 
                     // 稼働予定期間のカレンダーをセット
                     for (int mon = 0; mon < 6; mon++)
@@ -992,8 +992,8 @@ namespace jfgSchedule
                 // ログ出力
                 System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" ホテル向けガイド稼働表を更新しました。"), Encoding.GetEncoding(932));
 
-                // パスワード付きで再度書き換え：2023/03/17
-                _ = Utility.PwdXlsFile(Properties.Settings.Default.xlsHotelsWorksPath, Properties.Settings.Default.xlsPasswordHotel, "", logFile);
+                //// パスワード付きで再度書き換え：2023/03/17
+                //_ = Utility.PwdXlsFile(Properties.Settings.Default.xlsHotelsWorksPath, Properties.Settings.Default.xlsPasswordHotel, "", logFile);
             }
             catch (Exception ex)
             {
@@ -1086,26 +1086,26 @@ namespace jfgSchedule
                     var tmpSheet = book.Worksheet(TourSheetName);
 
                     // 見出し 2023/02/08
-                    tmpSheet.Cell("A1").SetValue("カード番号");
-                    tmpSheet.Cell("B1").SetValue("氏名");
-                    tmpSheet.Cell("C1").SetValue("フリガナ");
-                    tmpSheet.Cell("D1").SetValue(headerArray[0]);
-                    tmpSheet.Cell("E1").SetValue(headerArray[1]);
-                    tmpSheet.Cell("F1").SetValue(headerArray[2]);
-                    tmpSheet.Cell("G1").SetValue(headerArray[3]);
-                    tmpSheet.Cell("H1").SetValue(headerArray[4]);
-                    tmpSheet.Cell("I1").SetValue(headerArray[5]);
-                    tmpSheet.Cell("J1").SetValue(headerArray[6]);
-                    tmpSheet.Cell("K1").SetValue(headerArray[7]);
-                    tmpSheet.Cell("L1").SetValue(headerArray[8]);
-                    tmpSheet.Cell("M1").SetValue(headerArray[9]);
-                    tmpSheet.Cell("N1").SetValue(headerArray[10]);
-                    tmpSheet.Cell("O1").SetValue(headerArray[11]);
-                    tmpSheet.Cell("P1").SetValue(headerArray[12]);
-                    tmpSheet.Cell("Q1").SetValue(headerArray[13]);
-                    tmpSheet.Cell("R1").SetValue(headerArray[14]);
-                    tmpSheet.Cell("S1").SetValue("稼働日数");
-                    tmpSheet.Cell("T1").SetValue("更新日");
+                    tmpSheet.Cell("A2").SetValue("カード番号");
+                    tmpSheet.Cell("B2").SetValue("氏名");
+                    tmpSheet.Cell("C2").SetValue("フリガナ");
+                    tmpSheet.Cell("D2").SetValue(headerArray[0]);
+                    tmpSheet.Cell("E2").SetValue(headerArray[1]);
+                    tmpSheet.Cell("F2").SetValue(headerArray[2]);
+                    tmpSheet.Cell("G2").SetValue(headerArray[3]);
+                    tmpSheet.Cell("H2").SetValue(headerArray[4]);
+                    tmpSheet.Cell("I2").SetValue(headerArray[5]);
+                    tmpSheet.Cell("J2").SetValue(headerArray[6]);
+                    tmpSheet.Cell("K2").SetValue(headerArray[7]);
+                    tmpSheet.Cell("L2").SetValue(headerArray[8]);
+                    tmpSheet.Cell("M2").SetValue(headerArray[9]);
+                    tmpSheet.Cell("N2").SetValue(headerArray[10]);
+                    tmpSheet.Cell("O2").SetValue(headerArray[11]);
+                    tmpSheet.Cell("P2").SetValue(headerArray[12]);
+                    tmpSheet.Cell("Q2").SetValue(headerArray[13]);
+                    tmpSheet.Cell("R2").SetValue(headerArray[14]);
+                    tmpSheet.Cell("S2").SetValue("稼働日数");
+                    tmpSheet.Cell("T2").SetValue("更新日");
 
                     // 稼働予定期間のカレンダーをセット
                     for (int mon = 0; mon < 6; mon++)
@@ -1241,8 +1241,8 @@ namespace jfgSchedule
                 // ログ出力
                 System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" ツアー向けガイド稼働表を更新しました。"), Encoding.GetEncoding(932));
 
-                // パスワード付きで再度書き換え：2023/03/18
-                _ = Utility.PwdXlsFile(Properties.Settings.Default.xlsTourWorksPath, Properties.Settings.Default.xlsPasswordTour, "", logFile);
+                //// パスワード付きで再度書き換え：2023/03/18
+                //_ = Utility.PwdXlsFile(Properties.Settings.Default.xlsTourWorksPath, Properties.Settings.Default.xlsPasswordTour, "", logFile);
             }
             catch (Exception ex)
             {
@@ -1751,7 +1751,7 @@ namespace jfgSchedule
             tmpSheet.SheetView.Freeze(3, 5);
 
             // フィルタの設定：2023/1/25
-            tmpSheet.Row(2).SetAutoFilter();
+            tmpSheet.Row(3).SetAutoFilter();
         }
 
         /// --------------------------------------------------------------------------
@@ -2050,8 +2050,9 @@ namespace jfgSchedule
                     var rng = tmpSheet.Range(tmpSheet.Cell(1, attribute.ColumnIndex).Address, tmpSheet.Cell(3, attribute.ColumnIndex).Address);
                     rng.Style.Font.FontSize = attribute.HeaderFontSize;
 
-                    //セル結合
-                    rng.Merge(false);
+                    // 2023-3-30 コメント化
+                    ////セル結合
+                    //rng.Merge(false);
                 }
             }
         }
