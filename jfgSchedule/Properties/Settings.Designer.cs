@@ -52,7 +52,7 @@ namespace jfgSchedule.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\JFGWORKS\\稼働予定表.xlsx")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\kyama\\OneDrive - softbit\\JFG\\20230330稼働予定表\\稼働予定表.xlsx")]
         public string xlsWorksPath {
             get {
                 return ((string)(this["xlsWorksPath"]));
@@ -106,7 +106,7 @@ namespace jfgSchedule.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\JFGWORKS\\ホテル向けガイド稼働予定表.xlsx")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\JFGWORKS\\新ホテル向けガイド稼働予定表.xlsx")]
         public string xlsHotelsWorksPath {
             get {
                 return ((string)(this["xlsHotelsWorksPath"]));
@@ -119,17 +119,6 @@ namespace jfgSchedule.Properties {
         public string xlsHotelGuideListPath {
             get {
                 return ((string)(this["xlsHotelGuideListPath"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=192.168.1.51\\SQLEXPRESS,1433;Initial Catalog=JFG_MST;Persist Security" +
-            " Info=True;User ID=jfg210915; Password=jfgpass")]
-        public string JFG_MSTConnectionString {
-            get {
-                return ((string)(this["JFG_MSTConnectionString"]));
             }
         }
         
@@ -154,9 +143,83 @@ namespace jfgSchedule.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("hotel2023")]
-        public string xlsPassword {
+        public string xlsPasswordHotel {
             get {
-                return ((string)(this["xlsPassword"]));
+                return ((string)(this["xlsPasswordHotel"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=192.168.1.51\\SQLEXPRESS,1433;Initial Catalog=JFG_MST;Persist Security" +
+            " Info=True;User ID=jfg210915; Password=jfgpass")]
+        public string JFG_MSTConnectionString {
+            get {
+                return ((string)(this["JFG_MSTConnectionString"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2019")]
+        public string assignYear1 {
+            get {
+                return ((string)(this["assignYear1"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2020")]
+        public string assignYear2 {
+            get {
+                return ((string)(this["assignYear2"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2022")]
+        public string assignYear3 {
+            get {
+                return ((string)(this["assignYear3"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\JFGWORKS\\ツアー向けガイドリスト2023.xlsx")]
+        public string xlsTourGuideListPath {
+            get {
+                return ((string)(this["xlsTourGuideListPath"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\JFGWORKS\\ツアー向けガイド稼働予定表.xlsx")]
+        public string xlsTourWorksPath {
+            get {
+                return ((string)(this["xlsTourWorksPath"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("tour2023")]
+        public string xlsPasswordTour {
+            get {
+                return ((string)(this["xlsPasswordTour"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\kyama\\OneDrive - softbit\\JFG\\20230330稼働予定表\\")]
+        public string Copy2OneDrivePath {
+            get {
+                return ((string)(this["Copy2OneDrivePath"]));
             }
         }
     }
