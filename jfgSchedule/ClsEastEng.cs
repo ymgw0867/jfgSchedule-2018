@@ -12,7 +12,7 @@ namespace jfgSchedule
         public string 氏名 { get; set; }
         public string フリガナ { get; set; }
         public string 携帯電話 { get; set; }
-        public string 生まれ年 { get; set; }
+        public int 生まれ年 { get; set; }
         public string 住所都道府県 { get; set; }
         public string 住所市区 { get; set; }
         public string メールアドレス { get; set; }

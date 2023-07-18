@@ -12,7 +12,7 @@
       <Value Profile="(Default)">C:\JFGWORKS\稼働予定表Temp.xlsx</Value>
     </Setting>
     <Setting Name="xlsWorksPath" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">C:\Users\kyama\OneDrive - softbit\JFG\20230330稼働予定表\稼働予定表.xlsx</Value>
+      <Value Profile="(Default)">C:\Users\Owner\OneDrive - softbit\JFG\20230330稼働予定表\稼働予定表.xlsx</Value>
     </Setting>
     <Setting Name="xlsTempPath" Type="System.String" Scope="Application">
       <Value Profile="(Default)">C:\JFGWORKS\ワークシート.xlsx</Value>
@@ -71,7 +71,7 @@
       <Value Profile="(Default)">tour2023</Value>
     </Setting>
     <Setting Name="Copy2OneDrivePath" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">C:\Users\kyama\OneDrive - softbit\JFG\20230330稼働予定表\</Value>
+      <Value Profile="(Default)">C:\Users\Owner\OneDrive - softbit\JFG\20230330稼働予定表\</Value>
     </Setting>
   </Settings>
 </SettingsFile>

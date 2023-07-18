@@ -778,7 +778,7 @@ namespace jfgSchedule
 
             DateTime stDate;
             DateTime edDate;
-            string[] headerArray = new string[17];
+            string[] headerArray = new string[18];  // 2023/07/18 [18]
 
             try
             {
@@ -803,16 +803,17 @@ namespace jfgSchedule
                         headerArray[2]  = selSheet.Cell("F1").Value.ToString();
                         headerArray[3]  = selSheet.Cell("G1").Value.ToString();
                         headerArray[4]  = selSheet.Cell("H1").Value.ToString();
-                        headerArray[5]  = selSheet.Cell("J1").Value.ToString();
-                        headerArray[6]  = selSheet.Cell("K1").Value.ToString();
-                        headerArray[7]  = selSheet.Cell("L1").Value.ToString();
-                        headerArray[8]  = selSheet.Cell("M1").Value.ToString();
-                        headerArray[9]  = selSheet.Cell("N1").Value.ToString().Replace(" ", "").Replace("　", "");
-                        headerArray[10] = selSheet.Cell("O1").Value.ToString();
-                        headerArray[11] = selSheet.Cell("P1").Value.ToString();
-                        headerArray[12] = selSheet.Cell("Q1").Value.ToString();
-                        headerArray[13] = selSheet.Cell("R1").Value.ToString();
-                        headerArray[14] = selSheet.Cell("S1").Value.ToString();
+                        headerArray[5]  = selSheet.Cell("I1").Value.ToString(); // 2023/07/18 生まれ年
+                        headerArray[6]  = selSheet.Cell("J1").Value.ToString();
+                        headerArray[7]  = selSheet.Cell("K1").Value.ToString();
+                        headerArray[8]  = selSheet.Cell("L1").Value.ToString();
+                        headerArray[9]  = selSheet.Cell("M1").Value.ToString();
+                        headerArray[10]  = selSheet.Cell("N1").Value.ToString().Replace(" ", "").Replace("　", "");
+                        headerArray[11] = selSheet.Cell("O1").Value.ToString();
+                        headerArray[12] = selSheet.Cell("P1").Value.ToString();
+                        headerArray[13] = selSheet.Cell("Q1").Value.ToString();
+                        headerArray[14] = selSheet.Cell("R1").Value.ToString();
+                        headerArray[15] = selSheet.Cell("S1").Value.ToString();
                     }
                 }
 
@@ -856,16 +857,17 @@ namespace jfgSchedule
                     tmpSheet.Cell("P2").SetValue(headerArray[12]);
                     tmpSheet.Cell("Q2").SetValue(headerArray[13]);
                     tmpSheet.Cell("R2").SetValue(headerArray[14]);
-                    tmpSheet.Cell("S2").SetValue("稼働日数");
-                    tmpSheet.Cell("T2").SetValue("更新日");
+                    tmpSheet.Cell("S2").SetValue(headerArray[15]);  // 2023/07/18 
+                    tmpSheet.Cell("T2").SetValue("稼働日数");
+                    tmpSheet.Cell("U2").SetValue("更新日");
 
                     // 稼働予定期間のカレンダーをセット
                     for (int mon = 0; mon < 6; mon++)
                     {
                         // 該当月
                         DateTime wDt = stDate.AddMonths(mon);
-                        var xCol = 31 * mon + 21;
-                        tmpSheet.Cell(1, xCol).SetValue(wDt.Year + "年" + wDt.Month + "月"); // 21,52,83,114,・・・ 
+                        var xCol = 31 * mon + 22;   // 2023/07/18[22]
+                        tmpSheet.Cell(1, xCol).SetValue(wDt.Year + "年" + wDt.Month + "月"); // 22,53,84,115,・・・ 
 
                         // 年月と開始列の配列にセット
                         sheetYYMM[mon, 0] = wDt.Year.ToString() + wDt.Month.ToString().PadLeft(2, '0');
@@ -952,7 +954,7 @@ namespace jfgSchedule
                             カード番号 = t.カード番号,
                             氏名 = t.氏名,
                             携帯電話 = t.携帯電話番号,
-                            生まれ年 = t.生年月日 is null ? "" : (DateTime.Parse(t.生年月日.ToString()).Year).ToString(),
+                            生まれ年 = t.生年月日 is null ? 0 : (DateTime.Parse(t.生年月日.ToString()).Year),
                             住所都道府県 = t.都道府県,
                             住所市区 = t.住所1,
                             メールアドレス = t.メールアドレス1,
@@ -1031,7 +1033,7 @@ namespace jfgSchedule
 
             DateTime stDate;
             DateTime edDate;
-            string[] headerArray = new string[17];
+            string[] headerArray = new string[18];  // 2023/07/18
 
             try
             {
@@ -1057,15 +1059,16 @@ namespace jfgSchedule
                         headerArray[3]  = selSheet.Cell("G1").Value.ToString();
                         headerArray[4]  = selSheet.Cell("H1").Value.ToString();
                         headerArray[5]  = selSheet.Cell("I1").Value.ToString();
-                        headerArray[6]  = selSheet.Cell("K1").Value.ToString();
-                        headerArray[7]  = selSheet.Cell("L1").Value.ToString();
-                        headerArray[8]  = selSheet.Cell("M1").Value.ToString().Replace(" ", "").Replace("　", "");
-                        headerArray[9]  = selSheet.Cell("N1").Value.ToString();
-                        headerArray[10] = selSheet.Cell("O1").Value.ToString();
-                        headerArray[11] = selSheet.Cell("P1").Value.ToString();
-                        headerArray[12] = selSheet.Cell("Q1").Value.ToString();
-                        headerArray[13] = selSheet.Cell("R1").Value.ToString();
-                        headerArray[14] = selSheet.Cell("S1").Value.ToString();
+                        headerArray[6]  = selSheet.Cell("J1").Value.ToString();  // 2023/07/18
+                        headerArray[7]  = selSheet.Cell("K1").Value.ToString();
+                        headerArray[8]  = selSheet.Cell("L1").Value.ToString();
+                        headerArray[9]  = selSheet.Cell("M1").Value.ToString().Replace(" ", "").Replace("　", "");
+                        headerArray[10] = selSheet.Cell("N1").Value.ToString();
+                        headerArray[11] = selSheet.Cell("O1").Value.ToString();
+                        headerArray[12] = selSheet.Cell("P1").Value.ToString();
+                        headerArray[13] = selSheet.Cell("Q1").Value.ToString();
+                        headerArray[14] = selSheet.Cell("R1").Value.ToString();
+                        headerArray[15] = selSheet.Cell("S1").Value.ToString();
                     }
                 }
 
@@ -1109,16 +1112,17 @@ namespace jfgSchedule
                     tmpSheet.Cell("P2").SetValue(headerArray[12]);
                     tmpSheet.Cell("Q2").SetValue(headerArray[13]);
                     tmpSheet.Cell("R2").SetValue(headerArray[14]);
-                    tmpSheet.Cell("S2").SetValue("稼働日数");
-                    tmpSheet.Cell("T2").SetValue("更新日");
+                    tmpSheet.Cell("S2").SetValue(headerArray[15]);  // 2023/07/18
+                    tmpSheet.Cell("T2").SetValue("稼働日数");
+                    tmpSheet.Cell("U2").SetValue("更新日");
 
                     // 稼働予定期間のカレンダーをセット
                     for (int mon = 0; mon < 6; mon++)
                     {
                         // 該当月
                         DateTime wDt = stDate.AddMonths(mon);
-                        var xCol = 31 * mon + 21;
-                        tmpSheet.Cell(1, xCol).SetValue(wDt.Year + "年" + wDt.Month + "月"); // 21,52,83,114,・・・ 
+                        var xCol = 31 * mon + 22;  // 2023/07/18
+                        tmpSheet.Cell(1, xCol).SetValue(wDt.Year + "年" + wDt.Month + "月"); // 22,53,84,115,・・・ 
 
                         // 年月と開始列の配列にセット
                         sheetYYMM[mon, 0] = wDt.Year.ToString() + wDt.Month.ToString().PadLeft(2, '0');
@@ -1180,6 +1184,7 @@ namespace jfgSchedule
                                              a.言語名4,
                                              a.言語名5,
                                              a.JFG加入年,
+                                             a.生年月日,
                                              a.会員稼働予定
                                          });
 
@@ -1205,7 +1210,7 @@ namespace jfgSchedule
                             氏名 = t.氏名,
                             フリガナ = t.フリガナ,
                             携帯電話 = t.携帯電話番号,
-                            生まれ年 = "",
+                            生まれ年 = t.生年月日 is null ? 0 : (DateTime.Parse(t.生年月日.ToString()).Year),
                             住所都道府県 = t.都道府県,
                             住所市区 = t.住所1,
                             メールアドレス = t.メールアドレス1,
@@ -1385,6 +1390,36 @@ namespace jfgSchedule
                         更新日 = t.会員稼働予定.更新日.ToString()
                     };
 
+                    // 生まれ年：2023/07/23
+                    if (t.生まれ年 <= 1959)
+                    {
+                        clsHotel.生まれ年 = "0";
+                    }
+                    else if (t.生まれ年 <= 1964)
+                    {
+                        clsHotel.生まれ年 = "1";
+                    }
+                    else if (t.生まれ年 <= 1969)
+                    {
+                        clsHotel.生まれ年 = "2";
+                    }
+                    else if (t.生まれ年 <= 1974)
+                    {
+                        clsHotel.生まれ年 = "3";
+                    }
+                    else if (t.生まれ年 <= 1979)
+                    {
+                        clsHotel.生まれ年 = "4";
+                    }
+                    else if (t.生まれ年 <= 1984)
+                    {
+                        clsHotel.生まれ年 = "5";
+                    }
+                    else if (t.生まれ年 >= 1985)
+                    {
+                        clsHotel.生まれ年 = "6";
+                    }
+
                     for (int i = 0; i < 31; i++)
                     {
                         clsSchedule[i] = new ClsScheduleDays();
@@ -1487,6 +1522,36 @@ namespace jfgSchedule
                         稼働日数 = t.会員稼働予定.稼働日数.ToString("###"),
                         更新日 = t.会員稼働予定.更新日.ToString()
                     };
+
+                    // 生まれ年：2023/07/23
+                    if (t.生まれ年 <= 1959)
+                    {
+                        clsTour.生まれ年 = "0";
+                    }
+                    else if (t.生まれ年 <= 1964)
+                    {
+                        clsTour.生まれ年 = "1";
+                    }
+                    else if (t.生まれ年 <= 1969)
+                    {
+                        clsTour.生まれ年 = "2";
+                    }
+                    else if (t.生まれ年 <= 1974)
+                    {
+                        clsTour.生まれ年 = "3";
+                    }
+                    else if (t.生まれ年 <= 1979)
+                    {
+                        clsTour.生まれ年 = "4";
+                    }
+                    else if (t.生まれ年 <= 1984)
+                    {
+                        clsTour.生まれ年 = "5";
+                    }
+                    else if (t.生まれ年 >= 1985)
+                    {
+                        clsTour.生まれ年 = "6";
+                    }
 
                     for (int i = 0; i < 31; i++)
                     {
@@ -1783,7 +1848,7 @@ namespace jfgSchedule
             range2.AddConditionalFormat().WhenIsTrue("=U3=" + @"""日""").Fill.SetBackgroundColor(XLColor.MistyRose).Font.SetFontColor(XLColor.Black);
 
             // ウィンドウ枠の固定
-            tmpSheet.SheetView.Freeze(3, 5);
+            tmpSheet.SheetView.Freeze(3, 7);    // 2023/07/18
 
             // フィルタの設定：2023/1/25
             tmpSheet.Row(3).SetAutoFilter();
