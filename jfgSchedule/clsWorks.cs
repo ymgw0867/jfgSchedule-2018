@@ -2777,14 +2777,12 @@ namespace jfgSchedule
         {
             ClsHotelScheduleXls clsHotel = null;
             ClsScheduleDays[] clsSchedule = new ClsScheduleDays[31];
-
-            clsHotel = null;
-
             jfgDataClassDataContext db = new jfgDataClassDataContext();
             ClsEastEng en = null;
+            int endyymm = int.Parse(sheetYYMM[5, 0]);
 
-            // 会員情報取得
-            var member = db.会員情報.Where(a => a.カード番号 == cc)
+            // 会員情報取得：年月範囲内のみ抽出 2023/07/20
+            var member = db.会員情報.Where(a => a.カード番号 == cc && (a.会員稼働予定.年 * 100 + a.会員稼働予定.月) <= endyymm)
                                  .OrderBy(a => a.会員稼働予定.フリガナ).ThenBy(a => a.会員稼働予定.カード番号).ThenBy(a => a.会員稼働予定.年).ThenBy(a => a.会員稼働予定.月)
                                  .Select(a => new
                                  {
