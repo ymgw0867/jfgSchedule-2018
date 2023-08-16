@@ -32,7 +32,7 @@ namespace jfgSchedule
         string[] sheetName = { "東", "西" };    // シート名見出し
         const int cEAST = 0;                    // 東定数
         const int cWEST = 1;                    // 西定数
-        const int xCol  = 21;                   // 日列初期値
+        const int xCol  = 22;                   // 日列初期値
         readonly XLColor HeaderBackColor = XLColor.FromArgb(79, 129, 189);  // 見出し行背景色
         readonly XLColor LineBackColor   = XLColor.FromArgb(220, 230, 241); // 奇数明細行背景色
         readonly string  HotelSheetName  = "新ホテル向けガイド稼働表";
