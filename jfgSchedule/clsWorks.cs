@@ -2207,7 +2207,7 @@ namespace jfgSchedule
 
             // 日曜日の日付の背景色
             var range2 = tmpSheet.Range(tmpSheet.Cell(2, sCol).Address, tmpSheet.Cell(2, tmpSheet.LastCellUsed().Address.ColumnNumber).Address);
-            range2.AddConditionalFormat().WhenIsTrue("=U3=" + @"""日""").Fill.SetBackgroundColor(XLColor.MistyRose).Font.SetFontColor(XLColor.Black);
+            range2.AddConditionalFormat().WhenIsTrue("=V3=" + @"""日""").Fill.SetBackgroundColor(XLColor.MistyRose).Font.SetFontColor(XLColor.Black);
 
             // ウィンドウ枠の固定
             tmpSheet.SheetView.Freeze(3, 7);    // 2023/07/18
