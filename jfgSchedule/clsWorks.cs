@@ -960,7 +960,7 @@ namespace jfgSchedule
             try
             {
                 // Excelシート：ツアー向けガイドリスト英語以外をテーブルに読み込む
-                IXLTable Tourtbl = ImportTourGuideList(xlsToueListNotEnglish, out headerArray);
+                IXLTable Tourtbl = ImportTourGuideList_NotEng(xlsToueListNotEnglish, out headerArray);
 
                 // ガイドリストテーブル有効行がないときは終わる
                 if (Tourtbl.RowCount() < 1)
