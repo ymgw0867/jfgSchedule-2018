@@ -97,6 +97,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClsEastEng.cs" />
+    <Compile Include="ClsTourNotEngScheduleXls.cs" />
     <Compile Include="ClsTourScheduleXls.cs" />
     <Compile Include="ClsHotelScheduleXls.cs" />
     <Compile Include="clsPersonalData.cs" />

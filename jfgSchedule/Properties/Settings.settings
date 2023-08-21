@@ -73,5 +73,14 @@
     <Setting Name="Copy2OneDrivePath" Type="System.String" Scope="Application">
       <Value Profile="(Default)">C:\Users\Owner\OneDrive - softbit\JFG\20230330稼働予定表\</Value>
     </Setting>
+    <Setting Name="xlsPasswordTourNonEng" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\JFGWORKS\ツアー向けガイドリスト英語以外.xlsx</Value>
+    </Setting>
+    <Setting Name="xlsTourNotEngWorksPath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\JFGWORKS\ツアー向けガイド英語以外稼働予定表.xlsx</Value>
+    </Setting>
+    <Setting Name="xlsPasswordTourNotEng" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">tagengo2023</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
