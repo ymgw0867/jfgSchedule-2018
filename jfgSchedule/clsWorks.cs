@@ -16,6 +16,18 @@ namespace jfgSchedule
         int sheetStRow = 4;                     // エクセルシート明細開始行
         //int[] S_colSMAX = { 195, 196 };         // 稼働表Temp列Max
         string[] sheetName = { "東", "西" };    // シート名見出し
+        string[,] tagengo = new string[8, 2]    // 多言語名配列
+        {
+            { "西", "S" },
+            { "韓", "K" },
+            { "中", "C" },
+            { "独", "G" },
+            { "伊", "I" },
+            { "葡", "P" },
+            { "仏", "F" },
+            { "露", "R" },
+        };
+
         const int cEAST = 0;                    // 東定数
         const int cWEST = 1;                    // 西定数
         const int xCol  = 22;                   // 日列初期値
@@ -2088,7 +2100,6 @@ namespace jfgSchedule
         private void UpdateClsEastEng_Tour(ClsEastEng t)
         {
             t.住所市区 = SubstrAddress(t.住所市区, t.住所都道府県);
-            t.他言語ライセンス = t.他言語ライセンス.Replace("E ", "").Trim();
 
             jfgDataClassDataContext db = new jfgDataClassDataContext();
 
@@ -3142,6 +3153,7 @@ namespace jfgSchedule
         {
             clsSchedule = new ClsScheduleDays[31];
             UpdateClsEastEng_Tour(en);    // アサインテーブル項目集計
+            en.他言語ライセンス = en.他言語ライセンス.Replace("E ", "").Trim();
 
             var clsTour = new ClsTourScheduleXls()
             {
@@ -3264,12 +3276,15 @@ namespace jfgSchedule
                 市区町村 = en.住所市区,
                 メールアドレス = en.メールアドレス,
                 他言語 = en.他言語ライセンス,
-                得意分野 = GetNewHotelXCellValue(row.Cell(16).Value),
+                得意分野 = GetNewHotelXCellValue(row.Cell(17).Value),
                 JFG加入年 = en.JFG加入年,
                 稼働日数2020 = en.JFG稼働日数1.ToString("###"),
                 稼働日数2023 = en.会員稼働予定.稼働日数.ToString("###"),
                 更新日 = en.会員稼働予定.更新日.ToString()
             };
+
+            // 他言語ライセンス
+            clsTour.他言語 = clsTour.他言語.Replace(GetLangCode(clsTour.言語), "").Trim();
 
             // 生まれ年：2023/07/23
             if (en.生まれ年 <= 1959)
@@ -3340,6 +3355,28 @@ namespace jfgSchedule
         }
 
         /// <summary>
+        /// 漢字の言語を言語コードに変換する
+        /// </summary>
+        /// <param name="Gengo">漢字の言語</param>
+        /// <param name="tagen">言語コード</param>
+        /// <returns>言語コード+ " "</returns>
+        private string GetLangCode(string Gengo)
+        {
+            string rtn = "";
+
+            // 他言語ライセンス
+            for (int i = 0; i < tagengo.GetLength(0); i++)
+            {
+                if (tagengo[i, 0] == Gengo)
+                {
+                    rtn = tagengo[i, 1] + " ";
+                    break;
+                }
+            }
+            return rtn;
+        }
+
+        /// <summary>
         /// 組合員情報クラス、予定表クラス作成（ツアー向け英語以外）：2023/08/21
         /// </summary>
         /// <param name="en">会員情報クラス</param>
@@ -3368,10 +3405,13 @@ namespace jfgSchedule
                 市区町村 = en.住所市区,
                 メールアドレス = en.メールアドレス,
                 他言語 = en.他言語ライセンス,
-                得意分野 = GetNewHotelXCellValue(row.Cell(16).Value),
+                得意分野 = GetNewHotelXCellValue(row.Cell(17).Value),
                 JFG加入年 = en.JFG加入年,
                 稼働日数2020 = en.JFG稼働日数1.ToString("###")
             };
+
+            // 他言語ライセンス
+            clsTour.他言語 = clsTour.他言語.Replace(GetLangCode(clsTour.言語), "").Trim();
 
             // 生まれ年：2023/07/23
             if (en.生まれ年 <= 1959)
@@ -3503,6 +3543,7 @@ namespace jfgSchedule
         {
             clsSchedule = new ClsScheduleDays[186];
             UpdateClsEastEng_Tour(en);    // アサインテーブル項目集計
+            en.他言語ライセンス = en.他言語ライセンス.Replace("E ", "").Trim();
 
             var clsTour = new ClsTourScheduleXls
             {

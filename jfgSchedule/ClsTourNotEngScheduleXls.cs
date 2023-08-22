@@ -42,7 +42,7 @@ namespace jfgSchedule
         public string メールアドレス { get; set; }
         [ColumnName("P", ColumnIndex = 16, AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Center, Width = 8, HeaderFontSize = 9)]
         public string 他言語 { get; set; }
-        [ColumnName("Q", ColumnIndex = 17, AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Left, Width = 20, HeaderFontSize = 9)]
+        [ColumnName("Q", ColumnIndex = 17, AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Left, Width = 17, HeaderFontSize = 9)]
         public string 得意分野 { get; set; }
         [ColumnName("R", ColumnIndex = 18, AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Center, Width = 8, HeaderFontSize = 9)]
         public string JFG加入年 { get; set; }
