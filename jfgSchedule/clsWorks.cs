@@ -24,9 +24,9 @@ namespace jfgSchedule
         readonly string  HotelSheetName  = "新ホテル向けガイド稼働表";
         readonly string  TourSheetName   = "ツアー向けガイド稼働表";
         readonly string  TourSheetName_NotEnglish = "ツアー向けガイド稼働表・英語以外"; // 2023/08/21
-        readonly string  xlsNewHotelList = Properties.Settings.Default.xlsNewHotelGuideListPath;    // 参照用エクセルファイル：新ホテル向けガイドリスト
-        readonly string  xlsTourList     = Properties.Settings.Default.xlsTourGuideListPath;        // 参照用エクセルファイル：ツアー向けガイドリスト2023
-        readonly string  xlsToueListNotEnglish = Properties.Settings.Default.xlsPasswordTourNonEng; // 参照用エクセルファイル：ツアー向けガイドリスト英語以外2023
+        readonly string  xlsNewHotelList       = Properties.Settings.Default.xlsNewHotelGuideListPath;  // 参照用エクセルファイル：新ホテル向けガイドリスト
+        readonly string  xlsTourList           = Properties.Settings.Default.xlsTourGuideListPath;      // 参照用エクセルファイル：ツアー向けガイドリスト2023
+        readonly string  xlsToueListNotEnglish = Properties.Settings.Default.xlsPasswordTourNonEng;     // 参照用エクセルファイル：ツアー向けガイドリスト英語以外2023
 
         public clsWorks(string logFile)
         {
@@ -940,7 +940,7 @@ namespace jfgSchedule
 
 
         /// <summary>
-        /// ツアー向けガイド稼働予定表作成： 2023/07/21
+        /// ツアー向けガイド稼働予定表作成： 2023/07/21（英語以外）2023/08/21
         /// </summary>
         /// <param name="logFile">
         /// ログ出力パス
@@ -993,7 +993,7 @@ namespace jfgSchedule
                         if (!WorkData2ExcelSheet_Tour_NotEng(cc, tmpSheet, row, logFile, cardNum))
                         {
                             // 稼働予定が登録されていないガイドリスト組合員
-                            MemberData2TourSheet(cc, tmpSheet, row, logFile, cardNum);
+                            MemberData2TourNotEngSheet(cc, tmpSheet, row, logFile, cardNum);
                         }
 
                         // カード番号
@@ -1001,7 +1001,7 @@ namespace jfgSchedule
                     }
 
                     // 表のフォーマットを整える（罫線、列結合）
-                    SheetFormat<ClsTourScheduleXls>(tmpSheet, xCol, logFile);
+                    SheetFormat<ClsTourNotEngScheduleXls>(tmpSheet, xCol, logFile);
 
                     //保存処理
                     book.SaveAs(Properties.Settings.Default.xlsTourNotEngWorksPath);
@@ -2455,6 +2455,10 @@ namespace jfgSchedule
             {
                 cardCode = ((ClsTourScheduleXls)(object)(cls)).カード番号;
             }
+            else if (typeof(T) == typeof(ClsTourNotEngScheduleXls))
+            {
+                cardCode = ((ClsTourNotEngScheduleXls)(object)(cls)).カード番号;
+            }
             else
             {
                 return false;
@@ -2951,8 +2955,8 @@ namespace jfgSchedule
             edDate = stDate.AddMonths(6).AddDays(-1);
 
             // シート作成
-            book.AddWorksheet(TourSheetName);
-            var tmpSheet = book.Worksheet(TourSheetName);
+            book.AddWorksheet(TourSheetName_NotEnglish);
+            var tmpSheet = book.Worksheet(TourSheetName_NotEnglish);
 
             // 見出し 2023/02/08
             tmpSheet.Cell("A2").SetValue("カード番号");
@@ -3247,7 +3251,7 @@ namespace jfgSchedule
             {
                 カード番号 = en.カード番号.ToString(),
                 氏名 = en.氏名,
-                フリガナ = en.会員稼働予定.フリガナ,
+                フリガナ = en.フリガナ,
                 言語 = GetNewHotelXCellValue(row.Cell(4).Value),
                 携帯電話 = en.携帯電話,
                 ホテル業務対応可 = GetNewHotelXCellValue(row.Cell(6).Value),
@@ -3332,6 +3336,81 @@ namespace jfgSchedule
                 if (i == 29) clsSchedule[i].予定 = en.会員稼働予定.d30;
                 if (i == 30) clsSchedule[i].予定 = en.会員稼働予定.d31;
             }
+            return clsTour;
+        }
+
+        /// <summary>
+        /// 組合員情報クラス、予定表クラス作成（ツアー向け英語以外）：2023/08/21
+        /// </summary>
+        /// <param name="en">会員情報クラス</param>
+        /// <param name="row">ガイドリストRow</param>
+        /// <param name="clsSchedule">ClsScheduleDays[]予定表クラス</param>
+        /// <returns>ClsTourScheduleXls</returns>
+        private ClsTourNotEngScheduleXls GetTourNotEngMenmberData(ClsEastEng en, IXLRangeRow row, out ClsScheduleDays[] clsSchedule)
+        {
+            clsSchedule = new ClsScheduleDays[186];
+            UpdateClsEastEng_Tour(en);    // アサインテーブル項目集計
+
+            var clsTour = new ClsTourNotEngScheduleXls()
+            {
+                カード番号 = en.カード番号.ToString(),
+                氏名 = en.氏名,
+                フリガナ = en.フリガナ,
+                言語 = GetNewHotelXCellValue(row.Cell(4).Value),
+                携帯電話 = en.携帯電話,
+                ホテル業務対応可 = GetNewHotelXCellValue(row.Cell(6).Value),
+                団体インセンティブ対応可 = GetNewHotelXCellValue(row.Cell(7).Value),
+                一般のツアー対応可 = GetNewHotelXCellValue(row.Cell(8).Value),
+                東京都福祉衛生局対応 = GetNewHotelXCellValue(row.Cell(9).Value),
+                クレーム履歴 = GetNewHotelXCellValue(row.Cell(10).Value),
+                プレゼン面談年月 = GetMeetingDate(GetNewHotelXCellValue(row.Cell(12).Value)),
+                都道府県 = en.住所都道府県,
+                市区町村 = en.住所市区,
+                メールアドレス = en.メールアドレス,
+                他言語 = en.他言語ライセンス,
+                得意分野 = GetNewHotelXCellValue(row.Cell(16).Value),
+                JFG加入年 = en.JFG加入年,
+                稼働日数2020 = en.JFG稼働日数1.ToString("###")
+            };
+
+            // 生まれ年：2023/07/23
+            if (en.生まれ年 <= 1959)
+            {
+                clsTour.生まれ年 = "0";
+            }
+            else if (en.生まれ年 <= 1964)
+            {
+                clsTour.生まれ年 = "1";
+            }
+            else if (en.生まれ年 <= 1969)
+            {
+                clsTour.生まれ年 = "2";
+            }
+            else if (en.生まれ年 <= 1974)
+            {
+                clsTour.生まれ年 = "3";
+            }
+            else if (en.生まれ年 <= 1979)
+            {
+                clsTour.生まれ年 = "4";
+            }
+            else if (en.生まれ年 <= 1984)
+            {
+                clsTour.生まれ年 = "5";
+            }
+            else if (en.生まれ年 >= 1985)
+            {
+                clsTour.生まれ年 = "6";
+            }
+
+            for (int i = 0; i < 186; i++)
+            {
+                clsSchedule[i] = new ClsScheduleDays()
+                {
+                    予定 = "□"
+                };
+            }
+
             return clsTour;
         }
 
@@ -3856,6 +3935,91 @@ namespace jfgSchedule
 
                 // 組合員情報クラス、予定表クラス作成
                 clsTour = GetTourMemberData(en, row, out clsSchedule);
+
+                // 組合員情報を稼働表エクセルシートに貼付
+                if (!int.TryParse(sheetYYMM[0, 1], out int col))
+                {
+                    col = 22;
+                }
+
+                if (!XlsCellsSetXML_BySheet(clsTour, clsSchedule, tmpSheet, sheetStRow, col, cardNum, logFile))
+                {
+                    continue;
+                }
+
+                // カード番号
+                cardNum = clsTour.カード番号;
+            }
+            return true;
+        }
+
+
+        /// <summary>
+        /// 稼働予定データのない組合員情報を稼働表エクセルシートセルに書き込み（英語以外）: 2023/08/21
+        /// </summary>
+        /// <param name="cc">カード番号</param>
+        /// <param name="tmpSheet">稼働表エクセルシート</param>
+        /// <param name="row">ガイドリストRow</param>
+        /// <param name="logFile">ログファイルパス</param>
+        /// <param name="cardNum">比較用カード番号</param>
+        /// <returns>true：書き込み, false：稼働予定データなし</returns>
+        private bool MemberData2TourNotEngSheet(double cc, IXLWorksheet tmpSheet, IXLRangeRow row, string logFile, string cardNum)
+        {
+            ClsTourNotEngScheduleXls clsTour = null;
+            ClsScheduleDays[] clsSchedule    = new ClsScheduleDays[31];
+            jfgDataClassDataContext db       = new jfgDataClassDataContext();
+            ClsEastEng en = null;
+
+            // 会員情報取得
+
+            var member = db.会員情報.Where(a => a.カード番号 == cc)
+                                 .Select(a => new
+                                 {
+                                     a.カード番号,
+                                     a.氏名,
+                                     a.フリガナ,
+                                     a.携帯電話番号,
+                                     a.生年月日,
+                                     a.都道府県,
+                                     a.住所1,
+                                     a.メールアドレス1,
+                                     a.言語名1,
+                                     a.言語名2,
+                                     a.言語名3,
+                                     a.言語名4,
+                                     a.言語名5,
+                                     a.JFG加入年,
+                                     a.FIT日数
+                                 });
+
+            if (!member.Any())
+            {
+                return false;
+            }
+
+            foreach (var t in member)
+            {
+                en = new ClsEastEng
+                {
+                    カード番号 = t.カード番号,
+                    氏名 = t.氏名,
+                    フリガナ = t.フリガナ,
+                    携帯電話 = t.携帯電話番号,
+                    生まれ年 = t.生年月日 is null ? 0 : (DateTime.Parse(t.生年月日.ToString()).Year),
+                    住所都道府県 = t.都道府県,
+                    住所市区 = t.住所1,
+                    メールアドレス = t.メールアドレス1,
+                    他言語ライセンス = t.言語名1 + " " + t.言語名2 + " " + t.言語名3 + " " + t.言語名4 + " " + t.言語名5 + " ",
+                    JFG加入年 = t.JFG加入年.ToString(),
+                    JFG稼働日数1 = 0,
+                    JFG稼働日数2 = 0,
+                    FIT日数 = 0,
+                    マンダリン = 0,
+                    ペニンシュラ = 0
+                };
+
+                // 組合員情報クラス、予定表クラス作成
+                clsTour = GetTourNotEngMenmberData(en, row, out clsSchedule);
 
                 // 組合員情報を稼働表エクセルシートに貼付
                 if (!int.TryParse(sheetYYMM[0, 1], out int col))
