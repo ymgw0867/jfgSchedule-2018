@@ -1014,6 +1014,8 @@ namespace jfgSchedule
 
                     // 表のフォーマットを整える（罫線、列結合）
                     SheetFormat<ClsTourNotEngScheduleXls>(tmpSheet, xCol, logFile);
+                    // ウィンドウ枠の固定：2023/08/23
+                    tmpSheet.SheetView.Freeze(3, 8);
 
                     //保存処理
                     book.SaveAs(Properties.Settings.Default.xlsTourNotEngWorksPath);
