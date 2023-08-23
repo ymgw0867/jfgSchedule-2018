@@ -2123,6 +2123,26 @@ namespace jfgSchedule
         }
 
         /// <summary>
+        /// アサインデータ集計・加工（ツアー英語以外）: 2023/08/23
+        /// </summary>
+        /// <param name="t">ClsEastEngクラス</param>
+        private void UpdateClsEastNotEng_Tour(ClsEastEng t)
+        {
+            t.住所市区 = SubstrAddress(t.住所市区, t.住所都道府県);
+
+            jfgDataClassDataContext db = new jfgDataClassDataContext();
+
+            // 2020～2022アサイン件数
+            var date1 = DateTime.Parse(Properties.Settings.Default.assignYear2 + "/" + "01/01");
+            var date2 = DateTime.Parse(Properties.Settings.Default.assignYear3 + "/" + "12/31");
+
+            var asgn = db.アサイン.Where(a => a.カード番号 == t.カード番号)
+                .Where(a => a.手数料日付 != null).Where(a => a.稼働日1 >= date1 && a.稼働日1 <= date2).Count();
+
+            t.JFG稼働日数1 = asgn;
+        }
+
+        /// <summary>
         /// 住所1より区市郡までを切り出す
         /// </summary>
         /// <param name="str">住所</param>
@@ -3257,7 +3277,7 @@ namespace jfgSchedule
         private ClsTourNotEngScheduleXls GetTourNotEngData(ClsEastEng en, IXLRangeRow row, out ClsScheduleDays[] clsSchedule)
         {
             clsSchedule = new ClsScheduleDays[31];
-            UpdateClsEastEng_Tour(en);    // アサインテーブル項目集計
+            UpdateClsEastNotEng_Tour(en);    // アサインテーブル項目集計
 
             var clsTour = new ClsTourNotEngScheduleXls()
             {
@@ -3386,7 +3406,7 @@ namespace jfgSchedule
         private ClsTourNotEngScheduleXls GetTourNotEngMenmberData(ClsEastEng en, IXLRangeRow row, out ClsScheduleDays[] clsSchedule)
         {
             clsSchedule = new ClsScheduleDays[186];
-            UpdateClsEastEng_Tour(en);    // アサインテーブル項目集計
+            UpdateClsEastNotEng_Tour(en);    // アサインテーブル項目集計
 
             var clsTour = new ClsTourNotEngScheduleXls()
             {
