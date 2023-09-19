@@ -30,16 +30,16 @@ namespace jfgSchedule
 
         const int cEAST = 0;                    // 東定数
         const int cWEST = 1;                    // 西定数
-        const int xCol  = 22;                   // 日列初期値
+        const int xCol = 22;                   // 日列初期値
         readonly XLColor HeaderBackColor = XLColor.FromArgb(79, 129, 189);  // 見出し行背景色
-        readonly XLColor LineBackColor   = XLColor.FromArgb(220, 230, 241); // 奇数明細行背景色
-        readonly string  HotelSheetName  = "新ホテル向けガイド稼働表";
-        readonly string  TourSheetName   = "ツアー向けガイド稼働表";
-        readonly string  TourSheetName_NotEnglish = "ツアー向けガイド稼働表・英語以外"; // 2023/08/21
-        readonly string  xlsNewHotelList       = Properties.Settings.Default.xlsNewHotelGuideListPath;  // 参照用エクセルファイル：新ホテル向けガイドリスト
-        readonly string  xlsTourList           = Properties.Settings.Default.xlsTourGuideListPath;      // 参照用エクセルファイル：ツアー向けガイドリスト2023
-        readonly string  xlsToueListNotEnglish = Properties.Settings.Default.xlsPasswordTourNonEng;     // 参照用エクセルファイル：ツアー向けガイドリスト英語以外2023
-        readonly string  xlsWestHotelList      = Properties.Settings.Default.xlsWestHotelGuideListPath; // 参照用エクセルファイル：西日本ホテル向けガイドリスト
+        readonly XLColor LineBackColor = XLColor.FromArgb(220, 230, 241); // 奇数明細行背景色
+        readonly string HotelSheetName = "新ホテル向けガイド稼働表";
+        readonly string TourSheetName = "ツアー向けガイド稼働表";
+        readonly string TourSheetName_NotEnglish = "ツアー向けガイド稼働表・英語以外"; // 2023/08/21
+        readonly string xlsNewHotelList = Properties.Settings.Default.xlsNewHotelGuideListPath;  // 参照用エクセルファイル：新ホテル向けガイドリスト
+        readonly string xlsTourList = Properties.Settings.Default.xlsTourGuideListPath;      // 参照用エクセルファイル：ツアー向けガイドリスト2023
+        readonly string xlsToueListNotEnglish = Properties.Settings.Default.xlsPasswordTourNonEng;     // 参照用エクセルファイル：ツアー向けガイドリスト英語以外2023
+        readonly string xlsWestHotelList = Properties.Settings.Default.xlsWestHotelGuideListPath; // 参照用エクセルファイル：西日本ホテル向けガイドリスト
 
         public clsWorks(string logFile)
         {
@@ -738,7 +738,7 @@ namespace jfgSchedule
                         var cc = (double)card;
 
                         // 稼働予定表Excelシートにデータを書き込み
-                        if (!WorkData2ExcelSheet(cc, tmpSheet, row, logFile, cardNum))
+                        if (!WorkData2ExcelSheet_WestEng(cc, tmpSheet, row, logFile, cardNum))
                         {
                             // 稼働予定が登録されていないガイドリスト組合員
                             MemberData2ExcelSheet(cc, tmpSheet, row, logFile, cardNum);
@@ -921,16 +921,16 @@ namespace jfgSchedule
                     for (int i = 0; i < 31; i++)
                     {
                         clsSchedule[i] = new ClsScheduleDays();
-                        if (i ==  0) clsSchedule[i].予定 = t.会員稼働予定.d1;
-                        if (i ==  1) clsSchedule[i].予定 = t.会員稼働予定.d2;
-                        if (i ==  2) clsSchedule[i].予定 = t.会員稼働予定.d3;
-                        if (i ==  3) clsSchedule[i].予定 = t.会員稼働予定.d4;
-                        if (i ==  4) clsSchedule[i].予定 = t.会員稼働予定.d5;
-                        if (i ==  5) clsSchedule[i].予定 = t.会員稼働予定.d6;
-                        if (i ==  6) clsSchedule[i].予定 = t.会員稼働予定.d7;
-                        if (i ==  7) clsSchedule[i].予定 = t.会員稼働予定.d8;
-                        if (i ==  8) clsSchedule[i].予定 = t.会員稼働予定.d9;
-                        if (i ==  9) clsSchedule[i].予定 = t.会員稼働予定.d10;
+                        if (i == 0) clsSchedule[i].予定 = t.会員稼働予定.d1;
+                        if (i == 1) clsSchedule[i].予定 = t.会員稼働予定.d2;
+                        if (i == 2) clsSchedule[i].予定 = t.会員稼働予定.d3;
+                        if (i == 3) clsSchedule[i].予定 = t.会員稼働予定.d4;
+                        if (i == 4) clsSchedule[i].予定 = t.会員稼働予定.d5;
+                        if (i == 5) clsSchedule[i].予定 = t.会員稼働予定.d6;
+                        if (i == 6) clsSchedule[i].予定 = t.会員稼働予定.d7;
+                        if (i == 7) clsSchedule[i].予定 = t.会員稼働予定.d8;
+                        if (i == 8) clsSchedule[i].予定 = t.会員稼働予定.d9;
+                        if (i == 9) clsSchedule[i].予定 = t.会員稼働予定.d10;
                         if (i == 10) clsSchedule[i].予定 = t.会員稼働予定.d11;
                         if (i == 11) clsSchedule[i].予定 = t.会員稼働予定.d12;
                         if (i == 12) clsSchedule[i].予定 = t.会員稼働予定.d13;
@@ -1025,7 +1025,7 @@ namespace jfgSchedule
                         住所都道府県 = t.都道府県,
                         住所市区 = t.住所1,
                         メールアドレス = t.メールアドレス1,
-                        他言語ライセンス = t.言語名1 + " " + t.言語名2 + " " +t.言語名3 + " " +t.言語名4 + " " +t.言語名5 + " ",
+                        他言語ライセンス = t.言語名1 + " " + t.言語名2 + " " + t.言語名3 + " " + t.言語名4 + " " + t.言語名5 + " ",
                         JFG加入年 = t.JFG加入年.ToString(),
                         JFG稼働日数1 = 0,
                         JFG稼働日数2 = 0,
@@ -1096,16 +1096,16 @@ namespace jfgSchedule
                     for (int i = 0; i < 31; i++)
                     {
                         clsSchedule[i] = new ClsScheduleDays();
-                        if (i ==  0) clsSchedule[i].予定 = t.会員稼働予定.d1;
-                        if (i ==  1) clsSchedule[i].予定 = t.会員稼働予定.d2;
-                        if (i ==  2) clsSchedule[i].予定 = t.会員稼働予定.d3;
-                        if (i ==  3) clsSchedule[i].予定 = t.会員稼働予定.d4;
-                        if (i ==  4) clsSchedule[i].予定 = t.会員稼働予定.d5;
-                        if (i ==  5) clsSchedule[i].予定 = t.会員稼働予定.d6;
-                        if (i ==  6) clsSchedule[i].予定 = t.会員稼働予定.d7;
-                        if (i ==  7) clsSchedule[i].予定 = t.会員稼働予定.d8;
-                        if (i ==  8) clsSchedule[i].予定 = t.会員稼働予定.d9;
-                        if (i ==  9) clsSchedule[i].予定 = t.会員稼働予定.d10;
+                        if (i == 0) clsSchedule[i].予定 = t.会員稼働予定.d1;
+                        if (i == 1) clsSchedule[i].予定 = t.会員稼働予定.d2;
+                        if (i == 2) clsSchedule[i].予定 = t.会員稼働予定.d3;
+                        if (i == 3) clsSchedule[i].予定 = t.会員稼働予定.d4;
+                        if (i == 4) clsSchedule[i].予定 = t.会員稼働予定.d5;
+                        if (i == 5) clsSchedule[i].予定 = t.会員稼働予定.d6;
+                        if (i == 6) clsSchedule[i].予定 = t.会員稼働予定.d7;
+                        if (i == 7) clsSchedule[i].予定 = t.会員稼働予定.d8;
+                        if (i == 8) clsSchedule[i].予定 = t.会員稼働予定.d9;
+                        if (i == 9) clsSchedule[i].予定 = t.会員稼働予定.d10;
                         if (i == 10) clsSchedule[i].予定 = t.会員稼働予定.d11;
                         if (i == 11) clsSchedule[i].予定 = t.会員稼働予定.d12;
                         if (i == 12) clsSchedule[i].予定 = t.会員稼働予定.d13;
@@ -1178,14 +1178,14 @@ namespace jfgSchedule
 
                     clsTour = new ClsTourScheduleXls
                     {
-                        Year  = t.会員稼働予定.年,
+                        Year = t.会員稼働予定.年,
                         Month = t.会員稼働予定.月,
                         カード番号 = t.カード番号.ToString(),
                         氏名 = t.氏名,
                         フリガナ = t.会員稼働予定.フリガナ,
                         携帯電話 = t.携帯電話,
                         ホテル業務対応可 = GetNewHotelXCellValue(row.Cell(5).Value),
-                        団体インセンティブ対応可  = GetNewHotelXCellValue(row.Cell(6).Value),
+                        団体インセンティブ対応可 = GetNewHotelXCellValue(row.Cell(6).Value),
                         一般のツアー対応可 = GetNewHotelXCellValue(row.Cell(7).Value),
                         東京都福祉衛生局対応 = GetNewHotelXCellValue(row.Cell(8).Value),
                         クレーム履歴 = GetNewHotelXCellValue(row.Cell(9).Value),
@@ -1235,16 +1235,16 @@ namespace jfgSchedule
                     for (int i = 0; i < 31; i++)
                     {
                         clsSchedule[i] = new ClsScheduleDays();
-                        if (i ==  0) clsSchedule[i].予定 = t.会員稼働予定.d1;
-                        if (i ==  1) clsSchedule[i].予定 = t.会員稼働予定.d2;
-                        if (i ==  2) clsSchedule[i].予定 = t.会員稼働予定.d3;
-                        if (i ==  3) clsSchedule[i].予定 = t.会員稼働予定.d4;
-                        if (i ==  4) clsSchedule[i].予定 = t.会員稼働予定.d5;
-                        if (i ==  5) clsSchedule[i].予定 = t.会員稼働予定.d6;
-                        if (i ==  6) clsSchedule[i].予定 = t.会員稼働予定.d7;
-                        if (i ==  7) clsSchedule[i].予定 = t.会員稼働予定.d8;
-                        if (i ==  8) clsSchedule[i].予定 = t.会員稼働予定.d9;
-                        if (i ==  9) clsSchedule[i].予定 = t.会員稼働予定.d10;
+                        if (i == 0) clsSchedule[i].予定 = t.会員稼働予定.d1;
+                        if (i == 1) clsSchedule[i].予定 = t.会員稼働予定.d2;
+                        if (i == 2) clsSchedule[i].予定 = t.会員稼働予定.d3;
+                        if (i == 3) clsSchedule[i].予定 = t.会員稼働予定.d4;
+                        if (i == 4) clsSchedule[i].予定 = t.会員稼働予定.d5;
+                        if (i == 5) clsSchedule[i].予定 = t.会員稼働予定.d6;
+                        if (i == 6) clsSchedule[i].予定 = t.会員稼働予定.d7;
+                        if (i == 7) clsSchedule[i].予定 = t.会員稼働予定.d8;
+                        if (i == 8) clsSchedule[i].予定 = t.会員稼働予定.d9;
+                        if (i == 9) clsSchedule[i].予定 = t.会員稼働予定.d10;
                         if (i == 10) clsSchedule[i].予定 = t.会員稼働予定.d11;
                         if (i == 11) clsSchedule[i].予定 = t.会員稼働予定.d12;
                         if (i == 12) clsSchedule[i].予定 = t.会員稼働予定.d13;
@@ -1716,6 +1716,10 @@ namespace jfgSchedule
             {
                 cardCode = ((ClsTourNotEngScheduleXls)(object)(cls)).カード番号;
             }
+            else if (typeof(T) == typeof(ClsWestHotelEngScheduleXls))
+            {
+                cardCode = ((ClsWestHotelEngScheduleXls)(object)(cls)).カード番号;
+            }
             else
             {
                 return false;
@@ -1890,7 +1894,7 @@ namespace jfgSchedule
         /// </summary>
         /// <param name="headerArray">見出し配列</param>
         /// <returns>IXLTable</returns>
-        private IXLTable ImportExcelGuideList(string xlsHotelList,　out string[] headerArray)
+        private IXLTable ImportExcelGuideList(string xlsHotelList, out string[] headerArray)
         {
             headerArray = new string[18];
             IXLTable Hoteltbl = null;
@@ -1911,15 +1915,15 @@ namespace jfgSchedule
                     Hoteltbl = selSheet.Range(cell1, cell2).AsTable();
 
                     // 列見出し文言を取得
-                    headerArray[0]  = selSheet.Cell("D1").Value.ToString(); // 携帯電話
-                    headerArray[1]  = selSheet.Cell("E1").Value.ToString(); // ホテルアサイン件数
-                    headerArray[2]  = selSheet.Cell("F1").Value.ToString(); // クレーム履歴
-                    headerArray[3]  = selSheet.Cell("G1").Value.ToString(); // 備考
-                    headerArray[4]  = selSheet.Cell("H1").Value.ToString(); // 生まれ年
-                    headerArray[5]  = selSheet.Cell("I1").Value.ToString(); // 都道府県
-                    headerArray[6]  = selSheet.Cell("J1").Value.ToString(); // 住所市区
-                    headerArray[7]  = selSheet.Cell("K1").Value.ToString(); // メールアドレス
-                    headerArray[8]  = selSheet.Cell("L1").Value.ToString(); // 他言語
+                    headerArray[0] = selSheet.Cell("D1").Value.ToString(); // 携帯電話
+                    headerArray[1] = selSheet.Cell("E1").Value.ToString(); // ホテルアサイン件数
+                    headerArray[2] = selSheet.Cell("F1").Value.ToString(); // クレーム履歴
+                    headerArray[3] = selSheet.Cell("G1").Value.ToString(); // 備考
+                    headerArray[4] = selSheet.Cell("H1").Value.ToString(); // 生まれ年
+                    headerArray[5] = selSheet.Cell("I1").Value.ToString(); // 都道府県
+                    headerArray[6] = selSheet.Cell("J1").Value.ToString(); // 住所市区
+                    headerArray[7] = selSheet.Cell("K1").Value.ToString(); // メールアドレス
+                    headerArray[8] = selSheet.Cell("L1").Value.ToString(); // 他言語
                 }
             }
             return Hoteltbl;
@@ -1948,16 +1952,16 @@ namespace jfgSchedule
                     tourtbl = selSheet.Range(cell1, cell2).AsTable();
 
                     // 列見出し文言を取得
-                    headerArray[0]  = selSheet.Cell("D1").Value.ToString();
-                    headerArray[1]  = selSheet.Cell("E1").Value.ToString();
-                    headerArray[2]  = selSheet.Cell("F1").Value.ToString();
-                    headerArray[3]  = selSheet.Cell("G1").Value.ToString();
-                    headerArray[4]  = selSheet.Cell("H1").Value.ToString();
-                    headerArray[5]  = selSheet.Cell("I1").Value.ToString();
-                    headerArray[6]  = selSheet.Cell("J1").Value.ToString();  // 2023/07/18
-                    headerArray[7]  = selSheet.Cell("K1").Value.ToString();
-                    headerArray[8]  = selSheet.Cell("L1").Value.ToString();
-                    headerArray[9]  = selSheet.Cell("M1").Value.ToString().Replace(" ", "").Replace("　", "");
+                    headerArray[0] = selSheet.Cell("D1").Value.ToString();
+                    headerArray[1] = selSheet.Cell("E1").Value.ToString();
+                    headerArray[2] = selSheet.Cell("F1").Value.ToString();
+                    headerArray[3] = selSheet.Cell("G1").Value.ToString();
+                    headerArray[4] = selSheet.Cell("H1").Value.ToString();
+                    headerArray[5] = selSheet.Cell("I1").Value.ToString();
+                    headerArray[6] = selSheet.Cell("J1").Value.ToString();  // 2023/07/18
+                    headerArray[7] = selSheet.Cell("K1").Value.ToString();
+                    headerArray[8] = selSheet.Cell("L1").Value.ToString();
+                    headerArray[9] = selSheet.Cell("M1").Value.ToString().Replace(" ", "").Replace("　", "");
                     headerArray[10] = selSheet.Cell("N1").Value.ToString();
                     headerArray[11] = selSheet.Cell("O1").Value.ToString();
                     headerArray[12] = selSheet.Cell("P1").Value.ToString();
@@ -2349,16 +2353,16 @@ namespace jfgSchedule
             for (int i = 0; i < 31; i++)
             {
                 clsSchedule[i] = new ClsScheduleDays();
-                if (i ==  0) clsSchedule[i].予定 = en.会員稼働予定.d1;
-                if (i ==  1) clsSchedule[i].予定 = en.会員稼働予定.d2;
-                if (i ==  2) clsSchedule[i].予定 = en.会員稼働予定.d3;
-                if (i ==  3) clsSchedule[i].予定 = en.会員稼働予定.d4;
-                if (i ==  4) clsSchedule[i].予定 = en.会員稼働予定.d5;
-                if (i ==  5) clsSchedule[i].予定 = en.会員稼働予定.d6;
-                if (i ==  6) clsSchedule[i].予定 = en.会員稼働予定.d7;
-                if (i ==  7) clsSchedule[i].予定 = en.会員稼働予定.d8;
-                if (i ==  8) clsSchedule[i].予定 = en.会員稼働予定.d9;
-                if (i ==  9) clsSchedule[i].予定 = en.会員稼働予定.d10;
+                if (i == 0) clsSchedule[i].予定 = en.会員稼働予定.d1;
+                if (i == 1) clsSchedule[i].予定 = en.会員稼働予定.d2;
+                if (i == 2) clsSchedule[i].予定 = en.会員稼働予定.d3;
+                if (i == 3) clsSchedule[i].予定 = en.会員稼働予定.d4;
+                if (i == 4) clsSchedule[i].予定 = en.会員稼働予定.d5;
+                if (i == 5) clsSchedule[i].予定 = en.会員稼働予定.d6;
+                if (i == 6) clsSchedule[i].予定 = en.会員稼働予定.d7;
+                if (i == 7) clsSchedule[i].予定 = en.会員稼働予定.d8;
+                if (i == 8) clsSchedule[i].予定 = en.会員稼働予定.d9;
+                if (i == 9) clsSchedule[i].予定 = en.会員稼働予定.d10;
                 if (i == 10) clsSchedule[i].予定 = en.会員稼働予定.d11;
                 if (i == 11) clsSchedule[i].予定 = en.会員稼働予定.d12;
                 if (i == 12) clsSchedule[i].予定 = en.会員稼働予定.d13;
@@ -2404,7 +2408,7 @@ namespace jfgSchedule
                 フリガナ = en.会員稼働予定.フリガナ,
                 携帯電話 = en.携帯電話,
                 ホテル業務対応可 = GetNewHotelXCellValue(row.Cell(5).Value),
-                団体インセンティブ対応可  = GetNewHotelXCellValue(row.Cell(6).Value),
+                団体インセンティブ対応可 = GetNewHotelXCellValue(row.Cell(6).Value),
                 一般のツアー対応可 = GetNewHotelXCellValue(row.Cell(7).Value),
                 東京都福祉衛生局対応 = GetNewHotelXCellValue(row.Cell(8).Value),
                 クレーム履歴 = GetNewHotelXCellValue(row.Cell(9).Value),
@@ -2454,16 +2458,16 @@ namespace jfgSchedule
             for (int i = 0; i < 31; i++)
             {
                 clsSchedule[i] = new ClsScheduleDays();
-                if (i ==  0) clsSchedule[i].予定 = en.会員稼働予定.d1;
-                if (i ==  1) clsSchedule[i].予定 = en.会員稼働予定.d2;
-                if (i ==  2) clsSchedule[i].予定 = en.会員稼働予定.d3;
-                if (i ==  3) clsSchedule[i].予定 = en.会員稼働予定.d4;
-                if (i ==  4) clsSchedule[i].予定 = en.会員稼働予定.d5;
-                if (i ==  5) clsSchedule[i].予定 = en.会員稼働予定.d6;
-                if (i ==  6) clsSchedule[i].予定 = en.会員稼働予定.d7;
-                if (i ==  7) clsSchedule[i].予定 = en.会員稼働予定.d8;
-                if (i ==  8) clsSchedule[i].予定 = en.会員稼働予定.d9;
-                if (i ==  9) clsSchedule[i].予定 = en.会員稼働予定.d10;
+                if (i == 0) clsSchedule[i].予定 = en.会員稼働予定.d1;
+                if (i == 1) clsSchedule[i].予定 = en.会員稼働予定.d2;
+                if (i == 2) clsSchedule[i].予定 = en.会員稼働予定.d3;
+                if (i == 3) clsSchedule[i].予定 = en.会員稼働予定.d4;
+                if (i == 4) clsSchedule[i].予定 = en.会員稼働予定.d5;
+                if (i == 5) clsSchedule[i].予定 = en.会員稼働予定.d6;
+                if (i == 6) clsSchedule[i].予定 = en.会員稼働予定.d7;
+                if (i == 7) clsSchedule[i].予定 = en.会員稼働予定.d8;
+                if (i == 8) clsSchedule[i].予定 = en.会員稼働予定.d9;
+                if (i == 9) clsSchedule[i].予定 = en.会員稼働予定.d10;
                 if (i == 10) clsSchedule[i].予定 = en.会員稼働予定.d11;
                 if (i == 11) clsSchedule[i].予定 = en.会員稼働予定.d12;
                 if (i == 12) clsSchedule[i].予定 = en.会員稼働予定.d13;
@@ -2893,7 +2897,7 @@ namespace jfgSchedule
                 フリガナ = en.フリガナ,
                 携帯電話 = en.携帯電話,
                 ホテル業務対応可 = GetNewHotelXCellValue(row.Cell(5).Value),
-                団体インセンティブ対応可  = GetNewHotelXCellValue(row.Cell(6).Value),
+                団体インセンティブ対応可 = GetNewHotelXCellValue(row.Cell(6).Value),
                 一般のツアー対応可 = GetNewHotelXCellValue(row.Cell(7).Value),
                 東京都福祉衛生局対応 = GetNewHotelXCellValue(row.Cell(8).Value),
                 クレーム履歴 = GetNewHotelXCellValue(row.Cell(9).Value),
@@ -2971,8 +2975,22 @@ namespace jfgSchedule
                                  .OrderBy(a => a.会員稼働予定.フリガナ).ThenBy(a => a.会員稼働予定.カード番号).ThenBy(a => a.会員稼働予定.年).ThenBy(a => a.会員稼働予定.月)
                                  .Select(a => new
                                  {
-                                     a.カード番号, a.氏名, a.フリガナ, a.携帯電話番号, a.生年月日, a.都道府県, a.住所1, a.メールアドレス1,
-                                     a.言語名1, a.言語名2, a.言語名3, a.言語名4, a.言語名5, a.JFG加入年, a.FIT日数, a.会員稼働予定
+                                     a.カード番号,
+                                     a.氏名,
+                                     a.フリガナ,
+                                     a.携帯電話番号,
+                                     a.生年月日,
+                                     a.都道府県,
+                                     a.住所1,
+                                     a.メールアドレス1,
+                                     a.言語名1,
+                                     a.言語名2,
+                                     a.言語名3,
+                                     a.言語名4,
+                                     a.言語名5,
+                                     a.JFG加入年,
+                                     a.FIT日数,
+                                     a.会員稼働予定
                                  });
 
             if (!member.Any())
@@ -2999,7 +3017,7 @@ namespace jfgSchedule
                     住所都道府県 = t.都道府県,
                     住所市区 = t.住所1,
                     メールアドレス = t.メールアドレス1,
-                    他言語ライセンス = t.言語名1 + " " + t.言語名2 + " " +t.言語名3 + " " +t.言語名4 + " " +t.言語名5 + " ",
+                    他言語ライセンス = t.言語名1 + " " + t.言語名2 + " " + t.言語名3 + " " + t.言語名4 + " " + t.言語名5 + " ",
                     JFG加入年 = t.JFG加入年.ToString(),
                     JFG稼働日数1 = 0,
                     JFG稼働日数2 = 0,
@@ -3035,7 +3053,7 @@ namespace jfgSchedule
         /// <returns>true：書き込み, false：稼働予定データなし</returns>
         private bool WorkData2ExcelSheet_WestEng(double cc, IXLWorksheet tmpSheet, IXLRangeRow row, string logFile, string cardNum)
         {
-           　ClsWestHotelEngScheduleXls clsHotel = null;
+            ClsWestHotelEngScheduleXls clsHotel = null;
             ClsScheduleDays[] clsSchedule = new ClsScheduleDays[31];
             jfgDataClassDataContext db = new jfgDataClassDataContext();
             ClsEastEng en = null;
@@ -3099,7 +3117,7 @@ namespace jfgSchedule
                 };
 
                 // 組合員情報クラス、予定表クラス作成
-                clsHotel = GetWorkData(en, row, out clsSchedule);
+                clsHotel = GetWestEngData(en, row, out clsSchedule);
 
                 // 稼働予定を含む組合員情報を稼働表エクセルシートに貼付
                 if (!XlsCellsSetXML_BySheet(clsHotel, clsSchedule, tmpSheet, sheetStRow, col, cardNum, logFile))
@@ -3135,8 +3153,22 @@ namespace jfgSchedule
                                  .OrderBy(a => a.会員稼働予定.フリガナ).ThenBy(a => a.会員稼働予定.カード番号).ThenBy(a => a.会員稼働予定.年).ThenBy(a => a.会員稼働予定.月)
                                  .Select(a => new
                                  {
-                                     a.カード番号, a.氏名, a.フリガナ, a.携帯電話番号, a.生年月日,a.都道府県, a.住所1, a.メールアドレス1,
-                                     a.言語名1, a.言語名2, a.言語名3, a.言語名4, a.言語名5,a.JFG加入年, a.FIT日数, a.会員稼働予定
+                                     a.カード番号,
+                                     a.氏名,
+                                     a.フリガナ,
+                                     a.携帯電話番号,
+                                     a.生年月日,
+                                     a.都道府県,
+                                     a.住所1,
+                                     a.メールアドレス1,
+                                     a.言語名1,
+                                     a.言語名2,
+                                     a.言語名3,
+                                     a.言語名4,
+                                     a.言語名5,
+                                     a.JFG加入年,
+                                     a.FIT日数,
+                                     a.会員稼働予定
                                  });
 
             if (!member.Any())
@@ -3163,7 +3195,7 @@ namespace jfgSchedule
                     住所都道府県 = t.都道府県,
                     住所市区 = t.住所1,
                     メールアドレス = t.メールアドレス1,
-                    他言語ライセンス = t.言語名1 + " " + t.言語名2 + " " +t.言語名3 + " " +t.言語名4 + " " +t.言語名5 + " ",
+                    他言語ライセンス = t.言語名1 + " " + t.言語名2 + " " + t.言語名3 + " " + t.言語名4 + " " + t.言語名5 + " ",
                     JFG加入年 = t.JFG加入年.ToString(),
                     JFG稼働日数1 = 0,
                     JFG稼働日数2 = 0,
@@ -3302,8 +3334,21 @@ namespace jfgSchedule
             var member = db.会員情報.Where(a => a.カード番号 == cc)
                                  .Select(a => new
                                  {
-                                     a.カード番号, a.氏名,a.フリガナ, a.携帯電話番号, a.生年月日, a.都道府県, a.住所1, a.メールアドレス1,
-                                     a.言語名1,  a.言語名2, a.言語名3, a.言語名4, a.言語名5, a.JFG加入年, a.FIT日数
+                                     a.カード番号,
+                                     a.氏名,
+                                     a.フリガナ,
+                                     a.携帯電話番号,
+                                     a.生年月日,
+                                     a.都道府県,
+                                     a.住所1,
+                                     a.メールアドレス1,
+                                     a.言語名1,
+                                     a.言語名2,
+                                     a.言語名3,
+                                     a.言語名4,
+                                     a.言語名5,
+                                     a.JFG加入年,
+                                     a.FIT日数
                                  });
 
             if (!member.Any())
@@ -3323,7 +3368,7 @@ namespace jfgSchedule
                     住所都道府県 = t.都道府県,
                     住所市区 = t.住所1,
                     メールアドレス = t.メールアドレス1,
-                    他言語ライセンス = t.言語名1 + " " + t.言語名2 + " " +t.言語名3 + " " +t.言語名4 + " " +t.言語名5 + " ",
+                    他言語ライセンス = t.言語名1 + " " + t.言語名2 + " " + t.言語名3 + " " + t.言語名4 + " " + t.言語名5 + " ",
                     JFG加入年 = t.JFG加入年.ToString(),
                     JFG稼働日数1 = 0,
                     JFG稼働日数2 = 0,
@@ -3374,8 +3419,21 @@ namespace jfgSchedule
             var member = db.会員情報.Where(a => a.カード番号 == cc)
                                  .Select(a => new
                                  {
-                                     a.カード番号,a.氏名, a.フリガナ, a.携帯電話番号, a.生年月日, a.都道府県, a.住所1, a.メールアドレス1,
-                                     a.言語名1, a.言語名2, a.言語名3, a.言語名4, a.言語名5, a.JFG加入年, a.FIT日数
+                                     a.カード番号,
+                                     a.氏名,
+                                     a.フリガナ,
+                                     a.携帯電話番号,
+                                     a.生年月日,
+                                     a.都道府県,
+                                     a.住所1,
+                                     a.メールアドレス1,
+                                     a.言語名1,
+                                     a.言語名2,
+                                     a.言語名3,
+                                     a.言語名4,
+                                     a.言語名5,
+                                     a.JFG加入年,
+                                     a.FIT日数
                                  });
 
             if (!member.Any())
@@ -3395,7 +3453,7 @@ namespace jfgSchedule
                     住所都道府県 = t.都道府県,
                     住所市区 = t.住所1,
                     メールアドレス = t.メールアドレス1,
-                    他言語ライセンス = t.言語名1 + " " + t.言語名2 + " " +t.言語名3 + " " +t.言語名4 + " " +t.言語名5 + " ",
+                    他言語ライセンス = t.言語名1 + " " + t.言語名2 + " " + t.言語名3 + " " + t.言語名4 + " " + t.言語名5 + " ",
                     JFG加入年 = t.JFG加入年.ToString(),
                     JFG稼働日数1 = 0,
                     JFG稼働日数2 = 0,
@@ -3437,8 +3495,8 @@ namespace jfgSchedule
         private bool MemberData2TourNotEngSheet(double cc, IXLWorksheet tmpSheet, IXLRangeRow row, string logFile, string cardNum)
         {
             ClsTourNotEngScheduleXls clsTour = null;
-            ClsScheduleDays[] clsSchedule    = new ClsScheduleDays[31];
-            jfgDataClassDataContext db       = new jfgDataClassDataContext();
+            ClsScheduleDays[] clsSchedule = new ClsScheduleDays[31];
+            jfgDataClassDataContext db = new jfgDataClassDataContext();
             ClsEastEng en = null;
 
             // 会員情報取得
