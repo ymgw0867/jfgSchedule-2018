@@ -102,6 +102,7 @@
     <Compile Include="ClsHotelScheduleXls.cs" />
     <Compile Include="clsPersonalData.cs" />
     <Compile Include="clsSchedule.cs" />
+    <Compile Include="ClsWestHotelEngScheduleXls.cs" />
     <Compile Include="clsWorks.cs" />
     <Compile Include="clsWorksTbl.cs" />
     <Compile Include="clsXls.cs" />

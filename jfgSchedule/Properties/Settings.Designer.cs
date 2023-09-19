@@ -249,5 +249,14 @@ namespace jfgSchedule.Properties {
                 return ((string)(this["xlsPasswordTourNotEng"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\JFGWORKS\\西日本_新ホテル向けガイドリスト.xlsx")]
+        public string xlsWestHotelGuideListPath {
+            get {
+                return ((string)(this["xlsWestHotelGuideListPath"]));
+            }
+        }
     }
 }
