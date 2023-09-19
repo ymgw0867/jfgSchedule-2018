@@ -258,5 +258,23 @@ namespace jfgSchedule.Properties {
                 return ((string)(this["xlsWestHotelGuideListPath"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("newhotel")]
+        public string xlsPasswordWestEng {
+            get {
+                return ((string)(this["xlsPasswordWestEng"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\JFGWORKS\\西日本_新ホテル向け英語ガイド稼働予定表.xlsx")]
+        public string xlsWestEngWorksPath {
+            get {
+                return ((string)(this["xlsWestEngWorksPath"]));
+            }
+        }
     }
 }

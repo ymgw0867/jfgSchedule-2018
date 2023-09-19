@@ -85,5 +85,11 @@
     <Setting Name="xlsWestHotelGuideListPath" Type="System.String" Scope="Application">
       <Value Profile="(Default)">C:\JFGWORKS\西日本_新ホテル向けガイドリスト.xlsx</Value>
     </Setting>
+    <Setting Name="xlsPasswordWestEng" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">newhotel</Value>
+    </Setting>
+    <Setting Name="xlsWestEngWorksPath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\JFGWORKS\西日本_新ホテル向け英語ガイド稼働予定表.xlsx</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

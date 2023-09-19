@@ -23,13 +23,13 @@ namespace jfgSchedule
         public string ホテルアサイン2019 { get; set; }
         [ColumnName("F", ColumnIndex = 8, AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Left, Width = 14, HeaderFontSize = 9)]
         public string クレーム履歴 { get; set; }
-        [ColumnName("G", ColumnIndex = 9, AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Center, Width = 32, HeaderFontSize = 9)]
+        [ColumnName("G", ColumnIndex = 9, AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Left, Width = 32, HeaderFontSize = 9)]
         public string 備考 { get; set; }
         [ColumnName("H", ColumnIndex = 10, AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Center, Width = 10, HeaderFontSize = 9)]
         public string 生まれ年 { get; set; }
         [ColumnName("I", ColumnIndex = 13, AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Left, Width = 11, HeaderFontSize = 9)]
         public string 都道府県 { get; set; }
-        [ColumnName("J", ColumnIndex = 14, AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Left, Width = 13, HeaderFontSize = 9)]
+        [ColumnName("J", ColumnIndex = 14, AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Left, Width = 11, HeaderFontSize = 9)]
         public string 市区町村 { get; set; }
         [ColumnName("K", ColumnIndex = 15, AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Left, Width = 40, HeaderFontSize = 9)]
         public string メールアドレス { get; set; }
