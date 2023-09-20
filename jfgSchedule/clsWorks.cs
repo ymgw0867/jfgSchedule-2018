@@ -762,7 +762,7 @@ namespace jfgSchedule
                 }
 
                 // ログ出力
-                File.AppendAllText(logFile, Form1.GetNowTime("西日本・ホテル向け英語ガイド稼働表を更新しました。"), Encoding.GetEncoding(932));
+                File.AppendAllText(logFile, Form1.GetNowTime(" 西日本・ホテル向け英語ガイド稼働表を更新しました。"), Encoding.GetEncoding(932));
 
                 // パスワード付きで再度書き換え
                 _ = Utility.PwdXlsFile(Properties.Settings.Default.xlsWestEngWorksPath, Properties.Settings.Default.xlsPasswordWestEng, "", logFile);
@@ -2352,8 +2352,8 @@ namespace jfgSchedule
             tmpSheet.Cell("J2").SetValue(headerArray[6]);
             tmpSheet.Cell("K2").SetValue(headerArray[7]);
             tmpSheet.Cell("L2").SetValue(headerArray[8]);
-            tmpSheet.Cell("M2").SetValue("稼働日数2022");
-            tmpSheet.Cell("N2").SetValue("稼働日数2023");
+            tmpSheet.Cell("M2").SetValue("稼働日数" + (DateTime.Today.Year-1));
+            tmpSheet.Cell("N2").SetValue("稼働日数" + DateTime.Today.Year);
             tmpSheet.Cell("O2").SetValue("更新日");
 
             // 稼働予定期間のカレンダーをセット
@@ -2736,7 +2736,7 @@ namespace jfgSchedule
                 氏名 = en.氏名,
                 フリガナ = en.フリガナ,
                 携帯電話 = en.携帯電話,
-                ホテルアサイン2019 = "",
+                ホテルアサイン2019 = GetNewHotelXCellValue(row.Cell(5).Value),
                 クレーム履歴 = GetNewHotelXCellValue(row.Cell(6).Value),
                 備考 = GetNewHotelXCellValue(row.Cell(7).Value),
                 都道府県 = en.住所都道府県,
@@ -2938,7 +2938,7 @@ namespace jfgSchedule
                 氏名 = en.氏名,
                 フリガナ = en.フリガナ,
                 携帯電話 = en.携帯電話,
-                ホテルアサイン2019 = "",
+                ホテルアサイン2019 = GetNewHotelXCellValue(row.Cell(5).Value),
                 クレーム履歴 = GetNewHotelXCellValue(row.Cell(6).Value),
                 備考 = GetNewHotelXCellValue(row.Cell(7).Value),
                 都道府県 = en.住所都道府県,
