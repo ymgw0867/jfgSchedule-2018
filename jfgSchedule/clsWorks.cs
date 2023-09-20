@@ -1389,7 +1389,11 @@ namespace jfgSchedule
             var date2 = DateTime.Parse(DateTime.Today.Year - 1 + "/" + "12/31");
 
             var asgn = db.アサイン.Where(a => a.カード番号 == t.カード番号)
-                .Where(a => a.手数料日付 != null).Where(a => a.稼働日1 >= date1 && a.稼働日1 <= date2).Count();
+                .Where(a => !a.備考1.Contains("CXL"))
+                .Where(a => a.稼働日1 >= date1 && a.稼働日1 <= date2).Where(a => a.言語 == "E")
+                .Where(a => a.分類 == "H").Count();
+
+            // where カード番号 = 1339 and 稼働日1 >= '2022/01/01' and 稼働日1 <= '2022/12/31' and 言語 = 'E' and 分類 = 'H' and 備考1 NOT LIKE '%CXL%'
 
             t.JFG稼働日数1 = asgn;
 
@@ -1398,7 +1402,9 @@ namespace jfgSchedule
             date2 = DateTime.Parse(DateTime.Today.Year + "/" + "12/31");
 
             asgn = db.アサイン.Where(a => a.カード番号 == t.カード番号)
-                .Where(a => a.手数料日付 != null).Where(a => a.稼働日1 >= date1 && a.稼働日1 <= date2).Count();
+                .Where(a => !a.備考1.Contains("CXL"))
+                .Where(a => a.稼働日1 >= date1 && a.稼働日1 <= date2).Where(a => a.言語 == "E")
+                .Where(a => a.分類 == "H").Count();
 
             t.JFG稼働日数2 = asgn;
         }
