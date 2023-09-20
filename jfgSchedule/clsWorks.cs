@@ -40,7 +40,7 @@ namespace jfgSchedule
         readonly string xlsNewHotelList = Properties.Settings.Default.xlsNewHotelGuideListPath;  // 参照用エクセルファイル：新ホテル向けガイドリスト
         readonly string xlsTourList = Properties.Settings.Default.xlsTourGuideListPath;      // 参照用エクセルファイル：ツアー向けガイドリスト2023
         readonly string xlsToueListNotEnglish = Properties.Settings.Default.xlsPasswordTourNonEng;     // 参照用エクセルファイル：ツアー向けガイドリスト英語以外2023
-        readonly string xlsWestHotelList = Properties.Settings.Default.xlsWestHotelGuideListPath; // 参照用エクセルファイル：西日本ホテル向けガイドリスト
+        readonly string xlsWestHotelList = Properties.Settings.Default.xlsWestHotelGuideListPath; // 参照用エクセルファイル：西日本ホテル向けガイドリスト：2023/09/19
 
         public clsWorks(string logFile)
         {
@@ -48,15 +48,19 @@ namespace jfgSchedule
             ReadLang();
 
             //// 稼働予定表作成
+            //xCol = 22;
             //WorksOutputXML(logFile);
 
             //// 新ホテル向けガイド稼働予定表作成：2023/02/17
+            //xCol = 22;
             //WorksOutputXML_FromExcel_202307(logFile);
 
             //// ツアー向けガイド稼働予定表作成：2023/03/18
+            //xCol = 22;
             //WorksOutputXML_FromExcel_Tour202307(logFile);
 
             //// ツアー向けガイド英語以外稼働予定表作成：2023/08/21
+            //xCol = 22;
             //WorksOutputXML_FromExcel_Tour_NotEng(logFile);
 
             // 西日本ホテル向けガイド稼働予定表作成：2023/09/19
@@ -1368,6 +1372,35 @@ namespace jfgSchedule
                 .Where(a => a.手数料日付 != null).Where(a => a.稼働日1 >= date1 && a.稼働日1 <= date2).Count();
 
             t.JFG稼働日数1 = asgn;
+        }
+
+        /// <summary>
+        /// アサインデータ集計・加工（西日本）: 2023/09/20
+        /// </summary>
+        /// <param name="t">ClsEastEngクラス</param>
+        private void UpdateClsWestEng(ClsEastEng t)
+        {
+            t.住所市区 = SubstrAddress(t.住所市区, t.住所都道府県);
+
+            jfgDataClassDataContext db = new jfgDataClassDataContext();
+
+            // 前年アサイン件数
+            var date1 = DateTime.Parse(DateTime.Today.Year - 1 + "/" + "01/01");
+            var date2 = DateTime.Parse(DateTime.Today.Year - 1 + "/" + "12/31");
+
+            var asgn = db.アサイン.Where(a => a.カード番号 == t.カード番号)
+                .Where(a => a.手数料日付 != null).Where(a => a.稼働日1 >= date1 && a.稼働日1 <= date2).Count();
+
+            t.JFG稼働日数1 = asgn;
+
+            // 当年アサイン件数
+            date1 = DateTime.Parse(DateTime.Today.Year + "/" + "01/01");
+            date2 = DateTime.Parse(DateTime.Today.Year + "/" + "12/31");
+
+            asgn = db.アサイン.Where(a => a.カード番号 == t.カード番号)
+                .Where(a => a.手数料日付 != null).Where(a => a.稼働日1 >= date1 && a.稼働日1 <= date2).Count();
+
+            t.JFG稼働日数2 = asgn;
         }
 
         /// <summary>
@@ -2695,7 +2728,7 @@ namespace jfgSchedule
         private ClsWestHotelEngScheduleXls GetWestEngData(ClsEastEng en, IXLRangeRow row, out ClsScheduleDays[] clsSchedule)
         {
             clsSchedule = new ClsScheduleDays[31];
-            UpdateClsEastNotEng_Tour(en);    // アサインテーブル項目集計
+            UpdateClsWestEng(en);    // アサインテーブル項目集計：2023/09/20
 
             var clsTour = new ClsWestHotelEngScheduleXls()
             {
@@ -2710,7 +2743,8 @@ namespace jfgSchedule
                 市区町村 = en.住所市区,
                 メールアドレス = en.メールアドレス,
                 他言語 = en.他言語ライセンス,
-                稼働日数2023 = en.会員稼働予定.稼働日数.ToString("###"),
+                稼働日数2022 = en.JFG稼働日数1.ToString("###"),
+                稼働日数2023 = en.JFG稼働日数2.ToString("###"),
                 更新日 = en.会員稼働予定.更新日.ToString()
             };
 
@@ -2896,7 +2930,7 @@ namespace jfgSchedule
         private ClsWestHotelEngScheduleXls GetWestEngMenmberData(ClsEastEng en, IXLRangeRow row, out ClsScheduleDays[] clsSchedule)
         {
             clsSchedule = new ClsScheduleDays[186];
-            UpdateClsEastNotEng_Tour(en);    // アサインテーブル項目集計
+            UpdateClsWestEng(en);    // アサインテーブル項目集計：2023/09/20
 
             var clsTour = new ClsWestHotelEngScheduleXls()
             {
@@ -2910,7 +2944,9 @@ namespace jfgSchedule
                 都道府県 = en.住所都道府県,
                 市区町村 = en.住所市区,
                 メールアドレス = en.メールアドレス,
-                他言語 = en.他言語ライセンス
+                他言語 = en.他言語ライセンス,
+                稼働日数2022 = en.JFG稼働日数1.ToString("###"),
+                稼働日数2023 = en.JFG稼働日数2.ToString("###")
             };
 
             // 他言語ライセンス

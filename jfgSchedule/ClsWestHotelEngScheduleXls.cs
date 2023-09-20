@@ -36,7 +36,7 @@ namespace jfgSchedule
         [ColumnName("L", ColumnIndex = 16, AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Center, Width = 8, HeaderFontSize = 9)]
         public string 他言語 { get; set; }
         [ColumnName("M", ColumnIndex = 19, AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Right, Width = 9, HeaderFontSize = 9)]
-        public string 稼働日数2020 { get; set; }
+        public string 稼働日数2022 { get; set; }
         [ColumnName("N", ColumnIndex = 20, AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Right, Width = 9, HeaderFontSize = 9)]
         public string 稼働日数2023 { get; set; }
         [ColumnName("O", ColumnIndex = 21, AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Left, Width = 26, HeaderFontSize = 9)]
