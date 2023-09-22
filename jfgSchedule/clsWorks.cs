@@ -32,15 +32,15 @@ namespace jfgSchedule
         const int cWEST = 1;                    // 西定数
         int xCol = 22;                    // 日列初期値
         readonly XLColor HeaderBackColor = XLColor.FromArgb(79, 129, 189);  // 見出し行背景色
-        readonly XLColor LineBackColor = XLColor.FromArgb(220, 230, 241); // 奇数明細行背景色
-        readonly string HotelSheetName = "新ホテル向けガイド稼働表";
-        readonly string TourSheetName = "ツアー向けガイド稼働表";
-        readonly string TourSheetName_NotEnglish = "ツアー向けガイド稼働表・英語以外"; // 2023/08/21
-        readonly string WestSheetName_English = "西日本・新ホテル向けガイド稼働表・英語"; // 2023/09/19
-        readonly string xlsNewHotelList = Properties.Settings.Default.xlsNewHotelGuideListPath;  // 参照用エクセルファイル：新ホテル向けガイドリスト
-        readonly string xlsTourList = Properties.Settings.Default.xlsTourGuideListPath;      // 参照用エクセルファイル：ツアー向けガイドリスト2023
-        readonly string xlsToueListNotEnglish = Properties.Settings.Default.xlsPasswordTourNonEng;     // 参照用エクセルファイル：ツアー向けガイドリスト英語以外2023
-        readonly string xlsWestHotelList = Properties.Settings.Default.xlsWestHotelGuideListPath; // 参照用エクセルファイル：西日本ホテル向けガイドリスト：2023/09/19
+        readonly XLColor LineBackColor   = XLColor.FromArgb(220, 230, 241); // 奇数明細行背景色
+        readonly string  HotelSheetName  = "新ホテル向けガイド稼働表";
+        readonly string  TourSheetName   = "ツアー向けガイド稼働表";
+        readonly string  TourSheetName_NotEnglish = "ツアー向けガイド稼働表・英語以外"; // 2023/08/21
+        readonly string  WestSheetName_English    = "西日本・新ホテル向けガイド稼働表・英語"; // 2023/09/19
+        readonly string  xlsNewHotelList       = Properties.Settings.Default.xlsNewHotelGuideListPath;  // 参照用エクセルファイル：新ホテル向けガイドリスト
+        readonly string  xlsTourList           = Properties.Settings.Default.xlsTourGuideListPath;      // 参照用エクセルファイル：ツアー向けガイドリスト2023
+        readonly string  xlsToueListNotEnglish = Properties.Settings.Default.xlsPasswordTourNonEng;     // 参照用エクセルファイル：ツアー向けガイドリスト英語以外2023
+        readonly string  xlsWestHotelList      = Properties.Settings.Default.xlsWestHotelGuideListPath; // 参照用エクセルファイル：西日本ホテル向けガイドリスト：2023/09/19
 
         public clsWorks(string logFile)
         {
@@ -1384,11 +1384,22 @@ namespace jfgSchedule
 
             jfgDataClassDataContext db = new jfgDataClassDataContext();
 
-            // 前年アサイン件数
-            var date1 = DateTime.Parse(DateTime.Today.Year - 1 + "/" + "01/01");
-            var date2 = DateTime.Parse(DateTime.Today.Year - 1 + "/" + "12/31");
+            // 2019年ホテル（英語）アサイン件数：2023/09/22
+            var date1 = DateTime.Parse("2019/01/01 0:0:0");
+            var date2 = DateTime.Parse("2019/12/31 23:59:59");
 
             var asgn = db.アサイン.Where(a => a.カード番号 == t.カード番号)
+                .Where(a => !a.備考1.Contains("CXL"))
+                .Where(a => a.稼働日1 >= date1 && a.稼働日1 <= date2).Where(a => a.言語 == "E")
+                .Where(a => a.分類 == "H").Count();
+
+            t.FIT日数 = asgn; // 2019年ホテル（英語）アサイン件数
+
+            // 前年アサイン件数
+            date1 = DateTime.Parse(DateTime.Today.Year - 1 + "/" + "01/01 0:0:0");
+            date2 = DateTime.Parse(DateTime.Today.Year - 1 + "/" + "12/31 23:59:59");
+
+            asgn = db.アサイン.Where(a => a.カード番号 == t.カード番号)
                 .Where(a => !a.備考1.Contains("CXL"))
                 .Where(a => a.稼働日1 >= date1 && a.稼働日1 <= date2).Where(a => a.言語 == "E")
                 .Where(a => a.分類 == "H").Count();
@@ -1398,8 +1409,8 @@ namespace jfgSchedule
             t.JFG稼働日数1 = asgn;
 
             // 当年アサイン件数
-            date1 = DateTime.Parse(DateTime.Today.Year + "/" + "01/01");
-            date2 = DateTime.Parse(DateTime.Today.Year + "/" + "12/31");
+            date1 = DateTime.Parse(DateTime.Today.Year + "/" + "01/01 0:0:0");
+            date2 = DateTime.Parse(DateTime.Today.Year + "/" + "12/31 23:59:59");
 
             asgn = db.アサイン.Where(a => a.カード番号 == t.カード番号)
                 .Where(a => !a.備考1.Contains("CXL"))
@@ -2742,7 +2753,7 @@ namespace jfgSchedule
                 氏名 = en.氏名,
                 フリガナ = en.フリガナ,
                 携帯電話 = en.携帯電話,
-                ホテルアサイン2019 = GetNewHotelXCellValue(row.Cell(5).Value),
+                ホテルアサイン2019 = en.FIT日数.ToString("###"), // 2019年ホテル（英語）アサイン件数：2023/09/22
                 クレーム履歴 = GetNewHotelXCellValue(row.Cell(6).Value),
                 備考 = GetNewHotelXCellValue(row.Cell(7).Value),
                 都道府県 = en.住所都道府県,
@@ -2944,7 +2955,7 @@ namespace jfgSchedule
                 氏名 = en.氏名,
                 フリガナ = en.フリガナ,
                 携帯電話 = en.携帯電話,
-                ホテルアサイン2019 = GetNewHotelXCellValue(row.Cell(5).Value),
+                ホテルアサイン2019 = en.FIT日数.ToString("###"), // 2019年ホテル（英語）アサイン件数：2023/09/22
                 クレーム履歴 = GetNewHotelXCellValue(row.Cell(6).Value),
                 備考 = GetNewHotelXCellValue(row.Cell(7).Value),
                 都道府県 = en.住所都道府県,

@@ -21,7 +21,7 @@ namespace jfgSchedule
         public string 携帯電話 { get; set; }
         [ColumnName("E", ColumnIndex = 5, AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Center, Width = 9, HeaderFontSize = 9)]
         public string ホテルアサイン2019 { get; set; }
-        [ColumnName("F", ColumnIndex = 8, AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Left, Width = 14, HeaderFontSize = 9)]
+        [ColumnName("F", ColumnIndex = 8, AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Left, Width = 16, HeaderFontSize = 9)]
         public string クレーム履歴 { get; set; }
         [ColumnName("G", ColumnIndex = 9, AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Left, Width = 32, HeaderFontSize = 9)]
         public string 備考 { get; set; }
