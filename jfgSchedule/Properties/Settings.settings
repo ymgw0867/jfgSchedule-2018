@@ -91,5 +91,14 @@
     <Setting Name="xlsWestEngWorksPath" Type="System.String" Scope="Application">
       <Value Profile="(Default)">C:\JFGWORKS\西日本_新ホテル向け英語ガイド稼働予定表.xlsx</Value>
     </Setting>
+    <Setting Name="xlsWestHotelNotEngGuideListPath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\JFGWORKS\西日本他言語_新ホテル向けガイドリスト.xlsx</Value>
+    </Setting>
+    <Setting Name="xlsPasswordWestNotEng" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">tagengo</Value>
+    </Setting>
+    <Setting Name="xlsWestNotEngWorksPath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\JFGWORKS\西日本_新ホテル向け多言語ガイド稼働予定表.xlsx</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -41,6 +41,7 @@ namespace jfgSchedule
         readonly string  xlsTourList           = Properties.Settings.Default.xlsTourGuideListPath;      // 参照用エクセルファイル：ツアー向けガイドリスト2023
         readonly string  xlsToueListNotEnglish = Properties.Settings.Default.xlsPasswordTourNonEng;     // 参照用エクセルファイル：ツアー向けガイドリスト英語以外2023
         readonly string  xlsWestHotelList      = Properties.Settings.Default.xlsWestHotelGuideListPath; // 参照用エクセルファイル：西日本ホテル向けガイドリスト：2023/09/19
+        readonly string  xlsWestHotelListNotEng = Properties.Settings.Default.xlsWestHotelNotEngGuideListPath; // 参照用エクセルファイル：西日本多言語ホテル向けガイドリスト：2023/09/22
 
         public clsWorks(string logFile)
         {
@@ -51,22 +52,25 @@ namespace jfgSchedule
             //xCol = 22;
             //WorksOutputXML(logFile);
 
-            //// 新ホテル向けガイド稼働予定表作成：2023/02/17
-            //xCol = 22;
-            //WorksOutputXML_FromExcel_202307(logFile);
+            // 新ホテル向けガイド稼働予定表作成：2023/02/17
+            xCol = 22;
+            WorksOutputXML_FromExcel_202307(logFile);
 
-            //// ツアー向けガイド稼働予定表作成：2023/03/18
-            //xCol = 22;
-            //WorksOutputXML_FromExcel_Tour202307(logFile);
+            // ツアー向けガイド稼働予定表作成：2023/03/18
+            xCol = 22;
+            WorksOutputXML_FromExcel_Tour202307(logFile);
 
-            //// ツアー向けガイド英語以外稼働予定表作成：2023/08/21
-            //xCol = 22;
-            //WorksOutputXML_FromExcel_Tour_NotEng(logFile);
+            // ツアー向けガイド英語以外稼働予定表作成：2023/08/21
+            xCol = 22;
+            WorksOutputXML_FromExcel_Tour_NotEng(logFile);
 
             // 西日本ホテル向けガイド稼働予定表作成：2023/09/19
             xCol = 16;
             WorksOutputXML_West_HotelEnglish(logFile);
 
+            // 西日本多言語ホテル向けガイド稼働予定表作成：2023/09/22
+            xCol = 16;
+            //WorksOutputXML_West_HotelNotEng(logFile);
         }
 
         /// <summary>
@@ -714,7 +718,98 @@ namespace jfgSchedule
             try
             {
                 // Excelシート：新ホテル向けガイドリストをテーブルに読み込む
-                IXLTable Hoteltbl = ImportExcelGuideList(xlsWestHotelList, out headerArray);
+                IXLTable Hoteltbl = ImportWestGuideList(xlsWestHotelList, out headerArray);
+
+                // ガイドリストテーブル有効行がないときは終わる
+                if (Hoteltbl.RowCount() < 1)
+                {
+                    // ログ出力
+                    System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" 西日本_新ホテル向けガイドリストに有効行がありませんでした。"), Encoding.GetEncoding(932));
+                    return;
+                }
+
+                // 稼働表ブック作成
+                using (var book = new XLWorkbook(XLEventTracking.Disabled))
+                {
+                    // 稼働予定表Excelシート見出し行作成
+                    var tmpSheet = InitialSheetWest_Eng(headerArray, book);
+
+                    string cardNum = string.Empty;
+
+                    // ホテル向けガイドリストを順次読む
+                    foreach (var row in Hoteltbl.Rows())
+                    {
+                        // カード番号
+                        var card = row.Cell(1).Value;
+                        if (string.IsNullOrEmpty(card.ToString()) || !Utility.NumericCheck(card.ToString()))
+                        {
+                            continue;
+                        }
+                        var cc = (double)card;
+
+                        // 稼働予定表Excelシートにデータを書き込み
+                        if (!WorkData2ExcelSheet_WestEng(cc, tmpSheet, row, logFile, cardNum))
+                        {
+                            // 稼働予定が登録されていないガイドリスト組合員
+                            MemberData2WestEngSheet(cc, tmpSheet, row, logFile, cardNum);
+                        }
+
+                        // カード番号
+                        cardNum = card.ToString();
+                    }
+
+                    // 表のフォーマットを整える（罫線、列結合）
+                    SheetFormat<ClsWestHotelEngScheduleXls>(tmpSheet, xCol, logFile);
+
+                    //保存処理
+                    book.SaveAs(Properties.Settings.Default.xlsWestEngWorksPath);
+                }
+
+                // ログ出力
+                File.AppendAllText(logFile, Form1.GetNowTime(" 西日本・ホテル向け英語ガイド稼働表を更新しました。"), Encoding.GetEncoding(932));
+
+                // パスワード付きで再度書き換え
+                _ = Utility.PwdXlsFile(Properties.Settings.Default.xlsWestEngWorksPath, Properties.Settings.Default.xlsPasswordWestEng, "", logFile);
+
+                // OneDriveフォルダへコピー：2023/03/30
+                var toPath = Properties.Settings.Default.Copy2OneDrivePath + Path.GetFileName(Properties.Settings.Default.xlsWestEngWorksPath);
+                _ = Copy2OneDrive(Properties.Settings.Default.xlsWestEngWorksPath, toPath, logFile);
+            }
+            catch (Exception ex)
+            {
+                Console.Write(ex.ToString());
+                // ログ出力
+                File.AppendAllText(logFile, Form1.GetNowTime(ex.ToString()), Encoding.GetEncoding(932));
+            }
+            finally
+            {
+
+            }
+        }
+
+        /// 西日本多言語ホテル向けガイド稼働予定表作成： 2023/09/22
+        /// </summary>
+        /// <param name="logFile">
+        /// ログ出力パス
+        /// </param>
+        public void WorksOutputXML_West_HotelNotEng(string logFile)
+        {
+            // ホテル向けガイドリストExcelファイルの存在確認
+            if (!File.Exists(xlsWestHotelListNotEng))
+            {
+                // ログ出力
+                File.AppendAllText(logFile, Form1.GetNowTime(" 西日本他言語_新ホテル向けガイドリスト（" + xlsWestHotelListNotEng + "）が見つかりませんでした。"), Encoding.GetEncoding(932));
+                return;
+            }
+
+            DateTime stDate;
+            DateTime edDate;
+            string[] headerArray = new string[18];  // 2023/07/18 [18]
+
+            try
+            {
+                // Excelシート：西日本他言語_新ホテル向けガイドリストをテーブルに読み込む
+                IXLTable Hoteltbl = ImportWestGuideList(xlsWestHotelListNotEng, out headerArray);
 
                 // ガイドリストテーブル有効行がないときは終わる
                 if (Hoteltbl.RowCount() < 1)
@@ -1595,7 +1690,16 @@ namespace jfgSchedule
 
             // 日曜日の日付の背景色
             var range2 = tmpSheet.Range(tmpSheet.Cell(2, sCol).Address, tmpSheet.Cell(2, tmpSheet.LastCellUsed().Address.ColumnNumber).Address);
-            range2.AddConditionalFormat().WhenIsTrue("=P3=" + @"""日""").Fill.SetBackgroundColor(XLColor.MistyRose).Font.SetFontColor(XLColor.Black);
+
+            // 2023/09/22
+            if (typeof(T) == typeof(ClsWestHotelEngScheduleXls))
+            {
+                range2.AddConditionalFormat().WhenIsTrue("=P3=" + @"""日""").Fill.SetBackgroundColor(XLColor.MistyRose).Font.SetFontColor(XLColor.Black);
+            }
+            else
+            {
+                range2.AddConditionalFormat().WhenIsTrue("=V3=" + @"""日""").Fill.SetBackgroundColor(XLColor.MistyRose).Font.SetFontColor(XLColor.Black);
+            }
 
             // ウィンドウ枠の固定
             tmpSheet.SheetView.Freeze(3, 7);    // 2023/07/18
@@ -1942,11 +2046,58 @@ namespace jfgSchedule
         }
 
         /// <summary>
-        /// Excelシート西日本新ホテル向けガイドリストをテーブルに読み込む
+        /// Excelシート新ホテル向けガイドリストをテーブルに読み込む
         /// </summary>
         /// <param name="headerArray">見出し配列</param>
         /// <returns>IXLTable</returns>
         private IXLTable ImportExcelGuideList(string xlsHotelList, out string[] headerArray)
+        {
+            headerArray = new string[18];
+            IXLTable Hoteltbl = null;
+            using (var selectBook = new XLWorkbook(xlsHotelList))
+            {
+                using (var selSheet = selectBook.Worksheet(1))
+                {
+                    // カード番号開始セル
+                    var cell1 = selSheet.Cell("A1");
+
+                    // 最終行を取得
+                    var lastRow = selSheet.LastRowUsed().RowNumber();
+
+                    // カード番号最終セル
+                    var cell2 = selSheet.Cell(lastRow, 19);
+
+                    // カード番号をテーブルで取得
+                    Hoteltbl = selSheet.Range(cell1, cell2).AsTable();
+
+                    // 列見出し文言を取得
+                    headerArray[0] = selSheet.Cell("D1").Value.ToString(); // 携帯電話
+                    headerArray[1] = selSheet.Cell("E1").Value.ToString(); // 分類
+                    headerArray[2] = selSheet.Cell("F1").Value.ToString(); // ホテルアサイン件数（英）2019
+                    headerArray[3] = selSheet.Cell("G1").Value.ToString(); // ホテルアサイン件数（英）2020-22
+                    headerArray[4] = selSheet.Cell("H1").Value.ToString(); // クレーム履歴
+                    headerArray[5] = selSheet.Cell("I1").Value.ToString(); // 生まれ年
+                    headerArray[6] = selSheet.Cell("J1").Value.ToString(); // プレゼン面談年月
+                    headerArray[7] = selSheet.Cell("K1").Value.ToString(); // 得意分野・その他
+                    headerArray[8] = selSheet.Cell("L1").Value.ToString(); // 団体損害保険加入
+                    headerArray[9] = selSheet.Cell("M1").Value.ToString(); // 都道府県
+                    headerArray[10] = selSheet.Cell("N1").Value.ToString(); // 住所市区
+                    headerArray[11] = selSheet.Cell("O1").Value.ToString(); // メールアドレス
+                    headerArray[12] = selSheet.Cell("P1").Value.ToString(); // 他言語
+                    headerArray[13] = selSheet.Cell("Q1").Value.ToString(); // FIT日数
+                    headerArray[14] = selSheet.Cell("R1").Value.ToString(); // マンダリン
+                    headerArray[15] = selSheet.Cell("S1").Value.ToString(); // ペニンシュラ
+                }
+            }
+            return Hoteltbl;
+        }
+
+        /// <summary>
+        /// Excelシート西日本新ホテル向けガイドリストをテーブルに読み込む
+        /// </summary>
+        /// <param name="headerArray">見出し配列</param>
+        /// <returns>IXLTable</returns>
+        private IXLTable ImportWestGuideList(string xlsHotelList, out string[] headerArray)
         {
             headerArray = new string[18];
             IXLTable Hoteltbl = null;

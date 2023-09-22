@@ -276,5 +276,32 @@ namespace jfgSchedule.Properties {
                 return ((string)(this["xlsWestEngWorksPath"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\JFGWORKS\\西日本他言語_新ホテル向けガイドリスト.xlsx")]
+        public string xlsWestHotelNotEngGuideListPath {
+            get {
+                return ((string)(this["xlsWestHotelNotEngGuideListPath"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("tagengo")]
+        public string xlsPasswordWestNotEng {
+            get {
+                return ((string)(this["xlsPasswordWestNotEng"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\JFGWORKS\\西日本_新ホテル向け多言語ガイド稼働予定表.xlsx")]
+        public string xlsWestNotEngWorksPath {
+            get {
+                return ((string)(this["xlsWestNotEngWorksPath"]));
+            }
+        }
     }
 }
