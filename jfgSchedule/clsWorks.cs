@@ -1,6 +1,7 @@
 ﻿//using Excel = Microsoft.Office.Interop.Excel;
 using ClosedXML.Excel;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -32,18 +33,18 @@ namespace jfgSchedule
         const int cWEST = 1;                    // 西定数
         int xCol = 22;                    // 日列初期値
         readonly XLColor HeaderBackColor = XLColor.FromArgb(79, 129, 189);  // 見出し行背景色
-        readonly XLColor LineBackColor   = XLColor.FromArgb(220, 230, 241); // 奇数明細行背景色
-        readonly string  HotelSheetName  = "新ホテル向けガイド稼働表";
-        readonly string  TourSheetName   = "ツアー向けガイド稼働表";
-        readonly string  TourSheetName_NotEnglish = "ツアー向けガイド稼働表・英語以外"; // 2023/08/21
-        readonly string  WestSheetName_English    = "西日本・新ホテル向けガイド稼働表・英語"; // 2023/09/19
-        readonly string  WestSheetName_NotEnglish = "西日本・新ホテル向けガイド稼働表・他言語"; // 2023/09/19
-        readonly string  xlsNewHotelList       = Properties.Settings.Default.xlsNewHotelGuideListPath;  // 参照用エクセルファイル：新ホテル向けガイドリスト
-        readonly string  xlsTourList           = Properties.Settings.Default.xlsTourGuideListPath;      // 参照用エクセルファイル：ツアー向けガイドリスト2023
-        readonly string  xlsToueListNotEnglish = Properties.Settings.Default.xlsPasswordTourNonEng;     // 参照用エクセルファイル：ツアー向けガイドリスト英語以外2023
-        readonly string  xlsWestHotelList      = Properties.Settings.Default.xlsWestHotelGuideListPath; // 参照用エクセルファイル：西日本ホテル向けガイドリスト：2023/09/19
-        readonly string  xlsWestHotelListNotEng = Properties.Settings.Default.xlsWestHotelNotEngGuideListPath; // 参照用エクセルファイル：西日本多言語ホテル向けガイドリスト：2023/09/22
-        const string ENG     = "Eng";        // 西日本・英語 2023/09/22
+        readonly XLColor LineBackColor = XLColor.FromArgb(220, 230, 241); // 奇数明細行背景色
+        readonly string HotelSheetName = "新ホテル向けガイド稼働表";
+        readonly string TourSheetName = "ツアー向けガイド稼働表";
+        readonly string TourSheetName_NotEnglish = "ツアー向けガイド稼働表・英語以外"; // 2023/08/21
+        readonly string WestSheetName_English = "西日本・新ホテル向けガイド稼働表・英語"; // 2023/09/19
+        readonly string WestSheetName_NotEnglish = "西日本・新ホテル向けガイド稼働表・他言語"; // 2023/09/19
+        readonly string xlsNewHotelList = Properties.Settings.Default.xlsNewHotelGuideListPath;  // 参照用エクセルファイル：新ホテル向けガイドリスト
+        readonly string xlsTourList = Properties.Settings.Default.xlsTourGuideListPath;      // 参照用エクセルファイル：ツアー向けガイドリスト2023
+        readonly string xlsToueListNotEnglish = Properties.Settings.Default.xlsPasswordTourNonEng;     // 参照用エクセルファイル：ツアー向けガイドリスト英語以外2023
+        readonly string xlsWestHotelList = Properties.Settings.Default.xlsWestHotelGuideListPath; // 参照用エクセルファイル：西日本ホテル向けガイドリスト：2023/09/19
+        readonly string xlsWestHotelListNotEng = Properties.Settings.Default.xlsWestHotelNotEngGuideListPath; // 参照用エクセルファイル：西日本多言語ホテル向けガイドリスト：2023/09/22
+        const string ENG = "Eng";        // 西日本・英語 2023/09/22
         const string NOT_ENG = "NotEng";     // 西日本・他言語 2023/09/22
 
 
@@ -717,20 +718,20 @@ namespace jfgSchedule
             {
                 // 英語
                 case ENG:
-                    xList     = xlsWestHotelList;
+                    xList = xlsWestHotelList;
                     sheetName = WestSheetName_English;
-                    msg       = " 西日本・ホテル向け英語ガイド稼働表を更新しました。";
-                    pw        = Properties.Settings.Default.xlsPasswordWestEng;
-                    outpath   = Properties.Settings.Default.xlsWestEngWorksPath;
+                    msg = " 西日本・ホテル向け英語ガイド稼働表を更新しました。";
+                    pw = Properties.Settings.Default.xlsPasswordWestEng;
+                    outpath = Properties.Settings.Default.xlsWestEngWorksPath;
                     break;
 
                 // 他言語
                 case NOT_ENG:
-                    xList     = xlsWestHotelListNotEng;
+                    xList = xlsWestHotelListNotEng;
                     sheetName = WestSheetName_NotEnglish;
-                    msg       = " 西日本・ホテル向け他言語ガイド稼働表を更新しました。";
-                    pw        = Properties.Settings.Default.xlsPasswordWestNotEng;
-                    outpath   = Properties.Settings.Default.xlsWestNotEngWorksPath;
+                    msg = " 西日本・ホテル向け他言語ガイド稼働表を更新しました。";
+                    pw = Properties.Settings.Default.xlsPasswordWestNotEng;
+                    outpath = Properties.Settings.Default.xlsWestNotEngWorksPath;
                     break;
 
                 default:
@@ -2505,7 +2506,7 @@ namespace jfgSchedule
             tmpSheet.Cell("J2").SetValue(headerArray[6]);
             tmpSheet.Cell("K2").SetValue(headerArray[7]);
             tmpSheet.Cell("L2").SetValue(headerArray[8]);
-            tmpSheet.Cell("M2").SetValue("稼働日数" + (DateTime.Today.Year-1));
+            tmpSheet.Cell("M2").SetValue("稼働日数" + (DateTime.Today.Year - 1));
             tmpSheet.Cell("N2").SetValue("稼働日数" + DateTime.Today.Year);
             tmpSheet.Cell("O2").SetValue("更新日");
 
@@ -2887,7 +2888,7 @@ namespace jfgSchedule
             if (mode == ENG)
             {
                 // 英語
-                UpdateClsWestEng(en);    
+                UpdateClsWestEng(en);
             }
             else if (mode == NOT_ENG)
             {
@@ -2922,6 +2923,31 @@ namespace jfgSchedule
             else if (mode == NOT_ENG)
             {
                 // 他言語
+                var s = GetLangCodeFromBikou(clsTour.備考);
+                Debug.WriteLine(clsTour.カード番号 + "," + s[0] + "," + s[1] + " " + clsTour.他言語);
+
+                if (s[0] != "")
+                {
+                    clsTour.他言語 = clsTour.他言語.Replace(s[0], "").Trim();
+                }
+                if (s[1] != "")
+                {
+                    clsTour.他言語 = clsTour.他言語.Replace(s[1], "").Trim();
+                }
+                if (s[2] != "")
+                {
+                    clsTour.他言語 = clsTour.他言語.Replace(s[2], "").Trim();
+                }
+
+                //for (int i = 0; i < s.Length; i++)
+                //{
+                //    if (s[i] == null)
+                //    {
+                //        continue;
+                //    }
+                //    clsTour.他言語 = clsTour.他言語.Replace(s[i], "").Trim();
+                //}
+                Debug.WriteLine(clsTour.カード番号 + " " + clsTour.他言語);
             }
 
             // 生まれ年：2023/07/23
@@ -3013,6 +3039,35 @@ namespace jfgSchedule
             }
             return rtn;
         }
+
+        /// <summary>
+        /// 西日本他言語：備考欄の漢字の言語を言語コードに変換する
+        /// </summary>
+        /// <param name="bikou">備考欄文字列</param>
+        /// <returns>言語コード+ " "</returns>
+        private string[] GetLangCodeFromBikou(string bikou)
+        {
+            string[] rtn = new string[8];
+
+            for (int i = 0; i < rtn.Length; i++)
+            {
+                rtn[i] = "";
+            }
+
+            int cnt = 0;
+
+            // 他言語ライセンス
+            for (int i = 0; i < tagengo.GetLength(0); i++)
+            {
+                if (bikou.Contains(tagengo[i, 0]))
+                {
+                    rtn[cnt] = tagengo[i, 1];
+                    cnt++;
+                }
+            }
+            return rtn;
+        }
+
 
         /// <summary>
         /// 組合員情報クラス、予定表クラス作成（ツアー向け英語以外）：2023/08/21
@@ -3143,6 +3198,17 @@ namespace jfgSchedule
             else if (mode == NOT_ENG)
             {
                 // 他言語
+                var s = GetLangCodeFromBikou(clsTour.備考);
+                Debug.WriteLine(clsTour.カード番号 + "," + s[0] + "," + s[1] + " " + clsTour.他言語);
+                for (int i = 0; i < s.Length; i++)
+                {
+                    if (s[i] == "")
+                    {
+                        continue;
+                    }
+                    clsTour.他言語 = clsTour.他言語.Replace(s[i], "").Trim();
+                }
+                Debug.WriteLine(clsTour.カード番号 + " " + clsTour.他言語);
             }
 
             // 生まれ年：2023/07/23
