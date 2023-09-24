@@ -2924,29 +2924,33 @@ namespace jfgSchedule
             {
                 // 他言語
                 var s = GetLangCodeFromBikou(clsTour.備考);
-                Debug.WriteLine(clsTour.カード番号 + "," + s[0] + "," + s[1] + " " + clsTour.他言語);
+                Debug.WriteLine(clsTour.カード番号 + "," + s[0] + "," + s[1] + " : " + clsTour.他言語);
 
-                if (s[0] != "")
-                {
-                    clsTour.他言語 = clsTour.他言語.Replace(s[0], "").Trim();
-                }
-                if (s[1] != "")
-                {
-                    clsTour.他言語 = clsTour.他言語.Replace(s[1], "").Trim();
-                }
-                if (s[2] != "")
-                {
-                    clsTour.他言語 = clsTour.他言語.Replace(s[2], "").Trim();
-                }
-
-                //for (int i = 0; i < s.Length; i++)
+                //if (s[0] != "")
                 //{
-                //    if (s[i] == null)
-                //    {
-                //        continue;
-                //    }
-                //    clsTour.他言語 = clsTour.他言語.Replace(s[i], "").Trim();
+                //    clsTour.他言語 = clsTour.他言語.Replace(s[0], "").Trim();
                 //}
+                //if (s[1] != "")
+                //{
+                //    clsTour.他言語 = clsTour.他言語.Replace(s[1], "").Trim();
+                //}
+                //if (s[2] != "")
+                //{
+                //    clsTour.他言語 = clsTour.他言語.Replace(s[2], "").Trim();
+                //}
+
+                var tagengo = clsTour.他言語;
+
+                for (int i = 0; i < s.Length; i++)
+                {
+                    if (s[i] == "")
+                    {
+                        continue;
+                    }
+                    tagengo = tagengo.Replace(s[i], "").Trim();
+                }
+
+                clsTour.他言語 = tagengo;
                 Debug.WriteLine(clsTour.カード番号 + " " + clsTour.他言語);
             }
 
