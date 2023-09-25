@@ -53,21 +53,21 @@ namespace jfgSchedule
             // 言語配列読み込み
             ReadLang();
 
-            //// 稼働予定表作成
-            //xCol = 22;
-            //WorksOutputXML(logFile);
+            // 稼働予定表作成
+            xCol = 22;
+            WorksOutputXML(logFile);
 
-            //// 新ホテル向けガイド稼働予定表作成：2023/02/17
-            //xCol = 22;
-            //WorksOutputXML_FromExcel_202307(logFile);
+            // 新ホテル向けガイド稼働予定表作成：2023/02/17
+            xCol = 22;
+            WorksOutputXML_FromExcel_202307(logFile);
 
-            //// ツアー向けガイド稼働予定表作成：2023/03/18
-            //xCol = 22;
-            //WorksOutputXML_FromExcel_Tour202307(logFile);
+            // ツアー向けガイド稼働予定表作成：2023/03/18
+            xCol = 22;
+            WorksOutputXML_FromExcel_Tour202307(logFile);
 
-            //// ツアー向けガイド英語以外稼働予定表作成：2023/08/21
-            //xCol = 22;
-            //WorksOutputXML_FromExcel_Tour_NotEng(logFile);
+            // ツアー向けガイド英語以外稼働予定表作成：2023/08/21
+            xCol = 22;
+            WorksOutputXML_FromExcel_Tour_NotEng(logFile);
 
             // 西日本ホテル向けガイド稼働予定表作成：2023/09/19
             xCol = 16;
@@ -1606,6 +1606,7 @@ namespace jfgSchedule
             // 稼働予定年月を表すセルを結合する
             int stCell = 0;
             int edCell = 0;
+            bool firstDay = true;   // 2023/09/25
 
             for (int cl = xCol; cl <= tmpSheet.LastCellUsed().Address.ColumnNumber; cl++)
             {
@@ -1615,7 +1616,7 @@ namespace jfgSchedule
                     stCell = cl;
                 }
 
-                if (Utility.nulltoString(tmpSheet.Cell(2, cl).Value).Trim() == "1")
+                if (!firstDay && Utility.nulltoString(tmpSheet.Cell(2, cl).Value).Trim() == "1")   // 2023/09/25
                 {
                     // セル結合
                     tmpSheet.Range(tmpSheet.Cell(1, stCell).Address, tmpSheet.Cell(1, edCell).Address).Merge(false);
@@ -1632,6 +1633,8 @@ namespace jfgSchedule
                 {
                     edCell = cl;
                 }
+
+                firstDay = false;   // 2023/09/25
             }
 
             if (stCell != 0)
@@ -2926,19 +2929,6 @@ namespace jfgSchedule
                 var s = GetLangCodeFromBikou(clsTour.備考);
                 Debug.WriteLine(clsTour.カード番号 + "," + s[0] + "," + s[1] + " : " + clsTour.他言語);
 
-                //if (s[0] != "")
-                //{
-                //    clsTour.他言語 = clsTour.他言語.Replace(s[0], "").Trim();
-                //}
-                //if (s[1] != "")
-                //{
-                //    clsTour.他言語 = clsTour.他言語.Replace(s[1], "").Trim();
-                //}
-                //if (s[2] != "")
-                //{
-                //    clsTour.他言語 = clsTour.他言語.Replace(s[2], "").Trim();
-                //}
-
                 var tagengo = clsTour.他言語;
 
                 for (int i = 0; i < s.Length; i++)
@@ -3045,7 +3035,7 @@ namespace jfgSchedule
         }
 
         /// <summary>
-        /// 西日本他言語：備考欄の漢字の言語を言語コードに変換する
+        /// 西日本他言語：備考欄の漢字の言語を言語コードに変換する：2023/09/22
         /// </summary>
         /// <param name="bikou">備考欄文字列</param>
         /// <returns>言語コード+ " "</returns>
@@ -3203,15 +3193,20 @@ namespace jfgSchedule
             {
                 // 他言語
                 var s = GetLangCodeFromBikou(clsTour.備考);
-                Debug.WriteLine(clsTour.カード番号 + "," + s[0] + "," + s[1] + " " + clsTour.他言語);
+                Debug.WriteLine(clsTour.カード番号 + "," + s[0] + "," + s[1] + " : " + clsTour.他言語);
+
+                var tagengo = clsTour.他言語;
+
                 for (int i = 0; i < s.Length; i++)
                 {
                     if (s[i] == "")
                     {
                         continue;
                     }
-                    clsTour.他言語 = clsTour.他言語.Replace(s[i], "").Trim();
+                    tagengo = tagengo.Replace(s[i], "").Trim();
                 }
+
+                clsTour.他言語 = tagengo;
                 Debug.WriteLine(clsTour.カード番号 + " " + clsTour.他言語);
             }
 
