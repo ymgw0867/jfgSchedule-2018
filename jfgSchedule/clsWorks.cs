@@ -64,13 +64,13 @@ namespace jfgSchedule
             xCol = 23;  // 2023/10/24 備考欄追加
             WorksOutputXML_FromExcel_202307(logFile);
 
-            //// ツアー向けガイド稼働予定表作成：2023/03/18
-            //xCol = 22;
-            //WorksOutputXML_FromExcel_Tour202307(logFile);
+            // ツアー向けガイド稼働予定表作成：2023/03/18
+            xCol = 23;
+            WorksOutputXML_FromExcel_Tour202307(logFile);
 
-            //// ツアー向けガイド英語以外稼働予定表作成：2023/08/21
-            //xCol = 22;
-            //WorksOutputXML_FromExcel_Tour_NotEng(logFile);
+            // ツアー向けガイド英語以外稼働予定表作成：2023/08/21
+            xCol = 23;
+            WorksOutputXML_FromExcel_Tour_NotEng(logFile);
 
             //// 西日本ホテル向けガイド稼働予定表作成：2023/09/19
             //xCol = 16;
@@ -2264,7 +2264,7 @@ namespace jfgSchedule
                 DateTime wDt = stDate.AddMonths(mon);
                 //var xCol = 31 * mon + 22;   // 2023/07/18[22]
                 var xColu = 31 * mon + xCol;   // 2023/10/24
-                tmpSheet.Cell(1, xCol).SetValue(wDt.Year + "年" + wDt.Month + "月"); // 22,53,84,115,・・・ 
+                tmpSheet.Cell(1, xColu).SetValue(wDt.Year + "年" + wDt.Month + "月"); // 22,53,84,115,・・・ 
 
                 // 年月と開始列の配列にセット
                 sheetYYMM[mon, 0] = wDt.Year.ToString() + wDt.Month.ToString().PadLeft(2, '0');
@@ -2344,19 +2344,20 @@ namespace jfgSchedule
             tmpSheet.Cell("R2").SetValue(headerArray[14]);
             tmpSheet.Cell("S2").SetValue(headerArray[15]);  // 2023/07/18 
             tmpSheet.Cell("T2").SetValue("稼働日数");
-            tmpSheet.Cell("U2").SetValue("更新日");
+            tmpSheet.Cell("U2").SetValue("備考"); // 2024/10/24
+            tmpSheet.Cell("V2").SetValue("更新日");
 
             // 稼働予定期間のカレンダーをセット
             for (int mon = 0; mon < 6; mon++)
             {
                 // 該当月
                 DateTime wDt = stDate.AddMonths(mon);
-                var xCol = 31 * mon + 22;   // 2023/07/18[22]
-                tmpSheet.Cell(1, xCol).SetValue(wDt.Year + "年" + wDt.Month + "月"); // 22,53,84,115,・・・ 
+                var xColu = 31 * mon + xCol;   // 2023/10/24
+                tmpSheet.Cell(1, xColu).SetValue(wDt.Year + "年" + wDt.Month + "月"); // 22,53,84,115,・・・ 
 
                 // 年月と開始列の配列にセット
                 sheetYYMM[mon, 0] = wDt.Year.ToString() + wDt.Month.ToString().PadLeft(2, '0');
-                sheetYYMM[mon, 1] = xCol.ToString();
+                sheetYYMM[mon, 1] = xColu.ToString();
 
                 // 該当月の暦
                 int dy = 0;
@@ -2366,22 +2367,22 @@ namespace jfgSchedule
                     {
                         if (dDay >= DateTime.Today)
                         {
-                            tmpSheet.Cell(1, xCol + dy).SetValue(wDt.Year + "年" + wDt.Month + "月");  // 年月：2023/01/26
-                            tmpSheet.Cell(2, xCol + dy).SetValue((dy + 1).ToString());    // 日
-                            tmpSheet.Cell(3, xCol + dy).SetValue(dDay.ToString("ddd"));   // 曜日
+                            tmpSheet.Cell(1, xColu + dy).SetValue(wDt.Year + "年" + wDt.Month + "月");  // 年月：2023/01/26
+                            tmpSheet.Cell(2, xColu + dy).SetValue((dy + 1).ToString());    // 日
+                            tmpSheet.Cell(3, xColu + dy).SetValue(dDay.ToString("ddd"));   // 曜日
                         }
                         else
                         {
                             // 作成前日以前はセルを空白とする：2023/01/25
-                            tmpSheet.Cell(2, xCol + dy).SetValue(string.Empty);
-                            tmpSheet.Cell(3, xCol + dy).SetValue(string.Empty);
+                            tmpSheet.Cell(2, xColu + dy).SetValue(string.Empty);
+                            tmpSheet.Cell(3, xColu + dy).SetValue(string.Empty);
                         }
                     }
                     else
                     {
                         // 存在しない日付はセルを空白とする
-                        tmpSheet.Cell(2, xCol + dy).SetValue(string.Empty);
-                        tmpSheet.Cell(3, xCol + dy).SetValue(string.Empty);
+                        tmpSheet.Cell(2, xColu + dy).SetValue(string.Empty);
+                        tmpSheet.Cell(3, xColu + dy).SetValue(string.Empty);
                     }
 
                     dy++;
@@ -2433,19 +2434,20 @@ namespace jfgSchedule
             tmpSheet.Cell("R2").SetValue(headerArray[14]);
             tmpSheet.Cell("S2").SetValue("稼働日数2020～2022");
             tmpSheet.Cell("T2").SetValue("稼働日数2023年");
-            tmpSheet.Cell("U2").SetValue("更新日");
+            tmpSheet.Cell("V2").SetValue("備考");         // 2023/10/24
+            tmpSheet.Cell("U2").SetValue("更新日");       // 2023/10/24
 
             // 稼働予定期間のカレンダーをセット
             for (int mon = 0; mon < 6; mon++)
             {
                 // 該当月
                 DateTime wDt = stDate.AddMonths(mon);
-                var xCol = 31 * mon + 22;   // 2023/07/18[22]
-                tmpSheet.Cell(1, xCol).SetValue(wDt.Year + "年" + wDt.Month + "月"); // 22,53,84,115,・・・ 
+                var xColu = 31 * mon + xCol;   // 2023/10/24
+                tmpSheet.Cell(1, xColu).SetValue(wDt.Year + "年" + wDt.Month + "月"); // 22,53,84,115,・・・ 
 
                 // 年月と開始列の配列にセット
                 sheetYYMM[mon, 0] = wDt.Year.ToString() + wDt.Month.ToString().PadLeft(2, '0');
-                sheetYYMM[mon, 1] = xCol.ToString();
+                sheetYYMM[mon, 1] = xColu.ToString();
 
                 // 該当月の暦
                 int dy = 0;
@@ -2455,22 +2457,22 @@ namespace jfgSchedule
                     {
                         if (dDay >= DateTime.Today)
                         {
-                            tmpSheet.Cell(1, xCol + dy).SetValue(wDt.Year + "年" + wDt.Month + "月");  // 年月：2023/01/26
-                            tmpSheet.Cell(2, xCol + dy).SetValue((dy + 1).ToString());    // 日
-                            tmpSheet.Cell(3, xCol + dy).SetValue(dDay.ToString("ddd"));   // 曜日
+                            tmpSheet.Cell(1, xColu + dy).SetValue(wDt.Year + "年" + wDt.Month + "月");  // 年月：2023/01/26
+                            tmpSheet.Cell(2, xColu + dy).SetValue((dy + 1).ToString());    // 日
+                            tmpSheet.Cell(3, xColu + dy).SetValue(dDay.ToString("ddd"));   // 曜日
                         }
                         else
                         {
                             // 作成前日以前はセルを空白とする：2023/01/25
-                            tmpSheet.Cell(2, xCol + dy).SetValue(string.Empty);
-                            tmpSheet.Cell(3, xCol + dy).SetValue(string.Empty);
+                            tmpSheet.Cell(2, xColu + dy).SetValue(string.Empty);
+                            tmpSheet.Cell(3, xColu + dy).SetValue(string.Empty);
                         }
                     }
                     else
                     {
                         // 存在しない日付はセルを空白とする
-                        tmpSheet.Cell(2, xCol + dy).SetValue(string.Empty);
-                        tmpSheet.Cell(3, xCol + dy).SetValue(string.Empty);
+                        tmpSheet.Cell(2, xColu + dy).SetValue(string.Empty);
+                        tmpSheet.Cell(3, xColu + dy).SetValue(string.Empty);
                     }
 
                     dy++;
@@ -2704,6 +2706,7 @@ namespace jfgSchedule
                 稼働日数2019 = en.JFG稼働日数1.ToString("###"),
                 稼働日数2022 = en.JFG稼働日数2.ToString("###"),
                 稼働日数 = en.会員稼働予定.稼働日数.ToString("###"),
+                備考 = en.会員稼働予定.備考,
                 更新日 = en.会員稼働予定.更新日.ToString()
             };
 
@@ -2808,6 +2811,7 @@ namespace jfgSchedule
                 JFG加入年 = en.JFG加入年,
                 稼働日数2020 = en.JFG稼働日数1.ToString("###"),
                 稼働日数2023 = en.会員稼働予定.稼働日数.ToString("###"),
+                備考 = en.会員稼働予定.備考,
                 更新日 = en.会員稼働予定.更新日.ToString()
             };
 
@@ -3101,7 +3105,9 @@ namespace jfgSchedule
                 他言語 = en.他言語ライセンス,
                 得意分野 = GetNewHotelXCellValue(row.Cell(17).Value),
                 JFG加入年 = en.JFG加入年,
-                稼働日数2020 = en.JFG稼働日数1.ToString("###")
+                稼働日数2020 = en.JFG稼働日数1.ToString("###"),
+                備考 = "",
+                更新日 = ""
             };
 
             // 他言語ライセンス
@@ -3369,7 +3375,9 @@ namespace jfgSchedule
                 得意分野 = GetNewHotelXCellValue(row.Cell(16).Value),
                 JFG加入年 = GetNewHotelXCellValue(row.Cell(17).Value),
                 稼働日数2019 = en.JFG稼働日数1.ToString("###"),
-                稼働日数2022 = en.JFG稼働日数2.ToString("###")
+                稼働日数2022 = en.JFG稼働日数2.ToString("###"),
+                備考 = "",
+                更新日 = ""
             };
 
             // 生まれ年：2023/07/23
@@ -3929,7 +3937,7 @@ namespace jfgSchedule
                 // 組合員情報を稼働表エクセルシートに貼付
                 if (!int.TryParse(sheetYYMM[0, 1], out int col))
                 {
-                    col = 22;
+                    col = xCol;
                 }
 
                 if (!XlsCellsSetXML_BySheet(clsTour, clsSchedule, tmpSheet, sheetStRow, col, cardNum, logFile))
@@ -4014,7 +4022,7 @@ namespace jfgSchedule
                 // 組合員情報を稼働表エクセルシートに貼付
                 if (!int.TryParse(sheetYYMM[0, 1], out int col))
                 {
-                    col = 22;
+                    col = xCol;
                 }
 
                 if (!XlsCellsSetXML_BySheet(clsTour, clsSchedule, tmpSheet, sheetStRow, col, cardNum, logFile))

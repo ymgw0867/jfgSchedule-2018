@@ -50,7 +50,9 @@ namespace jfgSchedule
         public string 稼働日数2020 { get; set; }
         [ColumnName("T", ColumnIndex = 20, AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Right, Width = 9, HeaderFontSize = 9)]
         public string 稼働日数2023 { get; set; }
-        [ColumnName("U", ColumnIndex = 21, AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Left, Width = 26, HeaderFontSize = 9)]
+        [ColumnName("U", ColumnIndex = 21, AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Left, Width = 20, HeaderFontSize = 9)]
+        public string 備考 { get; set; }
+        [ColumnName("V", ColumnIndex = 21, AlignVertial = XLAlignmentVerticalValues.Center, AlignHorizon = XLAlignmentHorizontalValues.Left, Width = 26, HeaderFontSize = 9)]
         public string 更新日 { get; set; }
     }
 }
