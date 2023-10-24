@@ -31,19 +31,22 @@ namespace jfgSchedule
 
         const int cEAST = 0;                    // 東定数
         const int cWEST = 1;                    // 西定数
-        int xCol = 22;                    // 日列初期値
+        int xCol = 23;                    // 日列初期値
         readonly XLColor HeaderBackColor = XLColor.FromArgb(79, 129, 189);  // 見出し行背景色
         readonly XLColor LineBackColor = XLColor.FromArgb(220, 230, 241); // 奇数明細行背景色
+
         readonly string HotelSheetName = "新ホテル向けガイド稼働表";
         readonly string TourSheetName = "ツアー向けガイド稼働表";
         readonly string TourSheetName_NotEnglish = "ツアー向けガイド稼働表・英語以外"; // 2023/08/21
         readonly string WestSheetName_English = "西日本・新ホテル向けガイド稼働表・英語"; // 2023/09/19
         readonly string WestSheetName_NotEnglish = "西日本・新ホテル向けガイド稼働表・他言語"; // 2023/09/19
+
         readonly string xlsNewHotelList = Properties.Settings.Default.xlsNewHotelGuideListPath;  // 参照用エクセルファイル：新ホテル向けガイドリスト
         readonly string xlsTourList = Properties.Settings.Default.xlsTourGuideListPath;      // 参照用エクセルファイル：ツアー向けガイドリスト2023
         readonly string xlsToueListNotEnglish = Properties.Settings.Default.xlsPasswordTourNonEng;     // 参照用エクセルファイル：ツアー向けガイドリスト英語以外2023
         readonly string xlsWestHotelList = Properties.Settings.Default.xlsWestHotelGuideListPath; // 参照用エクセルファイル：西日本ホテル向けガイドリスト：2023/09/19
         readonly string xlsWestHotelListNotEng = Properties.Settings.Default.xlsWestHotelNotEngGuideListPath; // 参照用エクセルファイル：西日本多言語ホテル向けガイドリスト：2023/09/22
+
         const string ENG = "Eng";        // 西日本・英語 2023/09/22
         const string NOT_ENG = "NotEng";     // 西日本・他言語 2023/09/22
 
@@ -53,29 +56,29 @@ namespace jfgSchedule
             // 言語配列読み込み
             ReadLang();
 
-            // 稼働予定表作成
-            xCol = 22;
-            WorksOutputXML(logFile);
+            //// 稼働予定表作成
+            //xCol = 22;
+            //WorksOutputXML(logFile);
 
             // 新ホテル向けガイド稼働予定表作成：2023/02/17
-            xCol = 22;
+            xCol = 23;  // 2023/10/24 備考欄追加
             WorksOutputXML_FromExcel_202307(logFile);
 
-            // ツアー向けガイド稼働予定表作成：2023/03/18
-            xCol = 22;
-            WorksOutputXML_FromExcel_Tour202307(logFile);
+            //// ツアー向けガイド稼働予定表作成：2023/03/18
+            //xCol = 22;
+            //WorksOutputXML_FromExcel_Tour202307(logFile);
 
-            // ツアー向けガイド英語以外稼働予定表作成：2023/08/21
-            xCol = 22;
-            WorksOutputXML_FromExcel_Tour_NotEng(logFile);
+            //// ツアー向けガイド英語以外稼働予定表作成：2023/08/21
+            //xCol = 22;
+            //WorksOutputXML_FromExcel_Tour_NotEng(logFile);
 
-            // 西日本ホテル向けガイド稼働予定表作成：2023/09/19
-            xCol = 16;
-            WorksOutputXML_West_HotelEnglish(logFile, ENG);
+            //// 西日本ホテル向けガイド稼働予定表作成：2023/09/19
+            //xCol = 16;
+            //WorksOutputXML_West_HotelEnglish(logFile, ENG);
 
-            // 西日本多言語ホテル向けガイド稼働予定表作成：2023/09/22
-            xCol = 16;
-            WorksOutputXML_West_HotelEnglish(logFile, NOT_ENG);
+            //// 西日本他言語ホテル向けガイド稼働予定表作成：2023/09/22
+            //xCol = 16;
+            //WorksOutputXML_West_HotelEnglish(logFile, NOT_ENG);
         }
 
         /// <summary>
@@ -1686,7 +1689,8 @@ namespace jfgSchedule
             }
             else
             {
-                range2.AddConditionalFormat().WhenIsTrue("=V3=" + @"""日""").Fill.SetBackgroundColor(XLColor.MistyRose).Font.SetFontColor(XLColor.Black);
+                // "=V3=" → "=W3=" : 2023/10/24
+                range2.AddConditionalFormat().WhenIsTrue("=W3=" + @"""日""").Fill.SetBackgroundColor(XLColor.MistyRose).Font.SetFontColor(XLColor.Black);
             }
 
             // ウィンドウ枠の固定
@@ -2250,19 +2254,21 @@ namespace jfgSchedule
             tmpSheet.Cell("R2").SetValue(headerArray[14]);
             tmpSheet.Cell("S2").SetValue(headerArray[15]);  // 2023/07/18 
             tmpSheet.Cell("T2").SetValue("稼働日数");
-            tmpSheet.Cell("U2").SetValue("更新日");
+            tmpSheet.Cell("U2").SetValue("備考");          // 2023/10/24
+            tmpSheet.Cell("V2").SetValue("更新日");        // 2023/10/24
 
             // 稼働予定期間のカレンダーをセット
             for (int mon = 0; mon < 6; mon++)
             {
                 // 該当月
                 DateTime wDt = stDate.AddMonths(mon);
-                var xCol = 31 * mon + 22;   // 2023/07/18[22]
+                //var xCol = 31 * mon + 22;   // 2023/07/18[22]
+                var xColu = 31 * mon + xCol;   // 2023/10/24
                 tmpSheet.Cell(1, xCol).SetValue(wDt.Year + "年" + wDt.Month + "月"); // 22,53,84,115,・・・ 
 
                 // 年月と開始列の配列にセット
                 sheetYYMM[mon, 0] = wDt.Year.ToString() + wDt.Month.ToString().PadLeft(2, '0');
-                sheetYYMM[mon, 1] = xCol.ToString();
+                sheetYYMM[mon, 1] = xColu.ToString();
 
                 // 該当月の暦
                 int dy = 0;
@@ -2272,22 +2278,22 @@ namespace jfgSchedule
                     {
                         if (dDay >= DateTime.Today)
                         {
-                            tmpSheet.Cell(1, xCol + dy).SetValue(wDt.Year + "年" + wDt.Month + "月");  // 年月：2023/01/26
-                            tmpSheet.Cell(2, xCol + dy).SetValue((dy + 1).ToString());    // 日
-                            tmpSheet.Cell(3, xCol + dy).SetValue(dDay.ToString("ddd"));   // 曜日
+                            tmpSheet.Cell(1, xColu + dy).SetValue(wDt.Year + "年" + wDt.Month + "月");  // 年月：2023/01/26
+                            tmpSheet.Cell(2, xColu + dy).SetValue((dy + 1).ToString());    // 日
+                            tmpSheet.Cell(3, xColu + dy).SetValue(dDay.ToString("ddd"));   // 曜日
                         }
                         else
                         {
                             // 作成前日以前はセルを空白とする：2023/01/25
-                            tmpSheet.Cell(2, xCol + dy).SetValue(string.Empty);
-                            tmpSheet.Cell(3, xCol + dy).SetValue(string.Empty);
+                            tmpSheet.Cell(2, xColu + dy).SetValue(string.Empty);
+                            tmpSheet.Cell(3, xColu + dy).SetValue(string.Empty);
                         }
                     }
                     else
                     {
                         // 存在しない日付はセルを空白とする
-                        tmpSheet.Cell(2, xCol + dy).SetValue(string.Empty);
-                        tmpSheet.Cell(3, xCol + dy).SetValue(string.Empty);
+                        tmpSheet.Cell(2, xColu + dy).SetValue(string.Empty);
+                        tmpSheet.Cell(3, xColu + dy).SetValue(string.Empty);
                     }
 
                     dy++;
@@ -2592,6 +2598,7 @@ namespace jfgSchedule
                 マンダリン = en.マンダリン.ToString("###"),
                 ペニンシュラ = en.ペニンシュラ.ToString("###"),
                 稼働日数 = en.会員稼働予定.稼働日数.ToString("###"),
+                備考 = en.会員稼働予定.備考,
                 更新日 = en.会員稼働予定.更新日.ToString()
             };
 
@@ -3284,7 +3291,9 @@ namespace jfgSchedule
                 他言語 = en.他言語ライセンス,
                 FIT = en.FIT日数.ToString("###"),
                 マンダリン = en.マンダリン.ToString("###"),
-                ペニンシュラ = en.ペニンシュラ.ToString("###")
+                ペニンシュラ = en.ペニンシュラ.ToString("###"),
+                備考 = "",
+                更新日 = ""
             };
 
             // 生まれ年：2023/07/23
@@ -3835,7 +3844,7 @@ namespace jfgSchedule
                 // 組合員情報を稼働表エクセルシートに貼付
                 if (!int.TryParse(sheetYYMM[0, 1], out int col))
                 {
-                    col = 22;
+                    col = xCol; // 2023/10/24
                 }
 
                 if (!XlsCellsSetXML_BySheet(clsHotel, clsSchedule, tmpSheet, sheetStRow, col, cardNum, logFile))
