@@ -56,29 +56,29 @@ namespace jfgSchedule
             // 言語配列読み込み
             ReadLang();
 
-            //// 稼働予定表作成
-            //xCol = 22;
-            //WorksOutputXML(logFile);
+            // 稼働予定表作成
+            xCol = 22;
+            WorksOutputXML(logFile);
 
             // 新ホテル向けガイド稼働予定表作成：2023/02/17
             xCol = 23;  // 2023/10/24 備考欄追加
             WorksOutputXML_FromExcel_202307(logFile);
 
             // ツアー向けガイド稼働予定表作成：2023/03/18
-            xCol = 23;
+            xCol = 23;  // 2023/10/24 備考欄追加
             WorksOutputXML_FromExcel_Tour202307(logFile);
 
             // ツアー向けガイド英語以外稼働予定表作成：2023/08/21
-            xCol = 23;
+            xCol = 23;  // 2023/10/24 備考欄追加
             WorksOutputXML_FromExcel_Tour_NotEng(logFile);
 
-            //// 西日本ホテル向けガイド稼働予定表作成：2023/09/19
-            //xCol = 16;
-            //WorksOutputXML_West_HotelEnglish(logFile, ENG);
+            // 西日本ホテル向けガイド稼働予定表作成：2023/09/19
+            xCol = 16;
+            WorksOutputXML_West_HotelEnglish(logFile, ENG);
 
-            //// 西日本他言語ホテル向けガイド稼働予定表作成：2023/09/22
-            //xCol = 16;
-            //WorksOutputXML_West_HotelEnglish(logFile, NOT_ENG);
+            // 西日本他言語ホテル向けガイド稼働予定表作成：2023/09/22
+            xCol = 16;
+            WorksOutputXML_West_HotelEnglish(logFile, NOT_ENG);
         }
 
         /// <summary>
@@ -2434,8 +2434,8 @@ namespace jfgSchedule
             tmpSheet.Cell("R2").SetValue(headerArray[14]);
             tmpSheet.Cell("S2").SetValue("稼働日数2020～2022");
             tmpSheet.Cell("T2").SetValue("稼働日数2023年");
-            tmpSheet.Cell("V2").SetValue("備考");         // 2023/10/24
-            tmpSheet.Cell("U2").SetValue("更新日");       // 2023/10/24
+            tmpSheet.Cell("U2").SetValue("備考");         // 2023/10/24
+            tmpSheet.Cell("V2").SetValue("更新日");       // 2023/10/24
 
             // 稼働予定期間のカレンダーをセット
             for (int mon = 0; mon < 6; mon++)
