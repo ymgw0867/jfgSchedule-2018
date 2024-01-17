@@ -1376,21 +1376,35 @@ namespace jfgSchedule
 
             jfgDataClassDataContext db = new jfgDataClassDataContext();
 
-            // 2019アサイン件数
-            var date1 = DateTime.Parse(Properties.Settings.Default.assignYear1 + "/" + "01/01");
-            var date2 = DateTime.Parse(Properties.Settings.Default.assignYear1 + "/" + "12/31");
+            // コメント化：2024/01/17
+            //// 2019アサイン件数
+            //var date1 = DateTime.Parse(Properties.Settings.Default.assignYear1 + "/" + "01/01");
+            //var date2 = DateTime.Parse(Properties.Settings.Default.assignYear1 + "/" + "12/31");
+
+            // 前々年アサイン件数：2024/01/17
+            var date1 = DateTime.Parse(DateTime.Today.Year - 2 + "/" + "01/01 0:0:0");
+            var date2 = DateTime.Parse(DateTime.Today.Year - 2 + "/" + "12/31 23:59:59");
 
             var asgn = db.アサイン.Where(a => a.カード番号 == t.カード番号)
-                .Where(a => a.手数料日付 != null).Where(a => a.稼働日1 >= date1 && a.稼働日1 <= date2).Count();
+                .Where(a => !a.備考1.Contains("CXL"))
+                //.Where(a => a.手数料日付 != null)  // 2024/01/17
+                .Where(a => a.稼働日1 >= date1 && a.稼働日1 <= date2).Count();
 
             t.JFG稼働日数1 = asgn;
 
-            // 2022アサイン件数
-            date1 = DateTime.Parse(Properties.Settings.Default.assignYear3 + "/" + "01/01");
-            date2 = DateTime.Parse(Properties.Settings.Default.assignYear3 + "/" + "12/31");
+            // コメント化：2024/01/17
+            //// 2022アサイン件数
+            //date1 = DateTime.Parse(Properties.Settings.Default.assignYear3 + "/" + "01/01");
+            //date2 = DateTime.Parse(Properties.Settings.Default.assignYear3 + "/" + "12/31");
+
+            // 前年アサイン件数：2024/01/17
+            date1 = DateTime.Parse(DateTime.Today.Year - 1 + "/" + "01/01 0:0:0");
+            date2 = DateTime.Parse(DateTime.Today.Year - 1 + "/" + "12/31 23:59:59");
 
             asgn = db.アサイン.Where(a => a.カード番号 == t.カード番号)
-                .Where(a => a.手数料日付 != null).Where(a => a.稼働日1 >= date1 && a.稼働日1 <= date2).Count();
+                .Where(a => !a.備考1.Contains("CXL"))
+                //.Where(a => a.手数料日付 != null)  // 2024/01/17
+                .Where(a => a.稼働日1 >= date1 && a.稼働日1 <= date2).Count();
 
             t.JFG稼働日数2 = asgn;
         }
@@ -1405,12 +1419,19 @@ namespace jfgSchedule
 
             jfgDataClassDataContext db = new jfgDataClassDataContext();
 
-            // 2020～2022アサイン件数
-            var date1 = DateTime.Parse(Properties.Settings.Default.assignYear2 + "/" + "01/01");
-            var date2 = DateTime.Parse(Properties.Settings.Default.assignYear3 + "/" + "12/31");
+            // コメント化：2024/01/17
+            //// 2020～2022アサイン件数
+            //var date1 = DateTime.Parse(Properties.Settings.Default.assignYear2 + "/" + "01/01");
+            //var date2 = DateTime.Parse(Properties.Settings.Default.assignYear3 + "/" + "12/31");
+
+            // 前年アサイン件数：2024/01/17
+            var date1 = DateTime.Parse(DateTime.Today.Year - 1 + "/" + "01/01 0:0:0");
+            var date2 = DateTime.Parse(DateTime.Today.Year - 1 + "/" + "12/31 23:59:59");
 
             var asgn = db.アサイン.Where(a => a.カード番号 == t.カード番号)
-                .Where(a => a.手数料日付 != null).Where(a => a.稼働日1 >= date1 && a.稼働日1 <= date2).Count();
+                .Where(a => !a.備考1.Contains("CXL"))
+                //.Where(a => a.手数料日付 != null) // 2024/01/17
+                .Where(a => a.稼働日1 >= date1 && a.稼働日1 <= date2).Count();
 
             t.JFG稼働日数1 = asgn;
         }
@@ -2161,8 +2182,8 @@ namespace jfgSchedule
                     headerArray[11] = selSheet.Cell("O1").Value.ToString();
                     headerArray[12] = selSheet.Cell("P1").Value.ToString();
                     headerArray[13] = selSheet.Cell("Q1").Value.ToString();
-                    headerArray[14] = selSheet.Cell("R1").Value.ToString();
-                    headerArray[15] = selSheet.Cell("S1").Value.ToString();
+                    //headerArray[14] = selSheet.Cell("R1").Value.ToString();   // 2024/01/17 コメント化
+                    //headerArray[15] = selSheet.Cell("S1").Value.ToString();   // 2024/01/17 コメント化
                 }
             }
             return tourtbl;
@@ -2341,8 +2362,16 @@ namespace jfgSchedule
             tmpSheet.Cell("O2").SetValue(headerArray[11]);
             tmpSheet.Cell("P2").SetValue(headerArray[12]);
             tmpSheet.Cell("Q2").SetValue(headerArray[13]);
-            tmpSheet.Cell("R2").SetValue(headerArray[14]);
-            tmpSheet.Cell("S2").SetValue(headerArray[15]);  // 2023/07/18 
+
+            //tmpSheet.Cell("R2").SetValue(headerArray[14]);    // コメント化：2024/01/17
+            //tmpSheet.Cell("S2").SetValue(headerArray[15]);  // 2023/07/18  コメント化：2024/01/17
+
+            // 2024/01/17
+            var hdtl = string.Format("JFG 稼働日数 {0}年", DateTime.Now.Year - 2);
+            tmpSheet.Cell("R2").SetValue(hdtl);
+            hdtl = string.Format("JFG 稼働日数 {0}年", DateTime.Now.Year - 1);
+            tmpSheet.Cell("S2").SetValue(hdtl);
+
             tmpSheet.Cell("T2").SetValue("稼働日数");
             tmpSheet.Cell("U2").SetValue("備考"); // 2024/10/24
             tmpSheet.Cell("V2").SetValue("更新日");
@@ -2432,8 +2461,17 @@ namespace jfgSchedule
             tmpSheet.Cell("P2").SetValue(headerArray[12]);
             tmpSheet.Cell("Q2").SetValue(headerArray[13]);
             tmpSheet.Cell("R2").SetValue(headerArray[14]);
-            tmpSheet.Cell("S2").SetValue("稼働日数2020～2022");
-            tmpSheet.Cell("T2").SetValue("稼働日数2023年");
+
+            // コメント化：2024/01/17
+            //tmpSheet.Cell("S2").SetValue("稼働日数2020～2022");    // コメント化：2024/01/17
+            //tmpSheet.Cell("T2").SetValue("稼働日数2023年");        // コメント化：2024/01/17
+
+            // 2024/01/17
+            var hdtl = string.Format("稼働日数{0}年", DateTime.Now.Year - 1);
+            tmpSheet.Cell("S2").SetValue(hdtl);
+            hdtl = string.Format("稼働日数 {0}年", DateTime.Now.Year);
+            tmpSheet.Cell("T2").SetValue(hdtl);
+
             tmpSheet.Cell("U2").SetValue("備考");         // 2023/10/24
             tmpSheet.Cell("V2").SetValue("更新日");       // 2023/10/24
 
