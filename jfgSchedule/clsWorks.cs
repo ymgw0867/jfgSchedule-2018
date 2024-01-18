@@ -1335,32 +1335,54 @@ namespace jfgSchedule
 
             jfgDataClassDataContext db = new jfgDataClassDataContext();
 
-            // ホテルアサイン件数（英）2019
-            var date1 = DateTime.Parse(Properties.Settings.Default.assignYear1 + "/" + "01/01");
-            var date2 = DateTime.Parse(Properties.Settings.Default.assignYear1 + "/" + "12/31");
+            // ホテルアサイン件数（英）2019 コメント化：2024/01/18
+            //var date1 = DateTime.Parse(Properties.Settings.Default.assignYear1 + "/" + "01/01");
+            //var date2 = DateTime.Parse(Properties.Settings.Default.assignYear1 + "/" + "12/31");
 
-            var asgn = db.アサイン.Where(a => a.カード番号 == t.カード番号).Where(a => a.分類 == "G")
-                .Where(a => a.手数料日付 != null).Where(a => a.稼働日1 >= date1 && a.稼働日1 <= date2).Count();
+            // ホテルアサイン件数（英）2020~2022 : 2024/01/18 
+            var date1 = DateTime.Parse(Properties.Settings.Default.assignYear1 + "/01/01 0:0:0");
+            var date2 = DateTime.Parse(Properties.Settings.Default.assignYear2 + "/12/31 23:59:59");
+
+            var asgn = db.アサイン.Where(a => a.カード番号 == t.カード番号)
+                .Where(a => a.分類 == "G")
+                .Where(a => !a.備考1.Contains("CXL"))
+                //.Where(a => a.手数料日付 != null) // 2024/01/18
+                .Where(a => a.稼働日1 >= date1 && a.稼働日1 <= date2).Count();
 
             t.JFG稼働日数1 = asgn;
 
-            // ホテルアサイン件数（英）2020～2022
-            date1 = DateTime.Parse(Properties.Settings.Default.assignYear2 + "/" + "01/01");
-            date2 = DateTime.Parse(Properties.Settings.Default.assignYear3 + "/" + "12/31");
+            //// ホテルアサイン件数（英）2020～2022 コメント化：2024/01/18
+            //date1 = DateTime.Parse(Properties.Settings.Default.assignYear3 + "/" + "01/01");
+            //date2 = DateTime.Parse(Properties.Settings.Default.assignYear3 + "/" + "12/31");
 
-            asgn = db.アサイン.Where(a => a.カード番号 == t.カード番号).Where(a => a.分類 == "G")
-                .Where(a => a.手数料日付 != null).Where(a => a.稼働日1 >= date1 && a.稼働日1 <= date2).Count();
+            // ホテルアサイン件数（英）前年 : 2024/01/18 
+            date1 = DateTime.Parse(DateTime.Today.Year - 1 + "/01/01 0:0:0");
+            date2 = DateTime.Parse(DateTime.Today.Year - 1 + "/12/31 23:59:59");
+
+            asgn = db.アサイン.Where(a => a.カード番号 == t.カード番号)
+                .Where(a => a.分類 == "G")
+                .Where(a => !a.備考1.Contains("CXL"))
+                //.Where(a => a.手数料日付 != null) // 2024/01/18
+                .Where(a => a.稼働日1 >= date1 && a.稼働日1 <= date2).Count();
 
             t.JFG稼働日数2 = asgn;
 
-            // マンダリン
-            asgn = db.アサイン.Where(a => a.カード番号 == t.カード番号).Where(a => a.分類 == "G").Where(a => a.手数料日付 != null)
+            // マンダリン : 2024/01/18
+            asgn = db.アサイン.Where(a => a.カード番号 == t.カード番号)
+                .Where(a => a.分類 == "G")
+                .Where(a => !a.備考1.Contains("CXL"))
+                //.Where(a => a.手数料日付 != null)  // 2024/01/18
+                .Where(a => a.稼働日1 >= date1 && a.稼働日1 <= date2)
                 .Where(a => a.依頼先名1.Contains("ﾏﾝﾀﾞﾘﾝ")).Count();
 
             t.マンダリン = asgn;
 
-            // ペニンシュラ
-            asgn = db.アサイン.Where(a => a.カード番号 == t.カード番号).Where(a => a.分類 == "G").Where(a => a.手数料日付 != null)
+            // ペニンシュラ : 2024/01/18
+            asgn = db.アサイン.Where(a => a.カード番号 == t.カード番号)
+                .Where(a => a.分類 == "G")
+                .Where(a => !a.備考1.Contains("CXL"))
+                //.Where(a => a.手数料日付 != null) // 2024/01/18
+                .Where(a => a.稼働日1 >= date1 && a.稼働日1 <= date2)
                 .Where(a => a.依頼先名1.Contains("ﾍﾟﾆﾝｼｭﾗ")).Count();
 
             t.ペニンシュラ = asgn;
@@ -1382,8 +1404,8 @@ namespace jfgSchedule
             //var date2 = DateTime.Parse(Properties.Settings.Default.assignYear1 + "/" + "12/31");
 
             // 前々年アサイン件数：2024/01/17
-            var date1 = DateTime.Parse(DateTime.Today.Year - 2 + "/" + "01/01 0:0:0");
-            var date2 = DateTime.Parse(DateTime.Today.Year - 2 + "/" + "12/31 23:59:59");
+            var date1 = DateTime.Parse(DateTime.Today.Year - 2 + "/01/01 0:0:0");
+            var date2 = DateTime.Parse(DateTime.Today.Year - 2 + "/12/31 23:59:59");
 
             var asgn = db.アサイン.Where(a => a.カード番号 == t.カード番号)
                 .Where(a => !a.備考1.Contains("CXL"))
@@ -1398,8 +1420,8 @@ namespace jfgSchedule
             //date2 = DateTime.Parse(Properties.Settings.Default.assignYear3 + "/" + "12/31");
 
             // 前年アサイン件数：2024/01/17
-            date1 = DateTime.Parse(DateTime.Today.Year - 1 + "/" + "01/01 0:0:0");
-            date2 = DateTime.Parse(DateTime.Today.Year - 1 + "/" + "12/31 23:59:59");
+            date1 = DateTime.Parse(DateTime.Today.Year - 1 + "/01/01 0:0:0");
+            date2 = DateTime.Parse(DateTime.Today.Year - 1 + "/12/31 23:59:59");
 
             asgn = db.アサイン.Where(a => a.カード番号 == t.カード番号)
                 .Where(a => !a.備考1.Contains("CXL"))
@@ -1425,8 +1447,8 @@ namespace jfgSchedule
             //var date2 = DateTime.Parse(Properties.Settings.Default.assignYear3 + "/" + "12/31");
 
             // 前年アサイン件数：2024/01/17
-            var date1 = DateTime.Parse(DateTime.Today.Year - 1 + "/" + "01/01 0:0:0");
-            var date2 = DateTime.Parse(DateTime.Today.Year - 1 + "/" + "12/31 23:59:59");
+            var date1 = DateTime.Parse(DateTime.Today.Year - 1 + "/01/01 0:0:0");
+            var date2 = DateTime.Parse(DateTime.Today.Year - 1 + "/12/31 23:59:59");
 
             var asgn = db.アサイン.Where(a => a.カード番号 == t.カード番号)
                 .Where(a => !a.備考1.Contains("CXL"))
@@ -1458,8 +1480,8 @@ namespace jfgSchedule
             t.FIT日数 = asgn; // 2019年ホテル（英語）アサイン件数
 
             // 前年アサイン件数
-            date1 = DateTime.Parse(DateTime.Today.Year - 1 + "/" + "01/01 0:0:0");
-            date2 = DateTime.Parse(DateTime.Today.Year - 1 + "/" + "12/31 23:59:59");
+            date1 = DateTime.Parse(DateTime.Today.Year - 1 + "/01/01 0:0:0");
+            date2 = DateTime.Parse(DateTime.Today.Year - 1 + "/12/31 23:59:59");
 
             asgn = db.アサイン.Where(a => a.カード番号 == t.カード番号)
                 .Where(a => !a.備考1.Contains("CXL"))
@@ -1469,8 +1491,8 @@ namespace jfgSchedule
             t.JFG稼働日数1 = asgn;
 
             // 当年アサイン件数
-            date1 = DateTime.Parse(DateTime.Today.Year + "/" + "01/01 0:0:0");
-            date2 = DateTime.Parse(DateTime.Today.Year + "/" + "12/31 23:59:59");
+            date1 = DateTime.Parse(DateTime.Today.Year + "/01/01 0:0:0");
+            date2 = DateTime.Parse(DateTime.Today.Year + "/12/31 23:59:59");
 
             asgn = db.アサイン.Where(a => a.カード番号 == t.カード番号)
                 .Where(a => !a.備考1.Contains("CXL"))
@@ -2260,8 +2282,15 @@ namespace jfgSchedule
             tmpSheet.Cell("C2").SetValue("フリガナ");
             tmpSheet.Cell("D2").SetValue(headerArray[0]);
             tmpSheet.Cell("E2").SetValue(headerArray[1]);
-            tmpSheet.Cell("F2").SetValue(headerArray[2]);
-            tmpSheet.Cell("G2").SetValue(headerArray[3]);
+
+            // 2024/01/18 コメント化
+            //tmpSheet.Cell("F2").SetValue(headerArray[2]);
+            //tmpSheet.Cell("G2").SetValue(headerArray[3]);
+
+            // 2024/01/18
+            tmpSheet.Cell("F2").SetValue(string.Format("ﾎﾃﾙｱｻｲﾝ件数(英){0}{1}{2}", Properties.Settings.Default.assignYear1, "-", Properties.Settings.Default.assignYear2));
+            tmpSheet.Cell("G2").SetValue(string.Format("ﾎﾃﾙｱｻｲﾝ件数(英){0}", (DateTime.Today.Year-1).ToString()));
+
             tmpSheet.Cell("H2").SetValue(headerArray[4]);
             tmpSheet.Cell("I2").SetValue(headerArray[5]);
             tmpSheet.Cell("J2").SetValue(headerArray[6]);
@@ -2272,8 +2301,15 @@ namespace jfgSchedule
             tmpSheet.Cell("O2").SetValue(headerArray[11]);
             tmpSheet.Cell("P2").SetValue(headerArray[12]);
             tmpSheet.Cell("Q2").SetValue(headerArray[13]);
-            tmpSheet.Cell("R2").SetValue(headerArray[14]);
-            tmpSheet.Cell("S2").SetValue(headerArray[15]);  // 2023/07/18 
+
+            // 2024/01/18 コメント化
+            //tmpSheet.Cell("R2").SetValue(headerArray[14]);
+            //tmpSheet.Cell("S2").SetValue(headerArray[15]);  // 2023/07/18 
+
+            // 2024/01/18
+            tmpSheet.Cell("R2").SetValue(string.Format("ﾏﾝﾀﾞﾘﾝ件数{0}", (DateTime.Today.Year - 1).ToString()));
+            tmpSheet.Cell("S2").SetValue(string.Format("ﾍﾟﾆﾝｼｭﾗ件数{0}", (DateTime.Today.Year - 1).ToString())); 
+
             tmpSheet.Cell("T2").SetValue("稼働日数");
             tmpSheet.Cell("U2").SetValue("備考");          // 2023/10/24
             tmpSheet.Cell("V2").SetValue("更新日");        // 2023/10/24
