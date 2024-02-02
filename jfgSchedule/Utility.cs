@@ -248,5 +248,28 @@ namespace jfgSchedule
                 GC.Collect();
             }
         }
+
+        ///---------------------------------------------------------------------
+        /// <summary>
+        ///     文字列を指定文字数をＭＡＸとして返します</summary>
+        /// <param name="s">
+        ///     文字列</param>
+        /// <param name="n">
+        ///     文字数</param>
+        /// <returns>
+        ///     文字数範囲内の文字列</returns>
+        /// --------------------------------------------------------------------
+        public static string GetStringSubMax(string s, int n)
+        {
+            string val;
+
+            // 文字間のスペースを除去 2015/03/10
+            s = s.Replace(" ", "");
+
+            if (s.Length > n) val = s.Substring(0, n);
+            else val = s;
+
+            return val;
+        }
     }
 }

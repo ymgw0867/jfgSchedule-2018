@@ -344,7 +344,8 @@ namespace jfgSchedule
             for (int i = 0; i < 31; i++)
             {
                 // Trim()を追加 2019/07/18
-                string dVal = Utility.nulltoString(cPData.sheet.Cell(sRow + i, cPData.colidx).Value).Trim();
+                // 文字数をMAX10文字に制限 2024/02/02
+                string dVal = Utility.GetStringSubMax(Utility.nulltoString(cPData.sheet.Cell(sRow + i, cPData.colidx).Value).Trim(), 10);
 
                 if (i == 0) tbl.d1 = dVal;
                 if (i == 1) tbl.d2 = dVal;
