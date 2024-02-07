@@ -37,9 +37,15 @@ namespace jfgSchedule
             // 前回更新日時を取得
             DateTime dt = GetUpdateDate();
 
+            // データベース更新エラーで未更新の予定申告データを2023/11/1に遡って更新：ただし、2024/02/07に限って実行：2024/02/07
+            if (DateTime.Today == new DateTime(2024, 02, 07))
+            {
+                dt = new DateTime(2023, 11, 01);
+            }
+
             // エクセル予定申告シートより会員稼働予定テーブルを更新する
             clsXls xls = new clsXls();
-            int uCnt = xls.xlsSelect(Properties.Settings.Default.xlsxPath, dt);
+            _ = xls.xlsSelect(Properties.Settings.Default.xlsxPath, dt);
 
             // 前回更新日時フィールドに現在の日時を書き込む
             SetUpdateDate();
