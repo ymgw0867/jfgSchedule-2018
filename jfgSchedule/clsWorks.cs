@@ -416,6 +416,13 @@ namespace jfgSchedule
 
                 // ログ出力
                 System.IO.File.AppendAllText(logFile, Form1.GetNowTime(" アサイン担当用稼働表を更新しました。"), Encoding.GetEncoding(932));
+
+                // パスワード付きで再度書き換え：2024/09/05
+                _ = Utility.PwdXlsFile(Properties.Settings.Default.xlsWorksPath, Properties.Settings.Default.xlsPasswordAll, "", logFile);
+
+                // OneDriveフォルダへコピー：2024/09/05
+                var toPath = Properties.Settings.Default.Copy2OneDrivePath + Path.GetFileName(Properties.Settings.Default.xlsWorksPath);
+                _ = Copy2OneDrive(Properties.Settings.Default.xlsWorksPath, toPath, logFile);
             }
             catch (Exception ex)
             {

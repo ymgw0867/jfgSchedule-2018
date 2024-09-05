@@ -12,7 +12,7 @@ namespace jfgSchedule.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.8.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.11.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -52,7 +52,7 @@ namespace jfgSchedule.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\Owner\\OneDrive - softbit\\JFG\\20230330稼働予定表\\稼働予定表.xlsx")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\JFGWORKS\\稼働予定表.xlsx")]
         public string xlsWorksPath {
             get {
                 return ((string)(this["xlsWorksPath"]));
@@ -301,6 +301,15 @@ namespace jfgSchedule.Properties {
         public string xlsWestNotEngWorksPath {
             get {
                 return ((string)(this["xlsWestNotEngWorksPath"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("kadoyoteihyo2024")]
+        public string xlsPasswordAll {
+            get {
+                return ((string)(this["xlsPasswordAll"]));
             }
         }
     }

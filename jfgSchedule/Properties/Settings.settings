@@ -12,7 +12,7 @@
       <Value Profile="(Default)">C:\JFGWORKS\稼働予定表Temp.xlsx</Value>
     </Setting>
     <Setting Name="xlsWorksPath" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">C:\Users\Owner\OneDrive - softbit\JFG\20230330稼働予定表\稼働予定表.xlsx</Value>
+      <Value Profile="(Default)">C:\JFGWORKS\稼働予定表.xlsx</Value>
     </Setting>
     <Setting Name="xlsTempPath" Type="System.String" Scope="Application">
       <Value Profile="(Default)">C:\JFGWORKS\ワークシート.xlsx</Value>
@@ -99,6 +99,9 @@
     </Setting>
     <Setting Name="xlsWestNotEngWorksPath" Type="System.String" Scope="Application">
       <Value Profile="(Default)">C:\JFGWORKS\西日本_新ホテル向け多言語ガイド稼働予定表.xlsx</Value>
+    </Setting>
+    <Setting Name="xlsPasswordAll" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">kadoyoteihyo2024</Value>
     </Setting>
   </Settings>
 </SettingsFile>
