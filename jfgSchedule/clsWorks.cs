@@ -1440,6 +1440,7 @@ namespace jfgSchedule
 
         /// <summary>
         /// アサインデータ集計・加工（ツアー英語以外）: 2023/08/23
+        /// 英語以外をLINQ条件に追加：2024/09/06
         /// </summary>
         /// <param name="t">ClsEastEngクラス</param>
         private void UpdateClsEastNotEng_Tour(ClsEastEng t)
@@ -1448,21 +1449,25 @@ namespace jfgSchedule
 
             jfgDataClassDataContext db = new jfgDataClassDataContext();
 
-            // コメント化：2024/01/17
-            //// 2020～2022アサイン件数
-            //var date1 = DateTime.Parse(Properties.Settings.Default.assignYear2 + "/" + "01/01");
-            //var date2 = DateTime.Parse(Properties.Settings.Default.assignYear3 + "/" + "12/31");
-
-            // 前年アサイン件数：2024/01/17
+            // 前年アサイン件数：2024/09/06
             var date1 = DateTime.Parse(DateTime.Today.Year - 1 + "/01/01 0:0:0");
             var date2 = DateTime.Parse(DateTime.Today.Year - 1 + "/12/31 23:59:59");
 
             var asgn = db.アサイン.Where(a => a.カード番号 == t.カード番号)
                 .Where(a => !a.備考1.Contains("CXL"))
-                //.Where(a => a.手数料日付 != null) // 2024/01/17
-                .Where(a => a.稼働日1 >= date1 && a.稼働日1 <= date2).Count();
+                .Where(a => a.稼働日1 >= date1 && a.稼働日1 <= date2).Where(a => a.言語 != "E").Count();
 
             t.JFG稼働日数1 = asgn;
+
+            // 当年アサイン件数：2024/09/06
+            date1 = DateTime.Parse(DateTime.Today.Year + "/01/01 0:0:0");
+            date2 = DateTime.Parse(DateTime.Today.Year + "/12/31 23:59:59");
+
+            asgn = db.アサイン.Where(a => a.カード番号 == t.カード番号)
+                .Where(a => !a.備考1.Contains("CXL"))
+                .Where(a => a.稼働日1 >= date1 && a.稼働日1 <= date2).Where(a => a.言語 != "E").Count();
+
+            t.JFG稼働日数2 = asgn;
         }
 
         /// <summary>
@@ -2893,9 +2898,9 @@ namespace jfgSchedule
                 得意分野 = GetNewHotelXCellValue(row.Cell(17).Value),
                 JFG加入年 = en.JFG加入年,
                 稼働日数2020 = en.JFG稼働日数1.ToString("###"),
-                稼働日数2023 = en.会員稼働予定.稼働日数.ToString("###"),
+                //稼働日数2023 = en.会員稼働予定.稼働日数.ToString("###"),    // コメント化 : 2024/09/06
+                稼働日数2023 = en.JFG稼働日数2.ToString("###"),
                 備考 = en.会員稼働予定.備考,
-                //更新日 = en.会員稼働予定.更新日.ToString()    // 2024/02/02
                 更新日 = en.会員稼働予定.申告年月日.ToString()    // 2024/02/02
             };
 
@@ -3191,6 +3196,7 @@ namespace jfgSchedule
                 得意分野 = GetNewHotelXCellValue(row.Cell(17).Value),
                 JFG加入年 = en.JFG加入年,
                 稼働日数2020 = en.JFG稼働日数1.ToString("###"),
+                稼働日数2023 = en.JFG稼働日数2.ToString("###"), // 2023/09/06
                 備考 = "",
                 更新日 = ""
             };
